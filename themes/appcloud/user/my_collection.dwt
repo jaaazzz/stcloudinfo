@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>我的收藏_管理中心_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/collection.css" rel="stylesheet" type="text/css" />
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+        <style type="text/css">
+        .changeposition{
+            position: fixed;
+            top:0;
+        }
+        .base-tab div{
+            height: 16px;
+            padding-left: 36px;
+            line-height: 16px;
+        }
+        </style>
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="base-tab" style="width:164px;height:220px;margin-right:30px;margin-top:20px;background:#f5f5f5;border:0px;display:inline-block;" id="tabbox">
+                <div style="margin-top:54px;">
+                    <img src="themes/appcloud/images/mapserver.png" style="vertical-align:text-top;">
+                <a href="user.php?act=my_collection&type=map"  style="font-size:16px;{if $c_type eq map}color:#4bb0e5; {/if}">地图服务</a>
+                </div>
+
+                <div style="margin-top:32px;">
+                    <img src="themes/appcloud/images/yingyong.png" style="vertical-align:text-top;">
+                <a href="user.php?act=my_collection&type=app" style="font-size:16px;{if $c_type eq app}color:#4bb0e5; {/if}">应用</a>
+                </div>
+
+                <div style="margin-top:32px;">
+                    <img src="themes/appcloud/images/ruanjian.png" style="vertical-align:text-top;">
+                <a href="user.php?act=my_collection&type=soft" style="font-size:16px;{if $c_type eq soft}color:#4bb0e5; {/if}">软件</a>
+                </div>
+            </div>
+            <div class="my-collection" style="width:976px;float:right;">
+                <div class="collection-body clearfix" style="margin-top:20px;">
+                    <!-- {if $collection_arr }  -->
+                    <!-- {foreach from=$collection_arr item=item key=key name=collection_arr} -->
+                    <!-- {if $c_type eq soft }  -->
+                    <div class="collection-item col-sm {if $smarty.foreach.collection_arr.index % 4 == 0}first-child{/if}">
+                        <div class="collection-img zoom">
+                            <a href="{$item.url}" style="display:inline-block;width:224px;height:170px;overflow:hidden;">
+                                <img src="{if $item.img_url}{$item.img_url}{else}../images/app_01.png{/if}">
+                            </a>
+                            <!-- {if $item.is_on_sale eq 0 }  -->
+                            <div class="collection-backdrop">该产品下架啦!</div>
+                            <!-- {/if} -->
+                        </div>
+                        <div class="collection-info clearfix">
+                            <div class="collection-name col-sm name-tooltip" data-toggle="tooltip" data-original-title="{$item.name|escape:html}">
+                                <a href="{$item.url}">
+                                    <script>
+                                        util.cutEllipsis(true,".collection-item","{$item.name|escape:html}");
+                                    </script>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="op-btn clearfix">
+                            <!-- {if $item.type eq app }  -->
+                            <a href="{if $item.app_type == 2 || $item.on_sale == 0}javascript:void(0){else}{$item.app_url}{/if}" id="online-use" {if $item.host_id}onclick="console_app_host('{$item.host_id}')"{/if} class="col-sm { if $item.on_sale eq 0}disabled{/if}" target="_blank">
+                                <button class="btn-zondy { if $item.on_sale eq 0}disabled{/if}">在线使用</button>
+                            </a>
+                            <!-- {/if} -->
+                            <a id="collection" onclick="javascript:cancle_collection('{$item.id}','{$item.obj_id}','{$item.obj_type}',event);" class="collection">{$item.count}</a>
+                        </div>
+                    </div>
+                    <!-- {elseif $c_type eq app } -->
+                    <div class="collection-item col-sm {if $smarty.foreach.collection_arr.index % 4 == 0}first-child{/if}">
+                        <div class="collection-img">
+                            <div class='app-bl' style='position:absolute;top:-2px;left:-2px;width:228px;height:173px;background:#6389de;opacity: 0.8;text-align:center;'><img src='themes/appcloud/images/two-h.png' style='width:60px;height:60px;margin:20px auto 0;'>
+                                {if $item.app_type eq 2}
+                                <a href="javascript:console_app_host({$item.host_id})"><div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div></a>
+                                {elseif $item.app_type eq 4}
+                                <a href="javascript:console_app_host_openstack('{$item.app_url}')"><div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div></a>
+                                {else}
+                                {if $item.app_url }
+                                <a href="{$item.app_url}"><div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div></a>
+                                {else}
+                                <a href="javascript:;"><div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div></a>
+                                {/if}
+                                {/if}
+                            </div>
+                            <a href="{$item.url}">
+                                <img src="{if $item.img_url}{$item.img_url}{else}themes/appcloud/images/app_logo.png{/if}">
+                            </a>
+                            <!-- {if $item.is_on_sale eq 0 }  -->
+                            <div class="collection-backdrop">该产品下架啦!</div>
+                            <!-- {/if} -->
+                        </div>
+                        <div class="collection-info clearfix">
+                            <div class="collection-name col-sm name-tooltip" data-toggle="tooltip" data-original-title="{$item.name|escape:html}">
+                                <a href="{$item.url}">
+                                    <script>
+                                        util.cutEllipsis(true,".collection-item","{$item.name|escape:html}");
+                                    </script>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="op-btn clearfix">
+                            <a style="display: none;" href="{if $item.app_type == 2 || $item.on_sale == 0}javascript:void(0){else}{$item.app_url}{/if}" id="online-use" {if $item.host_id}onclick="console_app_host('{$item.host_id}')"{/if} class="col-sm { if $item.on_sale eq 0}disabled{/if}" target="_blank">
+                            <button class="btn-zondy { if $item.on_sale eq 0}disabled{/if}">在线使用</button>
+                            </a>
+                            <a id="collection"  onclick="javascript:cancle_collection('{$item.id}','{$item.obj_id}','{$item.obj_type}',event);" class="collection">{$item.count}</a>
+                        </div>
+                    </div>
+                    <!-- {else} -->
+                    <div class="resource-content clearfix">
+                        <div class="content-img col-sm">
+                            {if strtoupper($item.map_type) == 'MRMS_MAPX'}
+                            <img src="themes/appcloud/images/home/map_server.png" alt="map_server_logo"/>
+                            {elseif strtoupper($item.map_type) == 'VECTOR_OGC'}
+                            <img src="themes/appcloud/images/home/map_ogc.png" alt="map_ogc_logo"/>
+                            {elseif strtoupper($item.map_type) == 'TILE_OGC'}
+                             <img src="themes/appcloud/images/home/ogc.png" alt="ogc_logo"/>
+                            {elseif strtoupper($item.map_type) == 'MRMS_TDF'}
+                            <img src="themes/appcloud/images/home/tile.png" alt="tile_logo"/>
+                            {elseif strtoupper($item.map_type) == 'G3D'}
+                            <img src="themes/appcloud/images/home/g3d.png" alt="g3d_logo"/>
+                            {else}
+                            <img src="themes/appcloud/images/home_map_icon.png" alt="other_logo"/>
+                            {/if}
+                        </div>
+                        <div class="content-body col-sm">
+                            <div class="content-body-title"><a href="{$item.detail_info_address}">{$item.name}</a></div>
+                            <div class="content-body-substance">
+                                <div class="substance">
+                                    <!-- {if $item.wfs_base_address || $item.wmts_base_address || $item.wms_base_address }  -->
+                                    <div class="gis-inline-block" style="vertical-align:top">服务地址：</div>
+                                    <div class="gis-inline-block">
+                                        <!-- {if $item.wfs_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wfs_base_address}">{$item.wfs_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                        <!-- {if $item.wmts_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wmts_base_address}">{$item.wmts_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                        <!-- {if $item.wms_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wms_base_address}">{$item.wms_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                    </div>
+                                    <!-- {/if} -->
+                                </div>
+                                <div class="substance">
+                                    <span>服务类型：</span>
+                                    <span>{$item.map_type}</span>
+                                </div>
+                            </div>
+                            <div class="content-body-btn">
+                                <!-- {if $item.preview_address }  -->
+                                <a target="_blank" href="{$item.preview_address}" class="gis-inline-block p-btn">预览</a>
+                                <!-- {/if} -->
+                                <!-- {if $item.surface_preview_address }  -->
+                                <a target="_blank" href="{$item.surface_preview_address}" class="gis-inline-block p-btn">平面预览</a>                                
+                                <!-- {/if} -->
+                                <!-- {if $item.globe_preview_address }  -->
+                                <a target="_blank" href="{$item.globe_preview_address}" class="gis-inline-block p-btn">球面预览</a>                                
+                                <!-- {/if} -->
+                                <a id="collection" onclick="javascript:cancle_collection('{$item.id}','{$item.obj_id}','{$item.obj_type}',event);" class="collection">{$item.count}</a>
+                            </div>
+                        </div>
+                    </div>                     
+                    <!-- {/if} -->
+                    <!-- {/foreach} -->
+                    <!-- {else} -->
+                    <div class="tip-content">
+                        <div class="tip-content-text" style="left:160px;">
+                            <!-- {if $c_type eq map }  -->
+                            <div class="text-1">您还没有收藏地图服务～</div>
+                            <div class="text-2">去<a href="resource.php">资源中心</a>看看吧!</div>
+                            <!-- {/if} -->
+                            <!-- {if $c_type eq soft }  -->
+                            <div class="text-1">您还没有收藏软件～</div>
+                            <div class="text-2">去<a href="sfw.php">软件中心</a>看看吧!</div>
+                            <!-- {/if} -->
+                            <!-- {if $c_type eq app }  -->
+                            <div class="text-1">您还没有收藏应用～</div>
+                            <div class="text-2">去<a href="app.php">在线应用</a>看看吧!</div>
+                            <!-- {/if} -->
+                        </div>
+                        <img src="themes/appcloud/images/no_product_img.png">
+                    </div>
+                    <!-- {/if} -->
+                </div>
+            </div>
+            <div id="pageId">
+            </div>
+        </div>
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript">
+        $(function(){
+            /* 分页 begin */
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        return "{$p_url}p="+n;
+                    }
+                })            
+            }
+            /* 分页 end */
+        })
+
+        $(function(){
+            $(window).scroll(function(){
+                if($(document).scrollTop()>172){
+                // console.log("111");
+                $("#tabbox").addClass("changeposition")
+                }else{
+                $("#tabbox").removeClass("changeposition")
+                }
+            })
+        })
+    </script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+</html>

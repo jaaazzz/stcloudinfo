@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>手机地图_{$shop_name}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="css/bill.css" rel="stylesheet" type="text/css" />
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/order_list.css" rel="stylesheet" type="text/css" />
+        <!--[if IE 7]>
+        <link href="ie7.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js'} -->
+        <style type="text/css">
+            
+        </style>
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="mobile-title" style="width:100%;height:120px;background:url(themes/appcloud/mobilemap/images/banner-mobile.png)50% 50% no-repeat;box-sizing:border-box;padding-top:30px;background-color:#f3f3f3;">
+            <div style="font-size:36px;color:#4bb0e5;height:36px;margin:0 auto;width:100%;text-align:center;">手机地图</div>
+            <div style="width:100%;text-align:center;height:20px;line-hright:20px;margin-top:20px;color:#999;font-size:14px;">1324565789</div>
+        </div>
+        <div style="width:100%;">
+            <div style="width:1170px;height:0px;border:1px solid #999;margin:40px auto;"></div>
+            <div style="font-size:30px;color:#333;padding:4px 16px;margin:0px auto;width:120px;height:40px;line-height:40px;text-align:center;margin-top:-68px;background:#fff;">功能介绍</div>
+        </div>
+        <div style="width:1170px;margin:40px auto;">
+            <ul style="width:100%;">
+                <li style="width:500px;float:left;margin:16px 40px;height:280px;box-sizing:border-box;padding-top:200px;border:1px solid #dcdcdc;"><div style="width:100%;text-align:center;font-size:18px;color:#333;">查找兴趣点</div><div style="width:100%;text-align:center;font-size:14px;color:#999;margin-top:16px;">通过阿里云机器学习平台图算法解决金融贷款欺诈问题</div></li>
+                <li style="width:500px;float:left;margin:16px 40px;height:280px;box-sizing:border-box;padding-top:200px;border:1px solid #dcdcdc;"><div style="width:100%;text-align:center;font-size:18px;color:#333;">离线地图</div><div style="width:100%;text-align:center;font-size:14px;color:#999;margin-top:16px;">通过阿里云机器学习平台图算法解决金融贷款欺诈问题</div></li>
+                <li style="width:500px;float:left;margin:16px 40px;height:280px;box-sizing:border-box;padding-top:200px;border:1px solid #dcdcdc;"><div style="width:100%;text-align:center;font-size:18px;color:#333;">三维展示</div><div style="width:100%;text-align:center;font-size:14px;color:#999;margin-top:16px;">通过阿里云机器学习平台图算法解决金融贷款欺诈问题</div></li>
+                <li style="width:500px;float:left;margin:16px 40px;height:280px;box-sizing:border-box;padding-top:200px;border:1px solid #dcdcdc;"><div style="width:100%;text-align:center;font-size:18px;color:#333;">定时定位</div><div style="width:100%;text-align:center;font-size:14px;color:#999;margin-top:16px;">通过阿里云机器学习平台图算法解决金融贷款欺诈问题</div></li>
+            </ul>
+        </div>
+        <div style="width:100%;height:2px;clear:both;"></div>
+        <div style="width:100%;background:#ecf6fd;padding-top:60px;padding-bottom:16px;">
+            <div style="width:1170px;height:0px;border:1px solid #999;margin:0px auto;"></div>
+            <div style="font-size:30px;color:#333;padding:4px 16px;margin:0px auto;width:120px;height:40px;line-height:40px;text-align:center;margin-top:-28px;background:#ecf6fd;">软件下载</div>
+            <div style="width:1170px;margin:0 auto;">
+                <div style="width:50%;float:left;padding-top:40px;">
+                    <div style="height:90px;width:220px;padding-left:97px;margin:0 auto;background:url(themes/appcloud/mobilemap/images/安卓.png)0 0 no-repeat;padding-top:8px;">
+                        <div style="font-size:18px;color:#333;">Andriod客户端V1.82.90版</div>
+                        <div style="font-size:18px;color:#fff;width:128px;height:36px;text-align:center;line-height:36px;background:#4bb0e5;margin-top:16px;cursor:pointer;">下载</div>
+                    </div>
+                </div>
+                <div style="width:50%;float:left;padding-top:40px;">
+                    <div style="height:90px;width:220px;padding-left:97px;margin:0 auto;background:url(themes/appcloud/mobilemap/images/ios.png)0 0 no-repeat;padding-top:8px;">
+                        <div style="font-size:18px;color:#333;">ios客户端V1.82.90版</div>
+                        <div style="font-size:18px;color:#fff;width:128px;height:36px;text-align:center;line-height:36px;background:#4bb0e5;margin-top:16px;cursor:pointer;">下载</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="width:100%;height:2px;clear:both;"></div>
+        </div>
+
+
+        <!-- <div style="width:100%;height:136px;clear:both;"></div> -->
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        
+    </body>
+        <script>
+            
+        </script>
+</html>

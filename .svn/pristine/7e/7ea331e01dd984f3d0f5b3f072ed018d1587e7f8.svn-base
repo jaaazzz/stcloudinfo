@@ -1,0 +1,515 @@
+function initOnlineMap(){
+    ShowMap.initTree();
+    ShowMap.initLayer();
+}
+window.ShowMap = window.ShowMap || {};
+ShowMap.initTree=function() {
+    $('#Tree').tree({
+        url: 'themes/appcloud/onlinesrc/tree.json',
+        onLoadSuccess: function (node, param) {
+            $(this).find("span.tree-checkbox").unbind().click(function () {
+                $("#Tree").tree("select",$(this).parent());
+                return false;
+            });
+            var n = $('#Tree').tree("getChildren");
+            for(var i=0;i<n.length;i++){
+                if(n[i].type==1&&n[i].lx=="1"){
+                    data.SL=n[i].layer;
+                    data.defaultMapSL=n[i].layer;
+                    ShowMap.getMapInfo(data.defaultMapSL);
+                    break;
+                }
+            }
+            for(var i=0;i<n.length;i++){
+                if(n[i].type==1&&n[i].lx=="2"&&n[i].maptype=="1"){
+                    data.YX=n[i].layer;
+                    data.defaultMapYX=n[i].layer;
+                }else if(n[i].type==1&&n[i].lx=="3"&&n[i].maptype=="1"){
+                    data.globe3d=n[i].layer;
+                }else if(n[i].type==1&&n[i].lx=="4"&&n[i].maptype=="1"){
+                    data.defaultMapRelief=n[i].layer;
+                }
+            }
+            if(!data.rollMapSL || data.rollMapSL==""){
+                data.rollMapSL=data.defaultMapSL;
+            }
+            if(!data.rollMapYX || data.rollMapYX==""){
+                data.rollMapYX=data.defaultMapYX;
+            }       
+        },
+        onSelect: function (node) {
+            var n = $('#Tree').tree("getRoot", node.target);
+            if (node.type == 1) {//选择的是最子节点数据层
+                $('#Tree').tree("uncheck", n.target);
+                if (node.checked == true) {
+                    ShowMap.changeMapNew(node);
+                    $('#Tree').tree("uncheck", node.target);
+                    //ShowMap.changeMap(null,node.type);
+                    
+                } else {
+                    ShowMap.changeMapNew(node);
+                    $('#Tree').tree("check", node.target);
+                    //ShowMap.changeMap(node.layer,node.type);
+                    
+                }
+            } else {
+                var childnodes = $('#Tree').tree("getChildren", node.target);
+                if (childnodes.length == 1) {
+                    $('#Tree').tree("uncheck", n.target);
+                    if (node.checked == true) {
+                        ShowMap.changeMapNew(childnodes[0]);
+                        $('#Tree').tree("uncheck", node.target);
+                        //ShowMap.changeMap(null,node.type);
+                        
+                    } else {
+                        ShowMap.changeMapNew(childnodes[0]);
+                        $('#Tree').tree("check", node.target);
+                        //ShowMap.changeMap(childnodes[0].layer,node.type);
+                        
+                    }
+                } else {
+                    var index=0;
+                    var leafNode;
+                    for(var i in childnodes){
+                        var f=$('#Tree').tree("isLeaf", childnodes[i].target);
+                        if(f==true){
+                            index++;
+                            leafNode=childnodes[i];
+                        }
+                    }
+                    if (node.checked == false&&index>1) {
+                        alert("只允许选择单个图层");
+                    }else if(node.checked == true){
+                        ShowMap.changeMapNew(leafNode);
+                        $('#Tree').tree("uncheck", node.target);
+                    }else{
+                        ShowMap.changeMapNew(leafNode);
+                        $('#Tree').tree("check", node.target);
+                    }
+                }
+            }
+            // if (node.checked == true) {
+            //         $('#Tree').tree("uncheck", node.target);
+            //         ShowMap.changeMapNew(node);
+            //     } else {
+            //         $('#Tree').tree("check", node.target);
+            //         ShowMap.changeMapNew(node);
+            //    }
+
+            // var pNode=$('#Tree').tree("getParent", node.target);
+            // var f=$('#Tree').tree("isLeaf", node.target);
+            // var checkedNode = $('#Tree').tree("getChecked");
+            // if(f==true){//叶子节点
+            //      var tmp=false;
+            //      var pNode=$('#Tree').tree("getParent", node.target);
+            //      var pid=pNode.id;
+            //      for(var k=0;k<checkedNode.length;k++){
+            //         var pp=$('#Tree').tree("isLeaf", checkedNode[k].target);
+            //         if(pp==true){
+            //             var parentNode=$('#Tree').tree("getParent", checkedNode[k].target);
+            //             var id=parentNode.id;
+            //             if(pid!=id){
+            //                 tmp=true;
+            //             }
+            //         }
+            //      }
+            //      if(tmp==false){
+            //         if (node.checked == true) {
+            //             $('#Tree').tree("uncheck", node.target);
+            //         }else{
+            //             $('#Tree').tree("check", node.target);
+            //         }
+            //         ShowMap.changeMapNew(node);
+            //      }else{
+            //         for(var m=0;m<checkedNode.length;m++){
+            //             ShowMap.changeMapNew(checkedNode[m]);
+            //             $('#Tree').tree("uncheck", checkedNode[m].target);
+            //         }
+            //         if (node.checked == true) {
+            //             $('#Tree').tree("uncheck", node.target);
+            //         }else{
+            //             $('#Tree').tree("check", node.target);
+            //         }
+            //         ShowMap.changeMapNew(node);
+            //      }
+            // }else{//非叶子节点
+            //     var flag=true;
+            //     var n = $('#Tree').tree("getChildren", node.target);
+            //     for(var i=0;i<n.length;i++){
+            //         var z=$('#Tree').tree("isLeaf", n[i].target);
+            //         if(z==false){
+            //             flag=false;
+            //         }
+            //     }
+            //     if(flag==true){//是最底级文件夹
+            //         if (node.checked == true) {
+            //             $('#Tree').tree("uncheck", node.target);
+            //             for(var i=0;i<n.length;i++){
+            //                 ShowMap.changeMapNew(n[i]);
+            //             }
+            //         }else{
+            //             for(var m=0;m<checkedNode.length;m++){
+            //                 ShowMap.changeMapNew(checkedNode[m]);
+            //                 $('#Tree').tree("uncheck", checkedNode[m].target);
+            //             }
+            //             $('#Tree').tree("check", node.target);
+            //             for(var i=0;i<n.length;i++){
+            //                 ShowMap.changeMapNew(n[i]);
+            //             }
+            //         }
+            //     }
+            // }
+        },
+        onCheck: function (node, checked) {
+
+        }
+    });
+}
+
+ShowMap.getMapInfo=function(name){
+    var time=new Date().getTime().toString();
+    var info=new Zondy.Service.GetMapInfoService({mapName:name,ip:ip,port:port});
+    info.GetMapInfo(function(data){
+        if(data.xMin=="undefined"){
+            window.setInterval("ShowMap.getMapInfo('"+name+"')",10);
+            return;
+        }
+        dataInfo=data;
+        ShowMap.initMap(name,data);
+    });
+}
+var TileLayer = null;
+var dataInfo;
+//地图初始化函数
+ShowMap.initMap = function(TileName,data) {
+    var xmin=data.xMin;
+    var xmax=data.xMax;
+    var ymin=data.yMin;
+    var ymax=data.yMax;
+    var startLevel=data.startLevel;
+    var endLevel=data.endLevel;
+    var xCenter=(parseFloat(xmin)+parseFloat(xmax))/2;
+    var yCenter=(parseFloat(ymin)+parseFloat(ymax))/2;
+    zoom=parseInt(endLevel)-3;
+    TileLayer = new Zondy.Map.TileLayer(TileName, TileName, {
+        ip: ip,
+        port: port
+    });
+    map = new ol.Map({
+        //目标DIV
+        target: 'mapCon',
+        //将图层添加到地图容器
+        layers: [TileLayer],
+        view: new ol.View({
+            projection: 'EPSG:4326',
+            center: [xCenter,yCenter],
+            //最大显示级数
+            maxZoom: endLevel,
+            //最小显示级数
+            minZoom: startLevel,
+            //当前显示级数
+            zoom: zoom
+        })
+    });
+    //实例化ZoomSlider控件并加载到地图容器中
+    var zoomslider = new ol.control.ZoomSlider(); 
+    map.addControl(zoomslider);
+    var container = document.getElementById('popup');
+    // alert(container);
+    popup = new ol.Overlay(
+        /** @type {olx.OverlayOptions} */
+            ({
+                //要转换成overlay的HTML元素
+                element: container,
+                //当前窗口可见
+                autoPan: true,
+                //Popup放置的位置
+                positioning: 'bottom-center',
+                offset: [0, 10],
+                //是否应该停止事件传播到地图窗口
+                stopEvent: true,
+                autoPanAnimation: {
+                //当Popup超出地图边界时，为了Popup全部可见，地图移动的速度
+                duration: 250
+                }
+            })
+        );
+    map.addOverlay(popup);
+    view= map.getView();
+    zoom= view.getZoom();
+    center= view.getCenter();
+    rotation= view.getRotation();
+    $('.show').find('span').addClass('choose');
+    //typeSearch();
+}
+ShowMap.changeMapNew = function(node){
+    var layers=map.getLayerGroup().getLayers().getArray();
+    for(var i=0;i<layers.length;i++){
+         map.removeLayer(layers[i]);
+    }
+    if(node.checked==false){
+        var mapService = node.layer;
+        var mapName=node.text;
+        //map.removeLayer(TileLayer);
+        var xCenter=node.centerx;
+        var yCenter=node.centery;
+        var zoom = node.zoom;
+        if(node.lx==3){
+            window.location.href="themes/appcloud/onlinesrc/globe.html?ip="+ip+"&port="+port+"&globe="+data.globe3d;
+        }else{
+            var view = map.getView();
+            if(mapService!=null&&mapService!=""){
+                 var serviceLayer;
+                if(node.maptype==1){
+                    serviceLayer = new Zondy.Map.TileLayer(mapName, mapService, {
+                        ip: ip,
+                        port: port
+                    });
+                }else if(node.maptype==2){
+                    serviceLayer = new Zondy.Map.Doc(mapName, mapService, {
+                        ip: ip,
+                        port: port,
+                        ratio:1
+                    });
+                }else if(node.maptype==3){
+                    var url=node.url;
+                    //url = 'http://192.168.10.67:6080/arcgis/rest/services/world0428/MapServer';
+                    serviceLayer = new ol.layer.Tile({
+                          source: new ol.source.TileArcGISRest({
+                             url: url,
+                             wrapX:false
+                          })
+                      });
+                    serviceLayer.name=mapService;
+                    // TileLayer.name=mapService;
+                    // var arcGISSource = new ol.source.TileArcGISRest({
+                    // //ArcGIS Rest服务url,url中包括MapServer或ImageServer
+                    // url: 'http://192.168.10.67:6080/arcgis/rest/services/world0428/MapServer',
+                    // wrapX:false
+                    // });
+                    // var serviceLayer = new ol.layer.Tile({
+                    // source: arcGISSource
+                    // });
+                }else if(node.maptype==4){
+                    var url=node.url;
+                    //url='https://ahocevar.com/geoserver/wms';
+                    var wmslayer=node.wmslayer;
+                    //wmslayer=
+                    var wmsSource = new ol.source.TileWMS({
+                        url: url,
+                        params: { 'LAYERS': 'ne:ne'}
+                        //serverType: 'geoserver',
+                        //crossOrigin: 'anonymous'
+                    });
+                    serviceLayer = new ol.layer.Tile({
+                        source: wmsSource
+                    });
+                }
+
+                var flag=false;
+                var layers=map.getLayerGroup().getLayers().getArray();
+                for(var i=0;i<layers.length;i++){
+                    if(layers[i].name==mapService){
+                        flag=true;
+                    }
+                }
+                if(flag==false){
+                    map.addLayer(serviceLayer);
+                }
+                if(xCenter==0||yCenter==0||xCenter==""||yCenter==""){
+                    if(node.maptype==1||node.maptype==2){
+                        var info=new Zondy.Service.GetMapInfoService({mapName:mapService,ip:ip,port:port});
+                        info.GetMapInfo(function(data){
+                                var xmin=data.xMin;
+                                var xmax=data.xMax;
+                                var ymin=data.yMin;
+                                var ymax=data.yMax;
+                                var startLevel=data.startLevel;
+                                var endLevel=data.endLevel;
+                                if(xCenter==0){
+                                    xCenter=(parseFloat(xmin)+parseFloat(xmax))/2;
+                                }
+                                if(yCenter==0){
+                                    yCenter=(parseFloat(ymin)+parseFloat(ymax))/2;
+                                }
+                                if(zoom==0||zoom==""){
+                                    zoom=endLevel-5;
+                                }
+                                if(node.maptype==1){
+                                    view.setZoom(zoom);
+                                }else{
+                                    var size=map.getSize();
+                                    //view.fit([xmin,ymin,xmax,ymax],size);
+                                    var xRes = (xmax - xmin)/size[0];
+                                    var yRes = (ymax - ymin)/size[1];
+                                    if(xRes>0 && yRes>0){
+                                        var maxRes = xRes > yRes ? xRes : yRes;
+                                        view = new ol.View({
+                                            extent:[xmin,ymin,xmax,ymax],
+                                            maxResolution:maxRes
+                                        });
+                                        map.setView(view);
+                                    }
+                                    view.setZoom(1);
+                                }
+                                center=[xCenter,yCenter];
+                                view.setCenter(center);
+                        });
+                    }
+                }else{
+                    center=[xCenter,yCenter];
+                    view.setCenter(center);
+                    view.setZoom(zoom);
+                } 
+            }
+        }
+    }else{
+        var layers=map.getLayerGroup().getLayers().getArray();
+        for(var i=0;i<layers.length;i++){
+            if(layers[i].name==node.layer){
+                map.removeLayer(layers[i]);
+                break;
+            }
+        }
+    }
+}
+
+ShowMap.changeMap = function(mapName,type){
+    if(type==3){
+        window.location.href="themes/appcloud/onlinesrc/globe.html?ip="+ip+"&port="+port+"&globe="+data.globe3d;
+    }else{
+        if(mapName!=null&&mapName!=""){
+            var view = map.getView();
+            var center = view.getCenter();
+            var centerXY=center.toString().split(",");
+            var x=centerXY[0];var y=centerXY[1];
+            var zoom = view.getZoom();
+            var layers=map.getLayerGroup().getLayers().getArray();
+            for(var i=0;i<layers.length;i++){
+                if(layers[i].tip!="marker"){
+                    map.removeLayer(layers[i]);
+                }
+                i=0;
+            }
+            //TileLayer=null;
+            TileLayer = new Zondy.Map.TileLayer(mapName, mapName, {
+                ip: ip,
+                port: port
+            });
+            map.addLayer(TileLayer);
+            view = map.getView();
+            view.setCenter(center);
+            view.setZoom(zoom);
+            // var info=new Zondy.Service.GetMapInfoService({mapName:mapName,ip:ip,port:port});
+            // info.GetMapInfo(function(data){
+            //     var xmin=data.xMin;
+            //     var xmax=data.xMax;
+            //     var ymin=data.yMin;
+            //     var ymax=data.yMax;
+            //     var startLevel=data.startLevel;
+            //     var endLevel=data.endLevel;
+            //     var xCenter=(parseFloat(xmin)+parseFloat(xmax))/2;
+            //     var yCenter=(parseFloat(ymin)+parseFloat(ymax))/2;
+            //     if((x>xmax||x<xmin)&&(y>ymax||y<ymin)){
+            //         center=[xCenter,yCenter];
+            //         view.setCenter(center);
+            //     }else{
+            //         view.setCenter(center);
+            //     }
+            //     view.setZoom(zoom);
+            // });
+        }
+    }
+
+     var node=$('#Tree').tree("getChildren");
+     for(var i=0;i<node.length;i++){
+         if(node[i].layer==mapName){
+            for(var j in node){
+                $('#Tree').tree("uncheck",node[j].target);
+            }
+             $('#Tree').tree("check",node[i].target);
+    //         $("#layerDiv div").attr("select",false);
+    //         $("#layerDiv div").removeClass("layerSelect");
+    //         $("#layerDiv .layerTitle").removeClass("layerTitleSelect");
+    //         if(node[i].lx=="1"){
+    //             $("#layerDiv div").eq(3).attr("select",true);
+    //             $("#layerDiv .layerTitle").eq(3).addClass("layerTitleSelect");
+    //             $("#layerDiv div").eq(3).addClass("layerSelect");
+    //             $(this).css({'float':'right'}).siblings().css({'float':'left'});
+    //         }else if(node[i].lx=="2"){
+    //             $("#layerDiv div").eq(2).attr("select",true);
+    //             $("#layerDiv .layerTitle").eq(2).addClass("layerTitleSelect");
+    //             $("#layerDiv div").eq(2).addClass("layerSelect");
+    //             $(this).css({'float':'right'}).siblings().css({'float':'left'});
+    //         }else if(node[i].lx=="4"){
+    //             $("#layerDiv div").eq(1).attr("select",true);
+    //             $("#layerDiv .layerTitle").eq(1).addClass("layerTitleSelect");
+    //             $("#layerDiv div").eq(1).addClass("layerSelect");
+    //             $(this).css({'float':'right'}).siblings().css({'float':'left'});
+    //         }
+             break;
+         }else{
+             $('#Tree').tree("uncheck",node[i].target);
+         }
+     }
+}
+ShowMap.initLayer = function(){
+    $("#layerDiv div").eq(3).attr("select",true);
+    $("#layerDiv div").eq(3).addClass("layerSelect");
+    $("#layerDiv div").eq(3).find(".layerTitle").addClass("layerTitleSelect");
+    $("#layerDiv div").hover(function(){
+        $(this).addClass("layerHover");
+        $(this).find(".layerTitle").addClass("layerTitleHover");
+        $("#layerDiv div").css("display","block"); 
+    },function(){
+        $(this).removeClass("layerHover");
+        $(this).find(".layerTitle").removeClass("layerTitleHover");
+        $('.layerSelect').siblings().css("display","none");
+    })
+    $("#layerDiv div").click(function(){
+        $("#layerDiv div").attr("select",false);
+        $("#layerDiv div").removeClass("layerSelect");
+        $("#layerDiv .layerTitle").removeClass("layerTitleSelect");
+        $(this).css({'float':'right'}).siblings().css({'float':'left'});
+        ShowMap.selectLayer($(this));
+
+    });
+}
+ShowMap.selectLayer = function(selectDiv){
+//        var layer = map.getLayers().getArray();
+//        alert(layer[0].name);
+    // selectDiv.attr("select",true);
+    // selectDiv.addClass("layerSelect");
+    // selectDiv.find(".layerTitle").addClass("layerTitleSelect");
+    var layerIndex = selectDiv.attr("layerIndex");
+    if(layerIndex==1){
+        $("#layerDiv div").eq(3).attr("select",true);
+        $("#layerDiv .layerTitle").eq(3).addClass("layerTitleSelect");
+        $("#layerDiv div").eq(3).addClass("layerSelect");
+        ShowMap.changeMap(data.defaultMapSL,1);
+    }else if(layerIndex==2){
+        $("#layerDiv div").eq(2).attr("select",true);
+        $("#layerDiv .layerTitle").eq(2).addClass("layerTitleSelect");
+        $("#layerDiv div").eq(2).addClass("layerSelect");
+        ShowMap.changeMap(data.defaultMapYX,2);
+    }else if(layerIndex==3){
+        ShowMap.changeMap("球状三维",layerIndex);
+    }else if(layerIndex==4){
+        $("#layerDiv div").eq(1).attr("select",true);
+        $("#layerDiv .layerTitle").eq(1).addClass("layerTitleSelect");
+        $("#layerDiv div").eq(1).addClass("layerSelect");
+        ShowMap.changeMap(data.defaultMapRelief,4);
+    }
+}
+ShowMap.show3d=function(){
+    $("#mapCon").hide();
+    $("#layerDiv").hide();
+    $("#mapControl").show();
+    $("#mapselect").show();
+}
+ShowMap.show2d=function(){
+    $("#mapCon").show();
+    $("#layerDiv").show();
+    $("#mapControl").hide();
+    $("#mapselect").hide();
+}

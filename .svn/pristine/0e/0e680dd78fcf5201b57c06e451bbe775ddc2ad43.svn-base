@@ -1,0 +1,38 @@
+<ul class="nav nav-pills account pull-right">
+<!--<li class="help-center"><a href="helper.php#/2">帮助中心</a></li>-->
+{if $user_info}
+<li class="user-action" style="border:none;">
+	<span class="user-action-name" style="padding-right: 18px;"><span>{$user_info.username}</span><i class="navi-arrow"></i></span>
+	<ul class="dropdown" style="min-width:71px;">
+	<li class="drop-loginout"><a href="javascript:void(0);" onclick="GucLogout()">注销</a></li>
+	</ul>
+</li>
+{else}
+<li style='border:none;'><a style="background:#22252a;width:44px;" class="user-reg" href="javascript:void(0);" onclick="userRegister();">注册</a></li>
+<li style='border:none;'><a style="background:#22252a;width:44px;" class="user-login-name" href="javascript:void(0);" onclick="GucLogin()">登录</a></li>
+{/if}
+<!--<li class="help-center"><a href="{$cloud_disk_url}" target="_blank">数据云盘</a></li>-->
+<!-- <div class="backgroundNull" style="display:none;width:100%;height:100%;background:rgba(0,0,0,0.5);position:fixed;left:0;top:0;z-index:999999;">
+	<div class="registerMessage">'
+		<a href="" title="关闭" class="head-close">×</a>
+		<form>
+			<input class="usernameRegister" type="text" placeholder="请输入账号"><br>
+			<input class="userEmaiRegisterRegisterl" type="text" placeholder="请输入邮箱"><br>
+			<input class="passwordRegister1" type="password" placeholder="请输入密码"><br>
+			<input class="passwprdRegister2" type="password" placeholder="请输入密码"><br>
+			<input class="submitRegister" type="submit" value="提交"><br>
+		</form>
+	</div>
+</div> -->
+</ul>
+
+
+
+
+<script type="text/javascript">
+	var height = $(document).height() + 'px';
+	// console.log(height);
+	function userRegister(){
+	    $('.backgroundNull').css({'display':'block','width':'100%','height':height});
+	}
+</script>

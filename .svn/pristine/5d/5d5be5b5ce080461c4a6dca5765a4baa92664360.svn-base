@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "layer": "武汉矢量",
+        "text": "武汉矢量",
+        "zoom": 9,
+        "centerx": 0,
+        "centery": 0,
+        "projection":"degree"
+    },
+    {
+        "id": "2",
+        "layer": "武汉影像",
+        "text": "武汉影像",
+        "zoom": 9,
+        "centerx": 111.74,
+        "centery": 26.01,
+        "projection":"degree"
+    }
+]

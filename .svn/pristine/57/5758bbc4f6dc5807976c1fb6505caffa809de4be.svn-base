@@ -1,0 +1,32 @@
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+    $(function(){
+//        var h=$(window).height();
+//        var m=(h-$('.header').height()-100-30-$('.module_box').height()*6)/5;
+//        $(".module_box").css('margin',m+'px 30px');
+        var left='{$left}';
+        $(".module_box").each(function () {
+            if($(this).attr('data-left')==left){
+                $(this).addClass('active');
+            }
+        })
+    })
+</script>
+<div class="left">
+    <a href="sys_overview.php"><div class="module_box" data-left="总览">
+        <img src="images/总览.png" class="module_img"/>
+        <div class="module_title">
+            总览
+        </div>
+    </div></a>
+    {foreach from=$role_list item=role}
+    <a href="{$role.url}"><div class="module_box"  data-left="{$role.value}">
+        <img src="images/{$role.img}" class="module_img"/>
+        <div class="module_title">
+            {$role.value}
+        </div>
+    </div></a>
+    {/foreach}
+</div>

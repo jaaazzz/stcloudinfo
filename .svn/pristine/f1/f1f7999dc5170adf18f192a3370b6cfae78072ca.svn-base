@@ -1,0 +1,258 @@
+function initOnlineMap(){
+    ShowMap.initTree();
+    ShowMap.initLayer();
+}
+window.ShowMap = window.ShowMap || {};
+ShowMap.initTree=function() {
+    $('#Tree').tree({
+        url: 'themes/appcloud/onlinesrc/tree.json',
+        onLoadSuccess: function (node, param) {
+            $(this).find("span.tree-checkbox").unbind().click(function () {
+                $("#Tree").tree("select",$(this).parent());
+                return false;
+            });
+            var n = $('#Tree').tree("getChildren");
+            for(var i=0;i<n.length;i++){
+                if(n[i].type==1&&n[i].lx=="1"){
+                    defaultMapSL=n[i].layer;
+                    ShowMap.getMapInfo(defaultMapSL);
+                    break;
+                }
+            }
+            for(var i=0;i<n.length;i++){
+                if(n[i].type==1&&n[i].lx=="2"){
+                    defaultMapYX=n[i].layer;
+                }else if(n[i].type==1&&n[i].lx=="3"){
+                    globe3d=n[i].layer;
+                }
+            }
+            if(rollMapSL==""){
+                rollMapSL=defaultMapSL;
+            }
+            if(rollMapYX==""){
+                rollMapYX=defaultMapYX;
+            }
+            if(multileft==""){
+                multileft=defaultMapSL;
+            }
+            if(multiright==""){
+                multiright=defaultMapYX;
+            }
+            
+        },
+        onSelect: function (node) {
+            var n = $('#Tree').tree("getRoot", node.target);
+            $('#Tree').tree("uncheck", n.target);
+            if (node.type == 1) {//选择的是最子节点数据层
+                if (node.checked == true) {
+                    $('#Tree').tree("uncheck", node.target);
+                    ShowMap.changeMap(null,node.type);
+                } else {
+                    $('#Tree').tree("check", node.target);
+                    ShowMap.changeMap(node.layer,node.type);
+                }
+            } else {
+                var childnodes = $('#Tree').tree("getChildren", node.target);
+                if (childnodes.length == 1) {
+                    if (node.checked == true) {
+                        $('#Tree').tree("uncheck", node.target);
+                        ShowMap.changeMap(null,node.type);
+                    } else {
+                        $('#Tree').tree("check", node.target);
+                        ShowMap.changeMap(childnodes[0].layer,node.type);
+                    }
+                } else {
+                    if (node.checked == false) {
+                        alert("只允许选择单个图层");
+                    }
+                }
+            }
+        },
+        onCheck: function (node, checked) {
+
+        }
+    });
+}
+ShowMap.getMapInfo=function(name){
+    var time=new Date().getTime().toString();
+    var info=new Zondy.Service.GetMapInfoService({mapName:name,ip:ip,port:port});
+    info.GetMapInfo(function(data){
+        if(data.xMin=="undefined"){
+            window.setInterval("ShowMap.getMapInfo('"+name+"')",10);
+            return;
+        }
+        dataInfo=data;
+        ShowMap.initMap(name,data);
+    });
+}
+var TileLayer = null;
+var dataInfo;
+//地图初始化函数
+ShowMap.initMap = function(TileName,data) {
+    var xmin=data.xMin;
+    var xmax=data.xMax;
+    var ymin=data.yMin;
+    var ymax=data.yMax;
+    var startLevel=data.startLevel;
+    var endLevel=data.endLevel;
+    var xCenter=(parseFloat(xmin)+parseFloat(xmax))/2;
+    var yCenter=(parseFloat(ymin)+parseFloat(ymax))/2;
+    var zoom=parseInt(endLevel)-3;
+    TileLayer = new Zondy.Map.TileLayer(TileName, TileName, {
+        ip: ip,
+        port: port
+    });
+    map = new ol.Map({
+        //目标DIV
+        target: 'mapCon',
+        //将图层添加到地图容器
+        layers: [TileLayer],
+        view: new ol.View({
+            projection: 'EPSG:4326',
+            center: [xCenter,yCenter],
+            //最大显示级数
+            maxZoom: endLevel,
+            //最小显示级数
+            minZoom: startLevel,
+            //当前显示级数
+            zoom: zoom
+        })
+    });
+    //实例化ZoomSlider控件并加载到地图容器中
+    var zoomslider = new ol.control.ZoomSlider(); 
+    map.addControl(zoomslider);
+    //typeSearch();
+}
+ShowMap.changeMap = function(mapName,type){
+    var view = map.getView();
+    var center = view.getCenter();
+    var centerXY=center.toString().split(",");
+    var x=centerXY[0];var y=centerXY[1];
+    var zoom = view.getZoom();
+    map.removeLayer(TileLayer);
+    TileLayer=null;
+    // var layers = map.getLayerGroup().getLayers();
+    // var layersArray = layers.getArray();
+    // var length=layersArray.length;
+    // for(var i=0;i<length;i++){
+    //     if(layersArray[0] instanceof Zondy.Map.TileLayer){
+    //         map.removeLayer(layersArray[0]);
+    //     }
+    // }
+    if(type==3){
+        window.location.href="themes/appcloud/onlinesrc/globe.html?ip="+ip+"&port="+port+"&globe="+globe3d;
+    }else{
+        if(mapName==null){
+            return;
+        }else{
+            TileLayer = new Zondy.Map.TileLayer(mapName, mapName, {
+                ip: ip,
+                port: port
+            });
+            map.addLayer(TileLayer);
+            view = map.getView();
+            // view.setCenter(center);
+            // view.setZoom(zoom);
+            var info=new Zondy.Service.GetMapInfoService({mapName:mapName,ip:ip,port:port});
+            info.GetMapInfo(function(data){
+                var xmin=data.xMin;
+                var xmax=data.xMax;
+                var ymin=data.yMin;
+                var ymax=data.yMax;
+                var startLevel=data.startLevel;
+                var endLevel=data.endLevel;
+                var xCenter=(parseFloat(xmin)+parseFloat(xmax))/2;
+                var yCenter=(parseFloat(ymin)+parseFloat(ymax))/2;
+                if((x>xmax||x<xmin)&&(y>ymax||y<ymin)){
+                    center=[xCenter,yCenter];
+                    view.setCenter(center);
+                }else{
+                    view.setCenter(center);
+                }
+                view.setZoom(zoom);
+            });
+        }
+        // $("#mapCon").html("");
+        //  this.getMapInfo(mapName);
+       //  ShowMap.show2d();
+    }
+    var node=$('#Tree').tree("getChildren");
+    for(var i=0;i<node.length;i++){
+        if(node[i].layer==mapName){
+            $('#Tree').tree("check",node[i].target);
+            $("#layerDiv div").attr("select",false);
+            $("#layerDiv div").removeClass("layerSelect");
+            $("#layerDiv .layerTitle").removeClass("layerTitleSelect");
+            if(node[i].lx=="1"){
+                $("#layerDiv div").eq(0).attr("select",true);
+                $("#layerDiv .layerTitle").eq(0).addClass("layerTitleSelect");
+                $("#layerDiv div").eq(0).addClass("layerSelect");
+            }else if(node[i].lx=="2"){
+                $("#layerDiv div").eq(1).attr("select",true);
+                $("#layerDiv .layerTitle").eq(1).addClass("layerTitleSelect");
+                $("#layerDiv div").eq(1).addClass("layerSelect");
+            }else if(node[i].lx=="3"){
+                // $("#layerDiv div").eq(2).attr("select",true);
+                // $("#layerDiv .layerTitle").eq(2).addClass("layerTitleSelect");
+                // $("#layerDiv div").eq(2).addClass("layerSelect");
+            }
+            break;
+        }else{
+            $('#Tree').tree("uncheck",node[i].target);
+        }
+    }
+}
+ShowMap.initLayer = function(){
+    $("#layerDiv div").eq(0).attr("select",true);
+    $("#layerDiv div").eq(0).addClass("layerSelect");
+    $("#layerDiv div").eq(0).find(".layerTitle").addClass("layerTitleSelect");
+    $("#layerDiv div").hover(function(){
+        $(this).addClass("layerHover");
+        $(this).find(".layerTitle").addClass("layerTitleHover");
+        $("#layerDiv div").css("display","block");
+    },function(){
+        $(this).removeClass("layerHover");
+        $(this).find(".layerTitle").removeClass("layerTitleHover");
+    })
+    $("#layerDiv div").click(function(){
+        $("#layerDiv div").attr("select",false);
+        $("#layerDiv div").removeClass("layerSelect");
+        $("#layerDiv .layerTitle").removeClass("layerTitleSelect");
+        ShowMap.selectLayer($(this));
+
+    });
+}
+ShowMap.selectLayer = function(selectDiv){
+//        var layer = map.getLayers().getArray();
+//        alert(layer[0].name);
+    // selectDiv.attr("select",true);
+    // selectDiv.addClass("layerSelect");
+    // selectDiv.find(".layerTitle").addClass("layerTitleSelect");
+    var layerIndex = selectDiv.attr("layerIndex");
+    if(layerIndex==1){
+        $("#layerDiv div").eq(0).attr("select",true);
+        $("#layerDiv .layerTitle").eq(0).addClass("layerTitleSelect");
+        $("#layerDiv div").eq(0).addClass("layerSelect");
+        ShowMap.changeMap(defaultMapSL,1);
+    }else if(layerIndex==2){
+        $("#layerDiv div").eq(1).attr("select",true);
+        $("#layerDiv .layerTitle").eq(1).addClass("layerTitleSelect");
+        $("#layerDiv div").eq(1).addClass("layerSelect");
+        ShowMap.changeMap(defaultMapYX,2);
+    }else if(layerIndex==3){
+        ShowMap.changeMap("球状三维",3);
+        
+    }
+}
+ShowMap.show3d=function(){
+    $("#mapCon").hide();
+    $("#layerDiv").hide();
+    $("#mapControl").show();
+    $("#mapselect").show();
+}
+ShowMap.show2d=function(){
+    $("#mapCon").show();
+    $("#layerDiv").show();
+    $("#mapControl").hide();
+    $("#mapselect").hide();
+}

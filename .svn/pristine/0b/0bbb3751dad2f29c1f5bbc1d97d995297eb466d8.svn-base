@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>应用部署</title>
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <link href="css/app_create.css" rel="stylesheet" type="text/css" />    
+    <link href="DialogBySHF.css" rel="stylesheet" type="text/css" />
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js'} -->
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+          {insert_scripts files='json2.js'}
+        <![endif]-->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    <!-- {insert_scripts files='jquery.selectbox-0.2.min.js'} -->
+    <!-- {insert_scripts files='kindeditor/kindeditor-min.js,kindeditor/zh_CN.js'} -->
+    <!-- {insert_scripts files='DialogBySHF.js'} -->
+</head>
+<script type="text/javascript">
+  var editor;
+  KindEditor.ready(function(K) {
+      editor = K.create('textarea[name="content"]', {
+          id:'comment',
+          autoHeightMode : false,
+          resizeType : 0,
+          minHeight:210,
+          width : 600,
+          allowPreviewEmoticons : false,
+          allowImageUpload : false,
+          filterMode: true,
+          //afterChange:limitTitle,
+          items : [
+              'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+              'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+              'insertunorderedlist'],
+          afterChange : function() {
+              //判断是否输入了内容
+              var count1 = this.count('text'); //获取编辑器输入内容总数
+              var limit_Num = 300;
+              var str = "";
+              var string = this.text();
+              if(checkSpecialSymbols(string)){
+                  //有特殊字符
+                  checkErrorShow('comMsg','简介中不能输入特殊字符',false);
+              }else{
+                  //无特殊字符
+//                   if(count1 > 300){
+//                       alert("简介最多输入150字");
+//                       var strValue = editor.text();
+// 　　　                   strValue = strValue.substring(0,limit_Num);
+// 　　　                   editor.text(strValue);　
+//                       str = "您还可以输入0个字";
+//                       checkErrorShow('comMsg',str,true);
+//                   }else if(count1 < 1){
+//                       checkErrorShow('comMsg','简介不能为空',false);
+//                   }else{
+//                       var num = limit_Num-count1;
+//                       str = "您还可以输入"+num+"个字";
+//                       checkErrorShow('comMsg',str,true);
+//                   }
+              }
+
+          }
+      });
+
+  //显示错误信息
+  function checkErrorShow(id,msg,flag){
+      $("#"+id).text(msg);
+      if(flag){
+          $("#"+id).removeClass("no_complete_msg");
+      }else{
+          $("#"+id).addClass("no_complete_msg");
+      }
+  }
+  //检测特殊字符
+  function checkSpecialSymbols(string) {
+      var symbols = new RegExp("[,\\`,\\~,\\!,\\@,\#,\\$,\\%,\\￥,\\——,\\^,\\+,\\*,\\&,\\\\,\\/,\\?,\\|,\\:,\\.,\\<,\\>,\\{,\\},\\(,\\),\\',\\;,\\=,\"]");
+      return symbols.test(string);
+  }
+})
+</script>
+<!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+<div class="main-content">
+    <div class="content">
+<!--         <div class="app-info-nav">
+          <a href="/app.php">应用园地</a><span style="display: inline-block;width: 10px;text-align: center;">></span>
+          <a href="#">分类</a><span style="display: inline-block;width: 10px;text-align: center;">></span>
+          <a href="#">应用部署</a>
+        </div> -->
+        <div class="create_app_title">
+            {if $is_edit==1}部署到云主机{else}编辑应用信息{/if}
+        </div>
+        <div class="create_app_info">
+            部署信息
+        </div>
+        <div class="itme" style="margin-top:5px;">
+            <div class="itme-title">软件名称:</div>
+            <div class="itme-info">
+            {$goods_name}
+            </div>
+        </div>
+        <div class="itme" style="margin-top:15px;">
+            <div class="itme-title">应用名称:</div>
+            <div class="itme-info">
+              <input type="text" id="app_name" class="sv-req-title input-content" style="padding-left:5px;float:left;margin-bottom:0;height: 25px;width: 230px ! important;border-radius: 5px;" placeholder="应用名称" value="{$app_detail_obj.appName}">
+            </div>
+        </div>
+        {if $is_edit!=1}
+          <div class="itme">
+              <div class="itme-title">选择云主机:</div>
+              <div class="itme-info">
+                <select class="cloud_host cloud_host_select" id="host_id">
+                  <!-- {foreach from=$host_list item=host name=host_list} -->
+                  <option value="{$host.id}" {if $host.id==$app_detail_obj.ecsHost.id}selected="selected"{/if}>{$host.name}</option>
+                  <!-- {/foreach} -->
+                </select>
+                <span id="no-host-power" style="margin-left: 20px;color: #EA4614;float: left;display: inline-block;"></span>
+              </div>
+          </div>
+          {if $host_list_num == 0}
+          <style type="text/css">
+          .create_cloud_host
+          {
+            display: block;
+          }
+          {/if}
+          </style>
+          <div>
+          <!-- #BeginLibraryItem "/library/create_cloud_host.lbi" --><!-- #EndLibraryItem -->
+          </div>
+        {/if}
+        <div class="create_app_info">
+            其他设置<n style="font-weight:normal;">(应用上架必备展示信息)</n>
+        </div>
+        <div class="itme">
+            <div class="itme-title">分类:</div>
+            <div class="itme-info">
+              <select class="category" id="category">
+               <!-- {foreach from=$categroy_list item=categroy name=categroy_list} -->
+                <option value="{$categroy.id}" {if $categroy.id==$app_detail_obj.ecsAppCategory.id}selected="selected"{/if} >{$categroy.name}</option>
+               <!-- {/foreach} -->
+              </select>
+            </div>
+        </div>
+        <div class="itme" style="height:250px;">
+            <div class="itme-title" style="height:80px;">
+              应用详情介绍:
+              <div style="text-align: center; line-height:15px;font-size: 12px;color:#656565;">(选填)</div>
+            </div>
+            <div class="itme-info" style="height:220px;">
+              <textarea  id="comment_textarea" name="content" rows="10" onkeyup="limitComment(this)" style="border: 1px solid #DCDCDC;">
+              {$app_detail_obj.appDescription}
+              </textarea>
+              <div style="clear: both;"></div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="itme">
+            <div class="itme-title">&nbsp;</div>
+            <div class="itme-info">
+              <a style="color: #08c;font-size: 14px;  text-decoration: underline;" href="javascript:void(0)" onclick="show_upload_winframe()">上传附件</a>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div id="file_upload_list" style="margin-left:120px">
+            <div class="file-upload-list">
+                {if empty($app_detail_obj.fileList)}
+                {else}
+                    {foreach from=$file_list item=file name=name} 
+                      <div class="file-item">
+                          <div class="file-name-left">
+                              <a href="{$file[2]}">{$file[0]}</a>
+                          </div>
+                          <div class="file-view-a">
+                            <a target="_blank" data="{$file[1]}"></a>
+                          </div>
+                          <div class="remove-doc-file">
+                            <a title="移除"></a>
+                          </div>
+                      </div>
+                      <div style="clear: both;"></div>
+                    {/foreach}
+                {/if}
+            </div>
+            <div style="clear: both;"></div>  
+        </div>
+        <div style="clear: both;"></div>
+        <div class="itme" style="height: 140px;">
+            <div class="itme-title">应用LOGO:</div>
+            <div class="itme-info" style="height: 140px;margin-left: 12px;">
+                <input type="hidden" class="business-license-input" id="product-logo-img" value="{$app_detail_obj.logoImage}">
+                <div class="form-input" style="margin-left:12px;width:490px;height:120px;">
+                    <input type="hidden" class="business-logo-input" value="">
+                    <div class="logo-img business-logo-img product-logo-img">
+                        <a class="add-business-logo-img" style="display:block">
+                            <iframe id="file_upload_iframe_2" name="file_upload_iframe_2"  style="display:none;"></iframe>
+                            <form action="sss" method="post" target="file_upload_iframe_2" name="adminForm" id="file_upload_form_2" class="form-inline" enctype="multipart/form-data" >
+                                <div class="upload-select f-l">
+                                    <input type="file" name="gs_upload_file" class="gs-upload-file upload-2" value="选择文件" onchange="fileSubmit(2);" />
+                                    <span id="upload_file_name_img" class="upload-file-name_img" style="display:none;"></span>
+                                </div>
+                            </form>
+                            <img class="business-license-logo" src="{if !empty($app_detail_obj.logoImage)}{$file_server_base_url}{$app_detail_obj.logoImage}{else}themes/appcloud/images/app_logo.png{/if}">
+                        </a>
+                        <input type="hidden" id="current_file_type">
+                        <input type="hidden" id="current_option_load">
+                        <input type="hidden" id="fileupload">
+                    </div>
+                </div>
+            </div>    
+        </div>
+        <div class="itme">
+            <div class="itme-title">权限设置:</div>
+            <div class="itme-info" style="height:70px;">
+                <div><input type="radio" name="is_public" class="is_public_radio" value="1" { if $app_detail_obj.isPublic==1}checked{/if}{if empty($app_detail_obj)}checked{/if}>&nbsp;&nbsp;公开</div>
+                <div><input type="radio" name="is_public" class="is_public_radio" value="0" { if $app_detail_obj.isPublic==0}checked{/if}>&nbsp;&nbsp;部分用户可见&nbsp;&nbsp;<a style="color: #08c;" href="javascript:void(0)" onclick="get_select_user_list_model()" >选择可见用户用户</a></div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="add_user_list_con" style="padding-left: 125px;width: 700px;">
+            { if $app_detail_obj.isPublic==0}
+                <!-- {foreach from=$app_power_user_list item=power_user name=app_power_user_list} -->
+                  <span class="add_user_info" style="color: #08c;display: inline-block;padding:8px;cursor: pointer;" userid="{$power_user.ecsUser.userId}" onclick="remove_this_user(event)" title="移除">{$power_user.ecsUser.userName}</span>
+               <!-- {/foreach} -->
+            {/if}
+        </div>
+        <div class="itme">
+            <div class="itme-title">上架设置:</div>
+            <div class="itme-info" style="height:70px;">
+                <div><input type="radio" name="is_on_sale" value="1"{ if $app_detail_obj.isOnSale==1}checked{/if} {if empty($app_detail_obj)}checked{/if}>&nbsp;&nbsp;部署完成立即上架</div>
+                <div><input type="radio" name="is_on_sale" value="0" { if $app_detail_obj.isOnSale==0}checked{/if}>&nbsp;&nbsp;暂不上架&nbsp;&nbsp;</div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="itme" style="margin-top:30px;padding-bottom: 60px;">
+            <div class="itme-info">
+                  {if $is_edit==1}
+                    <div class="click-btn" onclick="deploy_application({$app_detail_obj.status})" style="float:left;margin-left: 100px;">确认编辑</div>
+                  {else}
+                    <div class="click-btn" onclick="deploy_application(2)" style="float:left;margin-left: 100px;">开始部署</div>
+                    <div class="click-btn" onclick="deploy_application(1)" style="float:left;margin-left: 45px;color: #51B778;background-color: #fff;  width: 100px;">保存</div>
+                  {/if}
+                  <div id="prompt_content" style="color:#EA4614;float: left;margin-left: 15px;"></div>
+            </div>
+        </div>
+    </div>    
+</div>
+<!-- #BeginLibraryItem "/library/add_user_power.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/upload_file.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/load_animation.lbi" --><!-- #EndLibraryItem -->
+</body>
+<script>
+ $(function()
+ {   
+    $(".trade-field .field").click(function(e){
+        $(".trade-field").find('.field.select').removeClass('select');
+        $(this).addClass('select');
+    });
+
+    $('.cloud_host_select').change(function(e)
+    {
+      if($(this).val()==0)
+      {
+          var url = 'ajax.php?act=get_user_info';
+            $.ajax({
+                url:url,
+                type:'post',
+                dataType:'json',
+                success:function(result){
+                    if(result.status==403)
+                    {
+                          GucLogin();
+                    }
+                    else if(result.status==200)
+                    {
+                        if (result.content.user_info['host_have']>0) {
+                          $('#no-host-power').text("");
+                          $('.create_cloud_host').show();
+                        }else
+                        {
+                          $('#no-host-power').text("您可创建的云主机个数为0");
+                        }
+                    }else
+                    {
+                        $.DialogBySHF.Alert({ Width: 350, Height: 200, Title:result.tip , Content: result.content.text });
+                    }
+                }
+            });
+      }else
+      {
+        $('.create_cloud_host').css("display","none");
+        $('#no-host-power').text("");
+      }
+    });
+
+    $('.is_public_radio').click(function(e)
+    {
+      if($(this).val()==1)
+      {
+        $('.add_user_list_con').css("display","none");
+      }
+      else
+      {
+        $('.add_user_list_con').css("display","block");
+      }
+    })
+
+ }) 
+
+  function remove_this_user(e)
+  {
+    $(e.target).remove();
+    // $(".add_user_list_con .remove_user_class").remove();
+  }
+
+  function get_select_user_list_model()
+  {
+    $('#user-find-modal').css('display','block');
+  }
+ //点击“点此上传文档”按钮
+  function show_upload_winframe(){
+      $('.upload-file-model').css('display','block');
+  }
+  function deploy_application(status)
+  {   
+    $('.loading_new_modle').css("display","block");
+    $('#user-find-modal').css('display','none');
+      //修改操作
+      {if $app_id>0} 
+         var app_id   = {$app_id} ;
+         var app_type = {$app_detail_obj.appType};
+      { else} 
+         var app_id = 0;
+         var app_type = {$goods_type};
+      {/if}
+
+      {if $is_edit==1}
+        var is_edit=1;
+      {else}  
+        var is_edit = 0;
+      {/if}
+      var app_name      =  $('#app_name').val();
+      var category      =  $('#category').val();
+      var host_id       =  $('#host_id').val();
+      var openstack_image_id =  $('#openstack_image_id').val();
+      var flavorid      =  $('#openstack_flavor_id').val();
+      var comment_textarea= editor.fullHtml();
+      // var comment_textarea= "";
+      var file_list     = dealDoc();
+      var logo_image    = $('#product-logo-img').val();
+
+      var host_name     =  $('#host_name').val();
+      var cpu_core_num  =  $('#cpu_core_num').text();
+      var memory_size   =  $('#memory_size').text();
+      var hdd_volume    =  $('#hdd_volume').text();
+      var is_public     =  $('input[name="is_public"]:checked').val();
+      var is_on_sale    =  $('input[name="is_on_sale"]:checked').val();
+      var user_ids      = '';
+      if(is_public==0)
+      {
+        $('.add_user_info').each(function(e)
+        {
+            user_ids+=$(this).attr('userid')+"|";
+        });
+      }
+      if(host_id==0)
+      {
+        data =   {
+                name:host_name,
+                cpu_core_num:cpu_core_num,
+                memory_size:memory_size,
+                hdd_volume:hdd_volume,
+                app_name:app_name,
+                category:category,
+                host_id:host_id,
+                app_description:comment_textarea,
+                file_list:file_list,
+                logo_image:logo_image,
+                app_type:app_type,
+                sn:{$sn},
+                app_id:app_id,
+                status:status,
+                is_public:is_public,
+                user_ids:user_ids,
+                is_on_sale:is_on_sale,
+                is_edit:is_edit,
+                openstack_image_id:openstack_image_id,
+                flavorid:flavorid
+                };
+      }else
+      {
+        data =   {
+                name:"",
+                cpu_core_num:cpu_core_num,
+                hdd_volume:hdd_volume,
+                memory_size:memory_size,
+                app_name:app_name,
+                category:category,
+                host_id:host_id,
+                app_description:comment_textarea,
+                file_list:file_list,
+                logo_image:logo_image,
+                app_type:app_type,
+                sn:{$sn},
+                app_id:app_id,
+                status:status,
+                is_edit:is_edit,
+                is_public:is_public,
+                is_on_sale:is_on_sale,
+                user_ids:user_ids,
+                openstack_image_id:openstack_image_id,
+                flavorid:flavorid
+                };
+      }  
+
+      var url = 'ajax.php?act=create_app';
+            jQuery.ajax({
+                url:url,
+                type:'post',
+                data:data,
+                error: function(request)
+                {
+                  $.DialogBySHF.Alert({ Width: 350, Height: 200, Title: "集成应用管理平台", Content: '系统出错'});
+                },
+                success: function(result) {
+                  $('.loading_new_modle').css("display","none");
+                  var result =JSON.parse(result);
+
+                  if(result.status==403)
+                  {
+                      GucLogin();
+                  }
+                  else if(result.status==200)
+                  {
+                    $.DialogBySHF.Alert({ Width: 350, Height: 200, Title:result.tip , Content: result.content.text });
+                    if(status==2)
+                    {
+                      window.location = 'app.php?act=app_prompt';
+                    }else
+                    {
+                      window.location = 'user.php?act=my_app';
+                    }
+
+                  }else
+                  {
+                    // $.DialogBySHF.Alert({ Width: 350, Height: 200, Title:result.tip , Content: result.content.text });
+                    $('#prompt_content').text(result.content.text);
+                  }
+                }
+            });
+  }
+
+  function dealDoc(){
+      var file_list = $('.file-upload-list .file-item');
+
+      var file_array = "";
+      for (var i = 0; i < file_list.length; i++) {
+          var r_name = $(file_list[i]).find('.file-name-left a').text();
+          var f_path = $(file_list[i]).find('.file-view-a a').attr('data');
+          var list_item = r_name+","+f_path;
+          file_array+= list_item;
+          if (i < file_list.length-1) {
+              file_array += "|";
+          };
+      };
+      return file_array;
+  }	
+</script>
+

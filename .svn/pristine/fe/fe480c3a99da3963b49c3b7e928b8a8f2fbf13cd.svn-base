@@ -1,0 +1,66 @@
+<?php
+// +----------------------------------------------------------------------
+// | zdcyber
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011-2016
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: huangbin
+// +----------------------------------------------------------------------
+// | Desc: 第一次购买流程后台
+// +----------------------------------------------------------------------
+
+if( !defined('IN_ECS') ){ die('Hacking attempt'); }
+
+include_once(ROOT_PATH . 'gis_service.php');
+
+//用户id
+($user_id = $_SESSION['user_id']) || header('location:user.php?act=login');
+//框架产品id
+($goods_id     = intval($_REQUEST['goods_id'])) || tson('参数错误');
+//初始化插件信息数组
+$addon_list_in = explode(',', urldecode($_REQUEST['addon_list']));
+/* 购买数量 */
+$order_count = intval($_REQUEST['order_count']);
+$order_count = $order_count < 1 ? 1 : $order_count;
+//购买期限
+$period        = intval($_REQUEST['period']);
+//价格模板类型id
+$order_group  = intval($_REQUEST['group']);
+
+//实例化购买逻辑类
+$buy_flow_obj = zd_core::instance('zd_buy_flow_class');
+//开启事务
+//$GLOBALS['db']->query('START TRANSACTION');
+//请求地址
+$ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+$api_url = $ip."ecs/order/new";
+$api_url_s = $api_url."/".$goods_id."?addon_list_in=".$_REQUEST['addon_list']."&order_count=".$order_count."&period=".$period."&uc_id=".$user_id."&order_group=".$order_group;
+//发送请求
+$order_id = zd_common_class::_send_get($api_url_s);
+//解析json,获取应用详情
+//$message_result_obj = json_decode($message_result,true);
+//返回结果
+//$order_id = $buy_flow_obj->_create_new_order($goods_id,$addon_list_in,$order_count,$period,$user_id,$order_group);
+//如果函数执行成功
+if ($order_id) {
+	//提交事务
+//	$GLOBALS['db']->query('COMMIT');
+	//header('location:user.php?act=prepare_for_download&sn='.$order_id);
+	header('location:user.php?act=bill');
+}
+else{
+    assign_template();
+	//获取错误信息
+	$error_msg = $buy_flow_obj->_get_error();
+	//加载zd_common_class类库
+	zd_core::autoload('zd_common_class');
+	//提示错误信息
+	zd_common_class::show_msg($error_msg);
+	//事务回滚
+//	$GLOBALS['db']->query('ROLLBACK');
+}
+
+?>

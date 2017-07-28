@@ -1,0 +1,100 @@
+window.Roller = window.Roller || {};
+
+Roller.showRoller = function(){
+    //mapCon.html('');
+    //var view = map.getView();
+    
+    mapCon.show();
+    
+    if(multi.attr('show')==1){
+        multi.hide();
+        multi.attr('show',0);
+        swipe.attr('show',1);
+        swipe.css('left','-100px');
+        mapCon.css('left','0px');
+        //mapCon.show();
+        // layerDiv.show();
+        swipe.show();
+        map.removeLayer(TileLayer);
+        Roller.init();
+    }else{
+        $('.left-box').toggle();
+        if(swipe.attr('show')==0){
+            layerDiv.hide();
+            searchbox.hide();
+            swipe.attr('show',1);
+            swipe.css('left','-100px');
+            mapCon.css('left','0px');
+            //mapCon.show();
+            multi.hide();
+            swipe.show();
+            map.removeLayer(TileLayer);
+            Roller.init();
+        }else if(swipe.attr('show')){
+            $('.navbar-wrapper').show();
+            $('#layerDiv').show();
+            swipe.hide();
+            searchbox.show();
+            //mapCon.html('');
+            swipe.attr('show',0);
+            mapCon.css('left','320px');
+            //ShowMap.getMapInfo(defaultMapSL);
+            map.removeLayer(TileLayer1);
+            map.removeLayer(TileLayer2);
+            //ShowMap.initMap(defaultMapSL,dataInfo);
+            map.addLayer(TileLayer);
+        }
+    }
+}
+var TileLayer1;
+var TileLayer2;
+Roller.init = function(){
+        map.removeLayer(TileLayer1);
+        map.removeLayer(TileLayer2);
+        TileLayer1= new Zondy.Map.TileLayer(rollMapSL, rollMapSL, {
+                ip: ip,
+                port: port
+            });
+        TileLayer2 = new Zondy.Map.TileLayer(rollMapYX, rollMapYX, {
+                ip: ip,
+                port: port
+            });
+        map.addLayer(TileLayer1);
+        map.addLayer(TileLayer2);
+    // var map = new ol.Map({
+    //         //目标DIV
+    //         target: 'mapCon',
+    //         //将图层添加到地图容器
+    //         layers: [TileLayer1,TileLayer2],
+    //         view: new ol.View({
+    //             projection: 'EPSG:4326',
+    //             center: [114.65,30.665],
+    //             //最大显示级数
+    //             maxZoom: 16,
+    //             //最小显示级数
+    //             minZoom: 9,
+    //             //当前显示级数
+    //             zoom: 9
+    //         })
+    //     });
+
+    var swipe1 = document.getElementById('swipe');
+
+    TileLayer2.on('precompose', function (event) {
+        var ctx = event.context;
+        var width = ctx.canvas.width * (swipe1.value / 100)-100;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(width, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.clip();
+    });
+
+    TileLayer2.on('postcompose', function (event) {
+        var ctx = event.context;
+        ctx.restore();
+    });
+
+    swipe1.addEventListener('input', function () {
+        map.render();
+    }, false);
+}

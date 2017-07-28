@@ -1,0 +1,718 @@
+var group_type;
+//web产品版本用户功能组描述
+var web_user_group_desc = '';
+{if $bac_act eq 'order'}
+var page_type = 'order';
+var order_goods_name = '{$goods_name}';
+var end_time = '{$end_time}';
+var rest_day = {$rest_day};
+var assembled_addon_list = {$assembled_addon_list};
+var order_id = '{$order_sn}';
+{if $scale_type}
+group_type = {$scale_type};
+{/if}
+{else}
+var page_type = '';
+{/if}
+{if $is_trial}
+var is_trial = true;
+{else}
+var is_trial = false;
+{/if}
+var goods_id = {$goods.goods_id};
+//Iris add
+var group_base_price = {$goods.shop_price};
+var total_price = 0;
+var capacity = {$goods.capacity};
+var COOKIE_NAME = page_type ? "ZONDY_ORDER":"ZONDY_CUSTOMIZE";
+var my_cookie,base_price,g_price_ratio;
+var price_num = 1;
+var price_unit = 1;//如果是月，则为1；如果是年，则为12.
+var could_Move = true;
+var current_index = page_type ? order_id : {$goods.goods_id};
+var goods_addon_list = {$addon_list_json};
+var page_data = [];
+var has_file = !! '{$goods.has_file}';
+//Iris add
+var sel_group_obj = $(".price-group");
+{if $bac_act neq 'order'}
+group_type = sel_group_obj.val();
+{/if}
+var base_price_list = {$price_list_json};
+var goods_trial_period;
+{if $goods.goods_trial_period}
+    goods_trial_period = {$goods.goods_trial_period};
+{else}
+    goods_trial_period = 0;
+{/if}
+{if $goods.goods_id eq 381}
+    var CUSTOM_PKG_CONFIG = {
+        BASIC:[385, 399, 396, 397, 390],
+        STANDARD:[385, 399, 396, 397, 390, 386, 401, 395],
+        PREMIUM:[385, 399, 396, 397, 390, 386, 401, 395, 382, 387, 391, 393, 400],
+    };
+{/if}
+
+{if $assembled_addon_list}
+    var assembled_addon_list_arry = [];
+    for(var key in assembled_addon_list){
+        assembled_addon_list_arry.push(assembled_addon_list[key]);
+    }
+{/if}
+
+//Iris add
+function updateScaleType(){
+    base_price = {$goods.shop_price};
+    {if $bac_act neq 'order'}
+    group_type = sel_group_obj.val();
+    {/if}
+    {foreach from=$goods_group  item=ginfo }
+        var type = '{$ginfo.scale_type}';
+        //并发用户描述
+        var concurrent_user = '{$ginfo.concurrent_user}';
+        //在线用户描述
+        var online_user = '{$ginfo.online_user}';
+        //在册用户描述
+        var register_user = '{$ginfo.register_user}';
+        if(type == group_type){
+            base_price = base_price * {$ginfo.price_ratio};
+            web_user_group_desc = "并发用户数="+concurrent_user+",在线用户数="+online_user+",在册用户数="+register_user;
+            g_price_ratio = {$ginfo.price_ratio};
+        }    
+    {/foreach}   
+}
+
+updateScaleType();
+
+for (var i = 0; i < goods_addon_list.length; i++) {
+    //Iris add
+    var goods_price = goods_addon_list[i].price ;
+
+    if(group_type){
+        goods_price = setPriceFormat(goods_price * g_price_ratio,1);
+    }
+
+    page_data.push({
+        "id": goods_addon_list[i].id,
+        "name": goods_addon_list[i].name,
+        "is_official": goods_addon_list[i].is_official,
+        "price": goods_price,
+        "pic": goods_addon_list[i].thumb == '' ? './images/default.png' : goods_addon_list[i].thumb,
+        "is_fixed":goods_addon_list[i].is_basic == 1 ? true:false,
+        "url":"sfw.php?do=goods&id="+goods_addon_list[i].id+"&parent_id="+goods_id,
+        "purchased": false,
+        "capacity": goods_addon_list[i].capacity,
+        "trial_period": goods_addon_list[i].trial_period,
+        "addon_group": goods_addon_list[i].addon_group
+    });
+}
+
+//Iris add
+// Change goods group value
+sel_group_obj.on("change", function(){
+      var has_chosen = $("#has-been-chosen").find('.addon-item');
+      has_chosen.each(function(index){
+         $(this).remove();
+      });
+
+      var to_choose = $("#to-be-chosen").find('.addon-item');
+      to_choose.each(function(index){
+         $(this).remove();
+      });  
+
+     updateScaleType();
+
+      if(group_type){
+            for (var i = 0; i < page_data.length; i++) {
+                var goods_ratio = g_price_ratio;
+                var init_goods_price = goods_addon_list[i].price ;
+                page_data[i].price = setPriceFormat(init_goods_price * goods_ratio,1);
+         }
+      }
+
+    //Iris add
+    //order_count = checkMinOrderCount();
+    //$('.order-count-num').val(order_count);
+     
+     renderData();
+
+     echo.init();
+      
+});
+
+
+
+
+function init(){
+    my_cookie = fetchCookie();
+    renderData();
+
+    $('#has-been-chosen').on('click', '.addon-item .delete', function(e){
+        var _self = $(e.target).parent('.addon-item');
+        var _id = _self.data('id');
+        _self.remove();
+        deleteCartTpl(_id);
+        $('#to-be-chosen .addon-item.chosen').each(function(){
+            if ($(this).data('id') == _id) {
+                $(this).removeClass('chosen');
+            }
+        });
+        adjustBoxStyle();
+    })
+
+    // $('#to-be-chosen').on('click', '.addon-item:not(.chosen) .add', function(e){
+    //     var _self = $(e.target).parent('.addon-item');
+    //     addCartTpl(_self);
+    //     _self.addClass('chosen');
+    // });
+
+    $('#to-be-chosen').on('click', '.addon-item:not(.chosen) .add', addCartTpl);
+
+
+{if $bac_act eq 'order'}
+    $(".btn-zondy.pay").on("click", function(){
+        $(".confirm-date span").html(rest_day + "天");
+        $(".confirm-deadline span").html(end_time);    
+        $(".confirm-price span").html(setPriceFormat(base_price * rest_day / 30,1));
+        $("#goto-buy-page-btn").html("提&nbsp;&nbsp;&nbsp;交");
+        var addon_list = [];
+        for (var i = 0; i < page_data.length; i++) {
+            if (page_data[i].chosen && assembled_addon_list_arry.indexOf(page_data[i].id) == -1) {
+                addon_list.push(page_data[i].id);
+            }
+        }
+        reassemble();
+    });
+{else}
+    $(".btn-zondy.pay").on("click", function(){
+    {if ($has_login)}
+        $(".confirm-count").show();
+
+        if(!inputOrderCountToPayModel()){
+            return false;
+        }
+
+        if (price_unit == 1) {
+            $(".confirm-date span").html(price_num + "个月");
+        } else if (price_unit == 12) {
+            $(".confirm-date span").html(price_num + "年");
+        }
+        //Iris add
+        $(".confirm-price span").html(setPriceFormat(group_base_price * price_num * price_unit * order_count,1));
+        $("#goto-buy-page-btn").html("提&nbsp;&nbsp;&nbsp;交");
+        updateDate(price_num*price_unit*30);
+        addToOrder(false);
+    {else}
+        GucLogin();
+    {/if}
+    });
+    {if $goods.goods_trial_period && $goods.goods_trial_period > 0}
+    $(".btn-zondy.try").on("click", function(){
+    {if ($has_login)}
+        var goods_trial_period = {$goods.goods_trial_period};
+        $(".confirm-count").hide();
+        $(".confirm-date span").html("试用"+goods_trial_period+"天");
+        $(".confirm-price span").html("¥0");
+        $("#goto-buy-page-btn").html("确&nbsp;&nbsp;&nbsp;认");
+        updateDate(goods_trial_period);
+        addToOrder(true);    
+    {else}
+        GucLogin();
+    {/if}        
+    });
+    {/if}
+
+    $(".time-num").on("change", function(){
+        price_num = $(this).val();
+        updatePrice();
+    });
+    $(".time-unit").on("change",function(){
+        price_unit = $(this).val();
+        updatePrice();
+    });
+    
+    {if $goods.goods_id eq 381}
+        preCustomPackage();
+    {/if}
+
+{/if}
+
+
+
+};
+
+
+function fetchCookie() {
+    my_cookie = eval('('+$.cookie(COOKIE_NAME)+')');
+
+    if (!my_cookie) {
+        my_cookie = {};
+        $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+    }
+    if (!my_cookie[current_index]) {
+        my_cookie[current_index] = [];
+
+        //Add fixed addons into cookies
+        for (var i in page_data) {
+            if (page_data[i].is_fixed) {
+                my_cookie[current_index].push(parseInt(page_data[i].id));
+            }
+        }
+
+        $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+    } else {
+         for (var i in page_data) {
+            for (var j in my_cookie[current_index]) {
+                if (page_data[i].id == my_cookie[current_index][j]) {
+                    page_data[i].chosen = true;
+                }
+            }
+        }
+    }
+    checkPreCustom(my_cookie[current_index]);
+    return my_cookie;
+};
+
+function renderData() {
+    var fixed_array = [];
+    var purchased_array = [];
+    var chosen_array = [];
+
+    for (var i in page_data) {
+
+        if (page_type == 'order') {
+            for (var k in assembled_addon_list) {
+                if (page_data[i].id == assembled_addon_list[k]) {
+                    page_data[i].purchased = true;
+                }
+            }
+        }
+
+        if (page_data[i].is_fixed) {
+            fixed_array.push(page_data[i]);
+        } else if (page_data[i].purchased) {
+            purchased_array.push(page_data[i]);
+        } else {
+            //Iris add
+              if(group_type){
+                if(page_data[i].addon_group.length == 0)
+                {
+                    chosen_array.push(page_data[i]);
+                }else{
+                    for (var j in  page_data[i].addon_group) {
+                         if (page_data[i].addon_group[j]['scale_type'] == group_type) {
+                                    chosen_array.push(page_data[i]);
+                         }
+                   }
+                }
+            }else{
+                   chosen_array.push(page_data[i]);
+            }
+        }
+        
+    }
+
+    if (fixed_array.length > 0) {
+        for (var i in fixed_array) {
+            var tpl = $("#has-been-chosen-template").tmpl(fixed_array[i]);
+            tpl.addClass(fixed_array[i].purchased?(is_trial?'fixed purchased trial':'fixed purchased'):'fixed');
+            $('#addon-add').before(tpl);
+            util.ellipsisWidth(tpl);
+            createToBeChosenTpl(fixed_array[i]);
+        }
+    }
+
+    if (purchased_array.length > 0) {
+        for (var i in purchased_array) {
+            var tpl = $("#has-been-chosen-template").tmpl(purchased_array[i]);
+            tpl.addClass(is_trial?'purchased trial':'purchased');
+            $('#addon-add').before(tpl);
+            util.ellipsisWidth(tpl);
+            createToBeChosenTpl(purchased_array[i]);
+        }
+    }
+
+    //Iris add
+    if (chosen_array.length > 0) {
+        for (var i in chosen_array) {
+            if (chosen_array[i].chosen) {
+                createHasBeenChosenTpl(chosen_array[i]);
+            }
+           createToBeChosenTpl(chosen_array[i]);
+        }
+    }
+
+    updatePrice();
+    adjustBoxStyle($('#to-be-chosen'));
+    adjustBoxStyle();
+
+    
+};
+
+function createHasBeenChosenTpl(data){
+    var tpl = $("#has-been-chosen-template").tmpl(data);
+    tpl.addClass(is_trial?'trial':'');
+    tpl.data('id', data.id);
+    $('#addon-add').before(tpl);
+    util.ellipsisWidth(tpl);
+    adjustBoxStyle();
+};
+
+function createToBeChosenTpl(data){
+    var tpl = $("#to-be-chosen-template").tmpl(data);
+    tpl.addClass(is_trial?'trial':'');
+    if (data.chosen || data.is_fixed || data.purchased) {
+        tpl.addClass('chosen');
+    }
+    tpl.data('id', data.id);
+    tpl.appendTo('#to-be-chosen');
+    util.ellipsisWidth(tpl); 
+};
+
+function adjustBoxStyle(box){
+    if (box === undefined) {
+        box = $('#has-been-chosen');
+    }
+    var addItem = $('#addon-add');
+    var items = box.find('.addon-item, #addon-add');
+    var itemsLength = items.length;
+    var line = (itemsLength - 1) / 7 >> 0; //floor
+    items.each(function(index){
+        var num = index + 1;
+
+        if (7 * line < num && num <= 7 * (line + 1)) {
+            $(this).addClass('box-footer');
+        } else {
+            $(this).removeClass('box-footer');
+        }
+
+        if (index % 7 == 0) {
+            $(this).addClass('line-header');
+        } else {
+            $(this).removeClass('line-header');
+        }
+    });
+
+    if (itemsLength % 7 == 0) {
+        addItem.addClass('line-footer');
+    } else {
+        addItem.removeClass('line-footer');
+        items.last().addClass('all-last');
+    }
+
+};
+
+function adjustChooseBoxStyle(box){
+    if (box === undefined) {
+        box = $('#to-be-chosen');
+    }
+    var items = box.find('.addon-item[data-show="true"]');
+    var itemsLength = items.length;
+    var line = (itemsLength - 1) / 7 >> 0; //floor
+    items.each(function(index){
+        var num = index + 1;
+
+        if (7 * line < num && num <= 7 * (line + 1)) {
+            $(this).addClass('box-footer');
+        } else {
+            $(this).removeClass('box-footer');
+        }
+
+        if (index % 7 == 0) {
+            $(this).addClass('line-header');
+        } else {
+            $(this).removeClass('line-header');
+        }
+    });
+
+};
+
+function addCartTpl(e){
+    if (!could_Move) {
+        return;
+    } else {
+        could_Move = false;
+    }
+    var _self = $(e.target).parent('.addon-item');
+    var _id = _self.data('id');
+    var i = 0;
+    while (i < page_data.length) {
+        if (page_data[i].id == _id){
+            page_data[i].chosen = true;
+            page_data[i].move = true;
+            _self.addClass('chosen');
+            var addPosition = $('#addon-add');
+            var startIndex = _self.index();
+            var endIndex = addPosition.index();
+            var startLeft = (startIndex % 7) * 137 - 1;
+            var startTop =  (Math.floor(startIndex / 7) == 0 ? -1 : Math.floor(startIndex / 7) * 139);
+            var moveLeft = startLeft + (endIndex % 7 - startIndex % 7) * 137 ;
+            var moveTop = startTop - 225 - Math.floor(startIndex / 7) * 139 + (Math.floor(endIndex / 7) == 0 ? 1 : 0);
+
+            var addItem = _self.clone();
+            addItem.addClass('clone').css({
+                left: startLeft,
+                top: startTop
+            }).appendTo('#to-be-chosen').find('.triangle,.add').hide();
+
+            addItem.animate({"left":moveLeft+"px","top":moveTop+"px"},500,"swing",function(){
+                createHasBeenChosenTpl(page_data[i]);
+                my_cookie[current_index].push(parseInt(_id));
+                $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+                checkPreCustom(my_cookie[current_index]);
+                updatePrice();
+                addItem.hide().css('left','-9999px');
+                could_Move = true;
+                //document.getElementById('to-be-chosen').removeChild(addItem[0]);
+                //addItem.remove();
+            });
+            break;
+        }
+        i++;
+    }
+};
+
+function deleteCartTpl(dataId){
+    var i = 0;
+    while (i < page_data.length) {
+        if (page_data[i].id == dataId){
+            page_data[i].chosen = false;
+            break;
+        } 
+        i++;
+    }
+    var j = 0;
+    while (j < my_cookie[current_index].length) {
+        if (my_cookie[current_index][j] == dataId){
+            my_cookie[current_index].splice(j,1);
+        } 
+        j++;
+    }
+
+    $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+    checkPreCustom(my_cookie[current_index]);
+    updatePrice();
+};
+
+get_group_info();
+
+function updatePrice(){
+    get_group_info();
+    if (page_type == 'order' && !is_trial) {
+        base_price = 0;
+        for (var i = 0; i < page_data.length; i++) {
+            if (page_data[i].chosen) {
+                if(assembled_addon_list_arry.indexOf(page_data[i].id) == -1){
+                    base_price += parseFloat(page_data[i].price);
+                }
+            }
+        }
+        base_price += group_price;
+        total_price = order_count * base_price * rest_day / 30;
+    } else if (page_type == 'order' && is_trial){
+        base_price = 0;
+        total_price = 0;
+    } else {
+        //Iris add (Choosed price)
+        //base_price = getBasePrice({$goods.shop_price});
+        updateScaleType();
+        for (var i = 0; i < page_data.length; i++) {
+            if (page_data[i].is_fixed ) {
+                base_price += parseFloat(page_data[i].price);
+            }else if(page_data[i].chosen){
+                /*if(group_type){
+                        for (var j in  page_data[i].addon_group) {
+                         if (page_data[i].addon_group[j]['scale_type'] == group_type) {
+                               base_price += parseFloat(page_data[i].price);     
+                         }
+                        }  
+                }else{
+                         base_price += parseFloat(page_data[i].price);     
+                }*/
+                base_price += parseFloat(page_data[i].price);
+            }
+        }
+        //Iris add (Plus base price)
+        group_base_price = base_price;
+        { if $group_plugin_list}
+        group_base_price += parseFloat(group_price);
+        {else}
+        for (var i = 0; i < base_price_list.length; i++) {
+            if (base_price_list[i].group_type == group_type) {
+                var price = base_price_list[i].price * base_price_list[i].price_ratio;
+                group_base_price += parseFloat(price);
+                break;
+            }
+        }
+        {/if}
+        total_price = group_base_price * price_num * price_unit * order_count;
+    }
+    
+    total_price = setPriceFormat(total_price,1); //to deal with js 0.1 * 3 bug
+    var total_price_html = total_price == 0 ? 0 : total_price;
+    if (page_type == 'order' && !is_trial) {
+        total_price_html = total_price == 0 ? "已购" : total_price;
+    }
+    $(".row.price span").html(total_price_html);
+    $(".row .user-group-desc").html(web_user_group_desc);
+    enableOrDisableButton();
+    updateSize();
+};
+
+
+function updateSize(){
+    var latestSize = baseSize;
+    for (var i = 0; i < page_data.length; i++) {
+        if (page_data[i].is_fixed || page_data[i].chosen) {
+            latestSize += parseFloat(page_data[i].capacity);
+        }
+    }
+
+    sizeItem.html(util.kbOrMbOrGB(latestSize));
+
+    updateBuyCount(latestSize);
+};
+
+function enableOrDisableButton (){
+    var box = $('#has-been-chosen');
+    if (box.find('.addon-item').length || has_file) {
+        if(can_try){
+            $('.btn-zondy.pay, .btn-zondy.try').removeClass('disabled').removeAttr('disabled');
+        }else{
+            $('.btn-zondy.pay').removeClass('disabled').removeAttr('disabled');
+        }
+    } else {
+        $('.btn-zondy.pay, .btn-zondy.try').addClass('disabled').attr('disabled','disabled');
+    }
+
+
+    if (page_type == 'order') {
+        if (box.find('.addon-item').not('.purchased').length) {
+            $('.btn-zondy.pay').removeClass('disabled').removeAttr('disabled');
+        } else {
+            $('.btn-zondy.pay').addClass('disabled').attr('disabled','disabled');
+        }
+    }
+};
+
+
+function addToOrder(is_try) {
+    var goodsArray = [];
+    for (var i = 0; i < page_data.length; i++) {
+        if (page_data[i].is_fixed || page_data[i].chosen) {
+            if(is_try) {
+                if(page_data[i].trial_period && page_data[i].trial_period == 0){
+                    alert(page_data[i].name + "不能试用");
+                    return;
+                }
+            }
+            goodsArray.push({goods_id:page_data[i].id.toString()});
+        }
+    }
+    var period = price_unit * price_num;
+    var $buypage = $("#goto-buy-page");
+    var $buypagebtn = $("#goto-buy-page-btn");
+    $buypage.modal('show');
+    $buypagebtn.off('click').click(function(){
+        $(this).addClass('disabled').attr('disabled','disabled').html("处理中...");
+        if (is_try) {
+            var is_try_group = group_type ? group_type : 10 ;
+            util.gisAddToCart(goods_id,period,is_try,goodsArray,'{$goods.goods_name}',goods_trial_period,is_try_group);
+        } else {
+            var goods_ids = []; 
+            $.each(goodsArray,function(i,n){
+                goods_ids.push(n.goods_id);
+            });
+            //Iris update
+            if(group_type){
+                 location.href ='flow.php?step=finish_new_order&goods_id=' + goods_id + '&period=' + period + '&total_amount=' + total_price + '&is_trial=' + is_try + '&order_type=0' + '&addon_list=' + goods_ids.join(",") + '&package_name={$goods.goods_name}' + '&order_count=' + order_count+ '&group=' + group_type;
+            }else{
+                location.href ='flow.php?step=finish_new_order&goods_id=' + goods_id + '&period=' + period + '&total_amount=' + total_price + '&is_trial=' + is_try + '&order_type=0' + '&addon_list=' + goods_ids.join(",") + '&package_name={$goods.goods_name}' + '&order_count=' + order_count;
+            }
+        }
+    });
+    
+};
+
+function reassemble (){
+    var url = 'flow.php?step=finish_reassemble_order',
+    $buypage = $("#goto-buy-page"),
+    $buypagebtn = $("#goto-buy-page-btn"),
+    $payorderbtn = $(".btn-zondy.pay");
+    var addon_list = [];
+    for (var i = 0; i < page_data.length; i++) {
+        if (page_data[i].chosen) {
+            if(page_data[i].trial_period && page_data[i].trial_period == 0){
+                alert(page_data[i].name + "不能试用");
+                return;
+            }
+            addon_list.push(page_data[i].id);
+        }
+    }
+    var goods_data = {
+        order_id: order_id,
+        addon_list:JSON.stringify(addon_list),
+        total_price: total_price,
+        period: rest_day,
+        order_type: 2 //重新选配
+    };
+
+    $buypage.modal('show');
+    $buypagebtn.off('click').click(function(){
+        $(this).addClass('disabled').attr('disabled','disabled').html("正在处理...");
+        location.href ='flow.php?step=finish_reassemble_order&order_id=' + order_id + '&addon_list=' + JSON.stringify(addon_list);
+    });
+
+    
+};
+
+function checkPreCustom(current_checked_array){
+    {if $goods.goods_id neq 381}
+    return;
+    {/if}
+    var current_array_string = JSON.stringify(current_checked_array.sort());
+    switch (current_array_string) {
+        case JSON.stringify(CUSTOM_PKG_CONFIG.BASIC.sort()):
+            $('.basic_pkg').addClass('active');
+            break;
+        case JSON.stringify(CUSTOM_PKG_CONFIG.STANDARD.sort()):
+            $('.standard_pkg').addClass('active');
+            break;
+        case JSON.stringify(CUSTOM_PKG_CONFIG.PREMIUM.sort()):
+            $('.premium_pkg').addClass('active');
+            break;
+        default:
+            $('.custom_pkg').removeClass('active');
+    }
+};
+
+function preCustomPackage() {
+    
+    var pre_chosen_list = [];
+
+    $('.custom_pkg').on('click', function(){
+
+        if ($(this).hasClass('active')) {
+            pre_chosen_list = [];
+            $(this).removeClass('active');
+        } else {
+            if ($(this).hasClass('basic_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.BASIC;
+            } else if ($(this).hasClass('standard_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.STANDARD;
+            } else if ($(this).hasClass('premium_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.PREMIUM;
+            }
+            $(this).addClass('active').siblings().removeClass('active');
+        }
+        
+
+        my_cookie[current_index] = pre_chosen_list.concat([]);
+        $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+
+        $('.addon-item').remove();
+        renderData();
+    })
+};
+
+init();

@@ -1,0 +1,17 @@
+.loading-content{
+	text-align: center;
+	min-height: 600px;
+} 
+
+.loading-content #state_msg{
+	font-size:24px;
+	color:#333;
+}
+
+.loading-content a{
+	color:#2299cc;
+}
+
+.statu-msg{
+	line-height: 600px;
+}

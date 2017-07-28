@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地质产品_地学科普</title>
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--[if lt IE 8]>
+    <script type="text/javascript" src="js/iconfont-ie7.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <script type="text/javascript" src="js/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" style="background: url(../images/homeimage/logo.png)  no-repeat; margin:0;background-position: 0 20px;text-indent: 58px;font-size: 24px;padding-right: 30px;" >中国地质调查局</a>
+			</div>
+	
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="index.php">首页</a></li>
+					<li><a href="serviceResource.php">服务资源</a></li>
+					<li class="active"><a href="geoproduct.php">地质产品</a></li>
+					<li><a href="#">地质在线</a></li>
+					<li><a href="#">动态新闻</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">登录</a></li>
+					<li><a href="#">注册</a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	
+	<div class="jumbotron"  style="background: url(../images/地质产品/banner.png) 0% 100% /cover no-repeat;min-height: 200px;">
+		<div class="container">
+			<form id="searchCard" class="text-center search-card" action="">
+				<div class="search-card_content">
+					<input type="text" class="search-card_text"  maxlength="255" autocomplete="off">
+				</div>
+				<div class="search-card-submit">
+					<input type="submit" class="search-card_btn" value="搜索" class="btn">
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	<!-- 地质产品导航 -->
+	<section>
+		<div class="container">
+			<div class="product-navbar">
+				<a class="product-navbar_link" href="geoproduct.php">地质数据</a>
+				<a class="product-navbar_link" href="geoproduct.php?do=geomap">地质图</a>
+				<a class="product-navbar_link active" href="geoproduct.php?do=geoscience">地学科普</a>
+				<span class="morelike">
+					<a href="geoproduct.php?do=software">软件及仪器设备</a>
+					<a href="geoproduct.php?do=publication">文献与出版物</a>
+					<a href="geoproduct.php?do=technolgy">技术方法与标注</a>
+					<a href="geoproduct.php?do=specialser">专题服务</a>
+				</span>
+				<span class="dropdown">
+			        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多 <span class="caret"></span></a>
+			        <ul class="dropdown-menu"  style="top: 120%;">
+			           <li><a href="geoproduct.php?do=software">软件及仪器设备</a></li>
+			           <li><a href="geoproduct.php?do=publication">文献与出版物</a></li>
+			           <li><a href="geoproduct.php?do=technolgy">技术方法与标注</a></li>
+			           <li><a href="geoproduct.php?do=specialser">专题服务</a></li>
+			        </ul>
+		        </span>
+			</div>	
+		</div>
+	</section>
+
+	<!-- 地质产品展示 -->
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+
+				<div class="col-md-4 col-sm-6 col-xs-12">
+					<div class="product-box-item">
+						<a href="">
+							<div class="product-box">
+								<div class="product-box_image" style="height: 179px;overflow: hidden;">
+									<img src="../images/地质产品/图层-36.png" alt="暂无图片" height="179" width="100%">
+								</div>
+								<div class="product-box_content">
+									<h4 class="text-center">地学科普</h4>
+								</div>	
+							</div>
+						</a>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 分页 -->
+	<section>
+		<div class="container">
+			<nav class="pull-right" aria-label="Page navigation">
+			  <ul class="pagination">
+			    <li>
+			      <a href="#" aria-label="Previous">
+			        <span aria-hidden="true">&laquo;</span>
+			      </a>
+			    </li>
+			    <li class="active"><a href="#">1</a></li>
+			    <li><a href="#">2</a></li>
+			    <li><a href="#">3</a></li>
+			    <li><a href="#">4</a></li>
+			    <li><a href="#">5</a></li>
+			    <li>
+			      <a href="#" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>
+			  </ul>
+			</nav>		
+		</div>
+	</section>
+
+	<!-- 快速导航 -->
+	<section style="background-color: #162e42;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">关于我们</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">联系我们</a></li>
+							<li class="fastlink-link"><a href="">企业地址</a></li>
+							<li class="fastlink-link"><a href="">单位情况</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">专题服务</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">物化</a></li>
+							<li class="fastlink-link"><a href="">水资源</a></li>
+							<li class="fastlink-link"><a href="">矿产</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">数据服务</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">软件</a></li>
+							<li class="fastlink-link"><a href="">服务</a></li>
+							<!-- <li class="fastlink-link"><a href="">矿产</a></li> -->
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">互联信息</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">发展研究中心</a></li>
+							<li class="fastlink-link"><a href="">中国地质科学院</a></li>
+							<li class="fastlink-link"><a href="">物化探所</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- footer -->
+	<footer class="footernav">
+		<div class="container">
+			<p class="text-center">主办：中国地质调查局 &nbsp;&nbsp;技术支持：中国地质调查局发展研究中心</p>
+			<p class="text-center">北京市西城区阜外大街45号院&nbsp;&nbsp;100037</p>
+			<p class="text-center">京ICP备05036996号</p>
+		</div>
+	</footer>
+</body>
+</html>

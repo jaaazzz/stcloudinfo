@@ -1,0 +1,63 @@
+/**
+ * 检测是否可以部署云主机
+ * @param $order_id 订单id 
+*/
+function check_deploy(order_id){
+	var data = {
+        'act' : "bindOperated",
+        'type' : "checkDeploy",
+		'order_sn':order_id
+	};
+	// $.get('ajax.php',data,function(result){
+	// 	if (result.success) {
+			window.location.href = "app.php?act=create&sn=" + order_id;
+	// 	}else{
+	// 		$('#check-deploy-tip').modal('show');
+	// 		var error_msg = result.msg;
+	// 		var str_html = '';
+	// 		if (error_msg == 'APP_FULL') {
+	// 			str_html += "该软件已经部署应用("+result.result.app_name+"),如您要部署新应用，请先删除原始应用！";
+	// 			str_html += "<a href='user.php?act=my_app'>去我的应用删除</a>";				
+	// 		}else if (error_msg == 'BIND_FULL') {
+	// 			var binding_info_arr = result.result;
+	// 			var binging_name = '';
+	// 			for (var k in binding_info_arr) {
+	// 				binging_name += binding_info_arr[k].ClientInfo + ',';
+	// 			};
+	// 			binging_name = binging_name.substring(0,binging_name.length-1);
+	// 			str_html = "该软件目前已经绑定("+binging_name+"),如您要在其他主机上使用该软件，请先解除绑定！"				
+	// 		}else if (error_msg == 'HOST_EMPTY') {
+	// 			str_html = "云主机剩余数为0";
+	// 			$('#check-deploy-tip .content-2').html('请联系管理员');
+	// 		}
+	// 		$('#check-deploy-tip .content-1 .tip-content').html(str_html);
+	// 	}
+	// },'JSON')
+}
+
+/**
+ * 检测是否可以迁移到本地
+ * @param $order_id 订单id 
+*/
+function check_download(order_id){
+	var data = {
+        'act' : "bindOperated",
+        'type' : "checkDownload",
+		'order_sn':order_id
+	};
+	$.get('ajax.php',data,function(result){
+		if (result.success) {
+			window.location.href = "user.php?act=prepare_for_download&sn=" + order_id;
+		}else{
+			$('#check-deploy-tip').modal('show');
+			var binding_info_arr = result.result;
+			var binging_name = '';
+			for (var k in binding_info_arr) {
+				binging_name += binding_info_arr[k].ClientInfo + ',';
+			};
+			binging_name = binging_name.substring(0,binging_name.length-1);
+			var str_html = "该软件目前已经绑定("+binging_name+"),如您要在其他主机上使用该软件，请先解除绑定！"
+			$('#check-deploy-tip .content-1 .tip-content').html(str_html);
+		}
+	},'JSON')	
+}

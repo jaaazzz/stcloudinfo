@@ -1,0 +1,220 @@
+/**
+ * 地球支持事件类型
+ * @readonly
+ * @enum {String}
+*/
+var EventType = {
+    Initialize: "initialize",
+
+    FinishedAnalyze: "finishedAnalyze",
+    FinishedDraw: "finishedDraw",
+    PickLabel: "pickLabel",
+    PickModel: "pickModel",
+
+    LButtonDblClk: "leftDbClick",
+    LButtonDown: "leftMouseDown",
+    LButtonUp: "leftMouseUp",
+
+    MouseMove: "mouseMove",
+    MouseWheel: "mouseWheel",
+    KeyDown: "keyDown",
+    KeyUp: "keyUp",
+
+    MButtonDown: "mButtonDown",
+    MButtonUp: "mButtonUp",
+
+    Jumped: "jumped",
+    PickElement: "pickElement",
+
+    RButtonDblClk: "rightDbClick",
+    RButtonDown: "rightMouseDown",
+    RButtonUp: "rightMouseUp",
+    CreationComplete: "creationComplete",
+
+    FinishedAddDoc: "finishedAddDoc",
+
+    FinishedLoadCache: "finishedLoadCache"
+};
+/**
+ * 鼠标事件的枚举值
+ * @readonly
+ * @enum {String}
+ */
+var MouseType = {
+    Pan: "pan",
+    ZoomInByRect: "zoomInByRect",
+    ZoomOutByRect: "zoomOutByRect"
+};
+/**
+ * 缓存类型，如果需要生成缓存，将bin目录下的WebCacheCfg.xml文件type设为1，数据库缓存type值对应为2，不缓存type值对应为0
+ * @readonly 
+ * @enum {Int}
+*/
+var CachesType = {
+    ImageCache: 1,
+    DBcache: 2,
+    NullCache: 0
+};
+/**
+ * 图层类型
+ * @readonly 
+ * @enum {Int}
+*/
+var CachesLayerType = {
+    Covering: 0,
+    Terrain: 2,
+    Model: 3,
+    Label: 4
+};
+/**
+* 当前进行的分析类别,主要为地形分析的各个小类
+ * @readonly 
+* @enum {Int}
+*/
+var AnalyseType = {
+    Null: "",
+    //洪水淹没分析
+    FLoodAnalyze: 1,
+    //填挖方分析
+    CutFill: 2,
+    //可视域分析
+    ViewShed: 3,
+    //单点地形参数查询分析
+    PointQuery: 4,
+    //两点通视性分析
+    Visible: 5,
+    //坡度分析
+    Slope: 6,
+    //坡向分析
+    Aspect: 7
+};
+/**
+* 进行的分析类别，主要为六大类别
+ * @readonly 
+* @enum {Int}
+*/
+var EnumCommToolType = {
+    Unknown: 0,
+    //地形分析
+    TerrainAnalyze: 1,
+    //爆炸演示分析
+    BombShow: 2,
+    //日照分析
+    SunLight: 3,
+    //剖切面分析
+    TerrainCut: 4,
+    //模型编辑分析
+    ModelEdit: 5,
+    //量算分析
+    Measure: 6
+};
+/**
+ * 图层的状态
+ * @readonly 
+ * @enum {Int}
+*/
+var EnumLayerState = {
+    StateDelete: 1,
+    StateAppend: 2,
+    StateVisble: 3,
+    StateUnVisble: 4,
+    StateActive: 5
+};
+/**
+ * 绘制二维元素的绘制方式的枚举类
+ * 0:线型，1:矩形, 2:多边形, 3:圆形
+ * @readonly 
+ * @enum {Int}
+ */
+var Enum2DShapeType = {
+    TypeLine: 0,
+    TypeRect: 1,
+    TypePolygon: 2,
+    TypeCircle: 3,
+    TypeArrow:4,   //2016-10-10   by liuruoli
+    TypeMultiPolygon:5 //2016-10-10   by liuruoli
+};
+/**
+ * 绘制二维元素的绘制线的枚举类
+ * 0:实线,1:折线,2:点线,3:折线点
+ * @readonly 
+ * @enum {Int}
+*/
+var Enum2DLineType = {
+    TypeSolid: 0,
+    TypePolyLine: 1,
+    TypePointLine: 2,
+    TypePolyLinePoint: 3
+};
+/**
+* 绘制三维元素的绘制方式的枚举类
+ * @readonly 
+* @enum {Int}
+*/
+var Enum3DShapeType = {
+    Type3DPoint: 0,
+    Type3DLine: 1,
+    TypeSurface: 2
+};
+/**
+* 地图文档的类型
+ * @readonly 
+* @enum {Int}
+*/
+var DocType = {
+    TypeDoc: 0,
+    TypeRaster: 1,
+    TypeG3D: 2,
+    TypeLayer: 3,
+    TypeOGCwmts: 4
+};
+/**
+* 动画漫游的操作
+ * @readonly 
+* @enum {Int}
+*/
+var EnumFlyOperType = {
+    FlyStart: 0,
+    FlyPause: 1,
+    FlyStop: 2,
+    Reverse: 3,
+    FlyBack: 4,
+    PosBegin: 5,
+    PosEnd: 6
+};
+/**
+* 天地图叠加图层的类型
+ * @readonly 
+* @enum {String}
+*/
+var EnumTDTType = {
+    Vector: "vec",
+    VectorAno: "cva",
+    Raster: "ims",
+    RasterAno: "cia",
+    Terrain: "ter",
+};
+/**
+* 模型显示的特效类型
+ * @readonly 
+* @enum {Int}
+*/
+var EnumModelDispType = {
+    Flash: 1,
+    Highlight: 2,
+    Translucence: 3
+};
+/**
+* 三维切割类型
+ * @readonly 
+* @enum {Int}
+*/
+var EnumMdlCutType = {
+    MdlCut_SurByLin: 0,//根据线创建面
+    MdlCut_SurByXYZ: 1,//平面切割
+    MdlCut_SurByAB: 2,//任意面切割
+    MdlCut_Cyliner: 3,//圆柱体切割
+    MdlCut_Box: 4,//长方体切割
+    MdlCut_Pipe: 5,//隧道模拟切割
+    MdlCut_EntityByLin: 6//根据折线创建体
+};

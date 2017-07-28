@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>在线地图_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon">
+		<link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+		
+		<link href="themes/appcloud/onlinesrc/libs/ol/ol.css" rel="stylesheet" type="text/css" />
+        <!--滚动条插件-->
+        <link href="themes/appcloud/onlinesrc/js/scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+
+        <link href="themes/appcloud/onlinesrc/css/MyStyle.css" rel="stylesheet" type="text/css" />
+
+    <script src="themes/appcloud/onlinesrc/libs/jquery-1.11.2.min.js" type="text/javascript"></script>
+     <script src="themes/appcloud/onlinesrc/libs/ol/ol-debug.js" type="text/javascript"></script>
+     <script src="themes/appcloud/onlinesrc/libs/zondyClient.js" type="text/javascript"></script>
+     <script src="themes/appcloud/onlinesrc/libs/MapGIS3D/globe.all.js" type="text/javascript"></script>
+    <script src="themes/appcloud/onlinesrc/libs/Paging.js" type="text/javascript"></script>
+    <!--引入easyui相关脚本库-->
+    <script src="themes/appcloud/onlinesrc/libs/jqueryEasyui/jquery.easyui.min.js" type="text/javascript"></script>
+    <!--引入操作JSON对象的相关脚本库-->
+    <script src="themes/appcloud/onlinesrc/libs/jsonformat/json2.js" type="text/javascript"></script>
+    <script src="themes/appcloud/onlinesrc/libs/jsonformat/jsonExtend.js" type="text/javascript"></script>
+    <script src="themes/appcloud/onlinesrc/libs/POI/POI.js" type="text/javascript"></script>
+    <script src="themes/appcloud/js/openlayer3/jquery-1.11.2.min.js" type="text/javascript"></script>
+    <link href="themes/appcloud/js/openlayer3/ol.css" rel="stylesheet" type="text/css" />
+    <script src="themes/appcloud/js/openlayer3/ol-debug.js" type="text/javascript"></script>
+    <script src="themes/appcloud/js/openlayer3/zondyClient.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="themes/appcloud/js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="themes/appcloud/js/easyui/themes/icon.css">
+
+
+        <!-- {insert_scripts files='g-common.js'} -->
+    <script type="text/javascript" src="themes/appcloud/js/easyui/jquery.easyui.min.js"></script>
+  <!--  <script src="themes/appcloud/onlinesrc/js/bootstrap-3.3.7-dist/js/bootstrap.js" type="text/javascript"></script>-->
+
+        <style type="text/css">
+        #mapCon {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+        }
+        .layerDiv{
+            position: absolute;
+            top: 50px;
+            right: 80px;
+        }
+        .layerDiv div{
+            float:left;
+        }
+        .layer1{
+            width:118px;
+            height:82px;
+            background:url(themes/appcloud/js/openlayer3/img/layer_raster.png) no-repeat;
+            border:2px solid #fff;
+            position:relative;
+        }
+        .layer2{
+            width:118px;
+            height:82px;
+            background:url(themes/appcloud/js/openlayer3/img/Layer_vector.png) no-repeat;
+            border:2px solid #fff;
+            position:relative;
+        }
+        .layerHover{
+            width:118px;
+            height:82px;border:2px solid #fde305;
+        }
+        .layerSelect{
+            border:2px solid #336EF8;
+        }
+        .layerTitle{
+            display:block;
+            background:#ccc;
+            color:#fff;
+            width:60px;
+            height:20px;
+            line-height:20px;
+            position:absolute;
+            right:0px;
+            bottom:0px;
+            text-align:center;
+        }
+        .layerTitleSelect,.layerTitleHover{
+            background:#336EF8;
+        }
+        .left-box{
+            width: 370px;
+            background-color: #F8F8FF;
+            position: absolute;
+            height: inherit;
+            box-shadow: 2px 0 2px rgba(0, 0, 0, .3);
+            z-index: 1;
+        }
+        .map-column{
+            border-radius: 4px;
+            border:1px solid #dcdcdc;
+            margin:20px;
+            width: 330px;
+            height: 50px;
+        }
+        .title{
+            float:left;
+            width:64px;
+            margin:4px 0px 4px 10px;
+            padding:10px 17px;
+            border-right:1px solid #dcdcdc;
+        }
+        </style>
+    </head>
+    <body onload="ShowMap.initMap();ShowMap.initTree();ShowMap.initLayer()">
+       <!-- #BeginLibraryItem "/library/header.lbi" -->
+       <!-- #EndLibraryItem -->
+<div id="onlinesrc-content" onload="init()">
+    <div id="header-line"></div>
+        <!--快捷工具栏-->
+        <div id="toolBars">
+            <ul class="onlinemap-menubar clearfix">
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" title="测距" data-placement="bottom">
+                    <img id="measureLen" class="measureA" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                    <ul class="shortBox">
+                    <img class="trangle-icon" src="themes/appcloud/onlinesrc/images/onlinesrcImg/trangle-icon.png"/>
+                        <li class="clearfix">
+                            <img class="title-icon" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                            <label class="boxTitle">
+                                测量距离</label>
+                                <img class="input_enter_icon closeBox" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                            <hr class="horizonLine" />
+                            <label class="measureUnitLabel">
+                                单 位 ：
+                            </label>
+                            <div class="measure-unit-box" id="measureLenUnit">
+                                <div class="measure-unit-showbox clearfix">
+                                    <span class="measure-unit-txt">千米</span>
+                                    <div class="measure-unit-icon-bg">
+                                        <img class="measure-unit-icon" src="themes/appcloud/onlinesrc/images/onlinesrcImg/arrow-icon.png" />
+                                    </div>
+                                </div>
+                                <ul class="measure-unit-option" id="measure-unit-option-len">
+                                    <li class="selected" value="km">千米</li>
+                                    <li value="m">米</li>
+                                    <li value="cm">厘米</li>
+                                </ul>
+                             </div><br/>
+
+                            <label class="geodesicCheckbox">
+                                <input type="checkbox" id="geodesicLen" />是否使用测地学方法测量</label>
+                                <hr class="horizon-line-before-measurerlt"/>
+                            <label class="measureRltLabel">
+                                测量结果：
+                            </label>
+                            <label id="measureLenRlt">
+                            </label>
+                        </li>
+                    </ul>
+                </li>
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" title="测面积" data-placement="bottom">
+                    <img id="measureArea" class="measureA" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                    <ul class="shortBox">
+                    <img class="trangle-icon" src="themes/appcloud/onlinesrc/images/onlinesrcImg/trangle-icon.png"/>
+                        <li class="clearfix">
+                        <img class="title-icon" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                            <label class="boxTitle">
+                                测量面积</label>
+                                <img class="input_enter_icon closeBox" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                            <hr class="horizonLine" />
+                            <label class="measureUnitLabel">
+                                单 位 ：
+                            </label>
+                            <div class="measure-unit-box" id="measureAreaUnit">
+                                <div class="measure-unit-showbox clearfix">
+                                    <span class="measure-unit-txt">平方千米</span>
+                                    <div class="measure-unit-icon-bg">
+                                        <img class="measure-unit-icon" src="themes/appcloud/onlinesrc/images/onlinesrcImg/arrow-icon.png" />
+                                    </div>
+                                </div>
+                                <ul class="measure-unit-option" id="measure-unit-option-area">
+                                    <li class="selected" value="km<sup>2<sup>">平方千米</li>
+                                    <li value="m<sup>2<sup>">平方米</li>
+                                    <li value="cm<sup>2<sup>">平方厘米</li>
+                                </ul>
+                             </div>
+                            <br />
+                            <label class="geodesicCheckbox">
+                                <input type="checkbox" id="geodesicArea" />是否使用测地学方法测量</label>
+                                <hr class="horizon-line-before-measurerlt"/>
+                            <label class="measureRltLabel">
+                                测量结果：
+                            </label>
+                            <label id="measureAreaRlt">
+                            </label>
+                        </li>
+                    </ul>
+                </li>
+                <!--清空-->
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" title="清空" data-placement="bottom">
+                    <img id="clearAll" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+
+                </li>
+                <li class="shortMenus">
+                    <hr class="verticalLine"/>
+                </li>
+                <!--放大地图-->
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" title="放大" data-placement="bottom">
+                    <img  id="zoomIn" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/></li>
+                <!--缩小地图-->
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" title="缩小" data-placement="bottom">
+                    <img  id="zoomOut" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/></li>
+                <!--复位地图-->
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" title="复位" data-placement="bottom">
+                    <img id="restore" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                </li>
+                <!--我的位置-->
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" title="我的位置" data-placement="bottom">
+                    <img id="curPosition" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png"/>
+                </li>
+                <li class="shortMenus">
+                    <hr class="verticalLine"/>
+                </li>
+                <!-- <!--搜索框-->
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" data-placement="bottom">
+                    <a class="btn btn-sm btn-link"  id="queryByPntBtn" style="position: absolute;" onclick="queryByAttribute()">搜索</a>
+                </li>
+                <li class="tooltip-test shortMenus" data-toggle="tooltip" data-placement="bottom">
+                    <input type="text"  id="Conditions" style="position: absolute;"/>
+                </li> -->
+                <div id="searchbox" class="clearfix">
+                    <div id="searchbox-container">
+                        <div id="sole-searchbox-content" class="searchbox-content" style="display: block;">
+                            <input id="sole-input" class="searchbox-content-common" placeholder="搜地点、查公交、找路线" value="" type="text" />
+                            <div class="input-clear" title="清空"></div>
+                            <div class="searchbox-content-button right-button route-button" title="路线" data-tooltip="1">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="search-button" title="搜索" data-tooltip="3"></button>
+                </div>
+            <ul id="cards-level0" class="cardlist"></ul>
+            <ul id="cards-level1" class="cardlist"></ul>
+            <ul id="cards-level2" class="cardlist"></ul>
+        </div>
+    <div id="content">
+        <div class="left-box">
+            <div class="map-column">
+                <div class="title"><span style="font-size:16px;">地图展示</span></div>
+                <div class="title"><span style="font-size:16px;">分类查询</span></div>
+                <div class="title" style="border-right:none;"><span style="font-size:16px;">专题图层</span></div>
+            </div>
+            <!--地图展示-->
+             <div style="position: absolute;width: 370px;height: 500px;" id="Tree" class="easyui-tree" data-options="animate:true,checkbox:true">
+            </div> 
+
+
+        </div>
+        <!-- <div class="iframe_wrapper" id="mapCon">
+        </div> -->
+        <div>
+            
+            <div id="mapCon" style="position: absolute;left: 200px;">
+            </div>
+            <div id="layerDiv" class="layerDiv" style="">
+                <div id="layer2" class="layer2" layerIndex="1">
+                    <span id="layerTitle2" class="layerTitle">矢量</span>
+                </div>
+                <div id="layer1" class="layer1" layerIndex="2">
+                    <span id="layerTitle1" class="layerTitle">影像</span>
+                </div>
+            </div>
+        </div>
+        <div id="mapControl" style="left: 190px; position: absolute; width: 100%; height: 100%">
+            <object id="MapGIS_EarthControl" classid="clsid:56D6E862-F22D-41EF-B517-F2255A4250CB"
+                style="left: 0px; top: 0px; width: 100%; height: 100%; position: absolute; z-index: 0;">
+            </object>
+        </div>
+    </div>
+</div>
+    <!-- #BeginLibraryItem "/library/footer.lbi" -->
+    <!-- #EndLibraryItem -->
+    </body>
+    <script type="text/javascript">
+    var svrCfg = {
+        //提供地图数据服务的IGS服务器ip
+        svrIp:window.location.hostname,
+        //提供地图数据服务的数据源
+        svrName: "MapGISLocal",
+        userName: "",
+        userPsw: ""
+    };
+
+    window.ShowMap = window.ShowMap || {};
+    ShowMap.initTree=function() {
+            $('#Tree').tree({
+                url: 'themes/appcloud/onlinesrc/tree.json',
+                onLoadSuccess: function (node, param) {
+                    $(this).find("span.tree-checkbox").unbind().click(function () {
+                        // $("#Tree").tree("select",$(this)).parent();
+                        return false;
+                    });
+                },
+                onClick: function (node) {
+                    var n = $('#Tree').tree("getRoot", node.target);
+                    $('#Tree').tree("uncheck", n.target);
+                    if (node.type == 1) {//选择的是最子节点数据层
+                        if (node.checked == true) {
+                            $('#Tree').tree("uncheck", node.target);
+                            ShowMap.changeMap(null);
+                        } else {
+                            $('#Tree').tree("check", node.target);
+                            ShowMap.changeMap(node.layer);
+                        }
+                    } else {
+                        var childnodes = $('#Tree').tree("getChildren", node.target);
+                        if (childnodes.length == 1) {
+                            if (node.checked == true) {
+                                $('#Tree').tree("uncheck", node.target);
+                                ShowMap.changeMap(null);
+                            } else {
+                                $('#Tree').tree("check", node.target);
+                                ShowMap.changeMap(childnodes[0].layer);
+                            }
+                        } else {
+                            if (node.checked == false) {
+                                alert("只允许选择单个图层");
+                            }
+                        }
+                    }
+                },
+                onCheck: function (node, checked) {
+
+                }
+            });
+        }
+        var map = null;
+        var TileLayer = null;
+        //地图初始化函数
+        ShowMap.initMap = function() {
+            //瓦片的显示名称
+            //var name = "MapGIS";
+            //瓦片地图的名称
+            var TileName = "武汉矢量";
+            TileLayer = new Zondy.Map.TileLayer(TileName, TileName, {
+                ip: "192.168.83.72",
+                port: "6163"
+            });
+            map = new ol.Map({
+                //目标DIV
+                target: 'mapCon',
+                //将图层添加到地图容器
+                layers: [TileLayer],
+                view: new ol.View({
+                    projection: 'EPSG:4326',
+                    center: [114.65,30.665],
+                    //最大显示级数
+                    maxZoom: 16,
+                    //最小显示级数
+                    minZoom: 9,
+                    //当前显示级数
+                    zoom: 9
+                })
+            });
+        }
+        ShowMap.changeMap = function(mapName){
+            var view = map.getView();
+            var center = view.getCenter();
+            var zoom = view.getZoom();
+            map.removeLayer(TileLayer);
+            if(mapName==null){
+                return;
+            }
+            TileLayer = new Zondy.Map.TileLayer(mapName, mapName, {
+                ip: "192.168.83.72",
+                port: "6163"
+            });
+            map.addLayer(TileLayer);
+            view = map.getView();
+            //平移地图
+            view.setCenter(center);
+            view.setZoom(zoom);
+            var node=$('#Tree').tree("getChildren");
+            for(var i=0;i<node.length;i++){
+                if(node[i].layer==mapName){
+                    $('#Tree').tree("check",node[i].target);
+                    break;
+                }else{
+                    $('#Tree').tree("uncheck",node[i].target);
+                }
+            }
+        }
+        ShowMap.initLayer = function(){
+            $("#layerDiv div").eq(0).attr("select",true);
+            $("#layerDiv div").eq(0).addClass("layerSelect");
+            $("#layerDiv div").eq(0).find(".layerTitle").addClass("layerTitleSelect");
+            $("#layerDiv div").hover(function(){
+                $(this).addClass("layerHover");
+                $(this).find(".layerTitle").addClass("layerTitleHover");
+                $("#layerDiv div").css("display","block");
+            },function(){
+                $(this).removeClass("layerHover");
+                $(this).find(".layerTitle").removeClass("layerTitleHover");
+            })
+            $("#layerDiv div").click(function(){
+                $("#layerDiv div").attr("select",false);
+                $("#layerDiv div").removeClass("layerSelect");
+                $("#layerDiv .layerTitle").removeClass("layerTitleSelect");
+                ShowMap.selectLayer($(this));
+            });
+        }
+        ShowMap.selectLayer = function(selectDiv){
+    //        var layer = map.getLayers().getArray();
+    //        alert(layer[0].name);
+            selectDiv.attr("select",true);
+            selectDiv.addClass("layerSelect");
+            selectDiv.find(".layerTitle").addClass("layerTitleSelect");
+            var layerIndex = selectDiv.attr("layerIndex");
+            if(layerIndex==1){
+                ShowMap.changeMap("武汉矢量");
+            }else{
+                ShowMap.changeMap("武汉影像");
+            }
+        }
+</script>
+	<script type="text/javascript" src="js/index.js"></script>
+    <script src="themes/appcloud/onlinesrc/js/Measure.js" type="text/javascript"></script>
+
+ <!--滚动条插件-->
+        <script src="themes/appcloud/onlinesrc/js/scrollbar/jquery.mCustomScrollbar.concat.min.js" type="text/javascript"></script>
+</html>

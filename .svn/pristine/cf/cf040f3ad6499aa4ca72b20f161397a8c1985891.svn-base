@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>{$page_title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <!--<link href="green.css" rel="stylesheet"  type="text/css" >-->
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/goods.css" rel="stylesheet" type="text/css" />
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+          {insert_scripts files='json2.js'}
+        <![endif]-->
+      
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js,jquery.cookie.js,jquery.tmpl.min.js,jquery.icheck.min.js'} -->
+        <!-- {insert_scripts files='jquery.selectbox-0.2.min.js'} -->
+        <style type="text/css">
+            #package_link:hover{
+                text-decoration: underline;
+            }
+            .row .order-count input{
+                margin-bottom: 0px;
+            }
+            .span9 .mid-line{
+                border-top: 1px solid #dcdcdc;
+            }
+            .row.name a{
+                color: #3a85c6;
+                font-size: 14px;
+                margin-left: 50px;
+            }
+            .row.name a:hover{
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+<body>
+    <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+    {insert name="goods_init"}
+    <div class="detail">
+        <div class="container" style=" min-height: 481px; ">
+            <!-- #BeginLibraryItem "/library/u_r_here.lbi" --><!-- #EndLibraryItem -->
+            <div class="row information">
+                <!-- {if $goods_type == 'package'} -->
+                    <div class="app-box lg has-customize-border">
+                        <!--{if $version_sign eq 'pre'}-->
+                        <div class="app-beta"></div>
+                        <!--{elseif $version_sign eq 'test'}-->
+                        <div class="app-test"></div>
+                        <!--{/if}-->
+                        <img class="app-box-img" src="{if $goods.goodsImg}{$goods.goodsImg}{else}./images/app_01.png{/if}" />
+                        <div class="app-background"></div>
+                        <div class="pull-left all-users-star app-show-score">
+                            <span class="comment-star">
+                                <span class="stars star_0">
+                                    <span class="stars star_1">
+                                        <span class="stars star_2">
+                                            <span class="stars star_3">
+                                                <span class="stars star_4">
+                                                    <span class="stars star_5">
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                    <!-- {if $bac_act eq 'order'} -->
+                    </div>
+                    <div class="span9">
+                        <div class="row name">{$goods_name}</div>
+                    <!-- {else} -->
+                        
+                    </div>
+                    <div class="span9">
+                        <div class="row name">
+                            {$goods.goodsNameStyle}
+                        </div>
+                    <!-- {/if} -->
+                        <div class="row">
+                            <!-- {if ($goods.workbenchId)} -->
+                            <div class="gis-inline-block">
+                                <span>开发工作室：</span>
+                                <span title="{$goods.workbenchId}" limit="32">{$goods.workbenchId}</span>
+                            </div>                            
+                            <!-- {else} -->
+                            <!-- {if ($goods.developerId)} -->
+                            <div class="gis-inline-block">
+                                <span>开发者：</span>
+                                <span title="{$goods.developerId}" limit="32">{$goods.developerId}</span>
+                            </div>
+                            <!-- {/if} -->
+                            <!-- {/if} -->
+                            <div class="gis-inline-block">
+                                <span>运行环境：</span>
+                                <span title="{$goods.envs}" limit="32">{$goods.envs}</span>
+                            </div>                            
+                        </div>
+
+                        <!-- {if $bac_act eq 'order'} -->
+                        <div class="row deadline gis-inline-block">截止日期：<span>{$end_time}</span></div>
+                        <div class="row pay-date">购买期限：{$rest_day}天</div>
+                        <div class="row price gis-inline-block" style='margin-top:10px;position:relative'>
+                            消费点数:<span>0</span>
+                        </div>
+                        <!-- {else} -->
+                        <!-- {if $goods.version} -->
+                        <div class="row version">
+                            版本：{$goods.version}
+                        </div>
+                        <!-- {/if} -->
+                        <div class="row">
+                            <div class="time gis-inline-block">
+                                期限：
+                                <!-- #BeginLibraryItem "/library/select.lbi" --><!-- #EndLibraryItem -->
+                            </div>                            
+                        </div>
+                        <div class="row price" style='margin-top:10px;position:relative'>
+                            消费点数:<span>0</span>
+                        </div>
+                        <div class="row" style="display:none">
+                            <div class="order-count gis-inline-block">
+                                购买份数：
+                                <!-- #BeginLibraryItem "/library/order_count_select.lbi" --><!-- #EndLibraryItem -->
+                            </div>
+                        </div>
+                        <!-- {if $is_desktop neq '1' && $goods_group } -->
+                         <div class="row" style="margin-left:3px;">
+                            产品版本：
+                            <!-- #BeginLibraryItem "/library/goods_group_select.lbi" --><!-- #EndLibraryItem -->
+                        </div>
+                        <!-- {/if} -->
+                        <!-- {/if} -->
+                        
+                        <div class="row">
+                        <!-- {if $bac_act eq 'order'} -->
+                            <button class="btn-zondy pay">申&nbsp;&nbsp;&nbsp;请</button>
+                        <!-- {else} -->
+                        <button class="btn-zondy pay">申&nbsp;&nbsp;&nbsp;请</button>
+                        <!-- {/if} -->
+                        <!-- {if $is_collection} -->
+                        <a id="collection" onclick="javascript:cancle_collection('{$is_collection}','{$goods.goodsId}','soft',event);" class="collection">{$collection_count}</a>
+                        <!-- {else} -->
+                        <a id="collection" onclick="javascript:add_collection('{$goods.goodsId}','soft',event);" class="no-collection">{$collection_count}</a>
+                         <!-- {/if} -->
+                        </div>
+
+                <!-- {elseif $goods_type == 'tool'} -->
+                    <div class="app-box lg {if $platform eq 'mobile'} mobile{/if} has-customize-border">
+                        <!--{if $version_sign eq 'pre'}-->
+                        <div class="app-beta"></div>
+                        <!--{elseif $version_sign eq 'test'}-->
+                        <div class="app-test"></div>
+                        <!--{/if}-->
+                        <img class="app-box-img" src="{if $goods.goodsImg}{$goods.goodsImg}{else}{if $top_parent_cat eq '98'}./images/mobile-default.png{else}./images/app_01.png{/if}{/if}" />
+                        <div class="app-background"></div>
+                        <div class="pull-left all-users-star app-show-score">
+                            <span class="comment-star">
+                                <span class="stars star_0">
+                                    <span class="stars star_1">
+                                        <span class="stars star_2">
+                                            <span class="stars star_3">
+                                                <span class="stars star_4">
+                                                    <span class="stars star_5">
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="app-category-icon
+                            {if $platform eq 'desktop'}
+                            desktop
+                            {elseif $platform eq 'web'}
+                            web
+                            {elseif $platform eq 'mobile'}
+                            android
+                            {/if}">
+                        </div>
+                        <div class="app-no-customize-border"></div>
+                    </div>
+                    <div class="span9">
+                        <div class="row name">
+                            {$goods.goodsNameStyle}
+                        </div>
+                        <div class="row">
+                            <div class="gis-inline-block">
+                                <span>运行环境：</span>
+                                <span title="{$goods.envs}" limit="30">{$goods.envs}</span>
+                            </div>                            
+                        </div>
+                            <!-- {if $bac_act neq 'order'} -->
+                            <div class="row">
+                                <div class="time gis-inline-block">
+                                    期限：
+                                    <!-- #BeginLibraryItem "/library/select.lbi" --><!-- #EndLibraryItem -->
+                                </div>
+                            </div>
+                            <div class="row price" style='margin-top:10px;position:relative'>
+                                消费点数:<span>0</span>
+                            </div>
+                            <div class="row" style="display:none">
+                                <div class="order-count gis-inline-block">
+                                    购买份数：
+                                    <!-- #BeginLibraryItem "/library/order_count_select.lbi" --><!-- #EndLibraryItem -->
+                                </div>
+                            </div>
+                            <!-- {if $is_desktop neq '1' && $goods_group } -->
+                             <div class="row" style="margin-left:3px;">
+                                产品版本：
+                                <!-- #BeginLibraryItem "/library/goods_group_select.lbi" --><!-- #EndLibraryItem -->
+                            </div>
+                            <!-- {/if} -->
+
+                            <div class="row">
+                                <button class="btn-zondy pay">申&nbsp;&nbsp;&nbsp;请</button>
+                                <!-- {if $is_collection} -->
+                                <a id="collection" onclick="javascript:cancle_collection('{$is_collection}','{$goods.goodsId}','soft',event);" class="collection">{$collection_count}</a>
+                                <!-- {else} -->
+                                <a id="collection" onclick="javascript:add_collection('{$goods.goodsId}','soft',event);" class="no-collection">{$collection_count}</a>
+                                 <!-- {/if} -->
+                            </div>
+                            <!-- {else} -->
+                                <!-- {if !$is_trial} -->
+                            <div class="row price">价格：<span><!-- {if $goods.shopPrice == '0.00'} -->免费<!--{else} -->¥{$goods.shopPrice}/月<!-- {/if} --></span></div>
+                                <!-- {/if} -->
+                            <div class="row pay-date">购买期限：{$rest_day}天</div>
+                            <!-- {/if} -->
+
+                <!-- {elseif $goods_type == 'addon'} -->
+                <div class="span3 icon" style="height:auto;margin-top:0px;margin-bottom:20px">
+                    <!--{if $version_sign eq 'pre'}-->
+                    <div class="app-beta"></div>
+                    <!--{elseif $version_sign eq 'test'}-->
+                    <div class="app-test"></div>
+                    <!--{/if}-->
+                    <img src="{if $goods.goodsThumb}{$goods.goodsThumb}{else}./images/default.png{/if}"  alt="{$goods.goodsName|escape:html}" style="height:120px; width:120px;margin-left:30px;"/>
+                </div>
+                <div class="span9">
+                    <div class="row name">{$goods.goodsNameStyle}</div>
+                        <div class="row">
+                            <div class="gis-inline-block">
+                                <span>文件大小：</span>
+                                <span data-name="大小">{$goods.fileSize}</span>
+                            </div>
+                            <div class="gis-inline-block">
+                                <span>语言：</span>
+                                <span data-name="语言">{$goods.lang}</span>
+                            </div>                            
+                        </div>
+                        <div class="row">
+                            <!-- {if ($goods.workbenchId)} -->
+                            <div class="gis-inline-block">
+                                <span>开发工作室：</span>
+                                <span title="{$goods.workbenchId}" limit="32">{$goods.workbenchId}</span>
+                            </div>                            
+                            <!-- {else} -->
+                            <!-- {if ($goods.developerId)} -->
+                            <div class="gis-inline-block">
+                                <span>开发者：</span>
+                                <span title="{$goods.developerId}" limit="32">{$goods.developerId}</span>
+                            </div>
+                            <!-- {/if} -->
+                            <!-- {/if} -->
+                            <div class="gis-inline-block">
+                                <span>运行环境：</span>
+                                <span data-name="运行环境" title="{$goods.envs}" limit="30">{$goods.envs}</span>
+                            </div>       
+                            <div class="row price">消费点数：<span><!-- {if $goods.shopPrice == '0.00'} -->免费<!-- {else} -->{$goods.shopPrice}/月<!-- {/if} --></span></div>
+                        </div>
+                        <!-- {if $parent_goods} -->
+                            <div class="row packages">关联的定制包：
+                                <span data-goods-id="{$parent_goods.goodsId}" selected="true"><a href="javascript:void(0)" style="color:#3a85c6" id="package_link">{$parent_goods.goodsName}</a></span>
+                            </div>
+                            <button class="btn-zondy add-customize">加入定制</button>
+                            <button class="btn-zondy checkout-customize" style="margin-left:10px;">查看定制包</button>
+                        <!-- {/if} -->
+                    <!-- {/if} -->
+                </div>
+            </div>
+
+            <!-- #BeginLibraryItem "/library/goods_detail_info.lbi" --><!-- #EndLibraryItem -->
+
+            <!-- {if $goods_type == 'package'} -->
+            <div class="row include" style="display:none">
+                <div class="row title f-c3">
+                    {$goods.goodsNameStyle}已包含的插件
+
+                    <!-- {if $goods.goodsId eq 381 && $bac_act neq 'order'} -->
+                    <div class="pull-right">
+                        <div class="pull-left custom_pkg basic_pkg">
+                            <span>基础版</span>
+                            <span class="checked"></span>
+                            <span class="triangle"></span>
+                        </div>
+                        <div class="pull-left custom_pkg standard_pkg">
+                            <span>标准版</span>
+                            <span class="checked"></span>
+                            <span class="triangle"></span>
+                        </div>
+                        <div class="pull-left custom_pkg premium_pkg">
+                            <span>高级版</span>
+                            <span class="checked"></span>
+                            <span class="triangle"></span>
+                        </div>
+                    </div>
+                    <!-- {/if} -->
+
+                </div>
+                <div class="row addon" id="has-been-chosen">
+                    <div id="addon-add"></div>
+                </div>
+                <div class="row title f-c3">
+                    可供{$goods.goodsNameStyle}构建的插件
+                    <div class="pull-right">
+<!--                         <span class="pull-left filter">筛选：</span>
+                        <span class="pull-left filter" >
+                            <input type="checkbox" id="official-addon">
+                            <label for = "official-addon">官方插件</label>
+                        </span>
+                        <span class="pull-left filter" >
+                            <input type="checkbox" id="third-party-addon">
+                            <label for = "third-party-addon">第三方插件</label>
+                        </span> -->
+                    </div>
+                </div>
+                <div class="row addon" id="to-be-chosen">
+                </div>
+            </div>
+            <!-- {/if} -->
+
+            <!-- {if $goods_type == 'package' || $goods_type == 'tool'} -->
+
+            <!-- {if $goods.goodsDesc} -->
+
+            <!-- {/if} -->
+
+            <!-- {/if} -->
+            
+            <div id="payment" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="row info">请在新打开的页面完成支付</div>
+                    <div class="row operation">
+                        <button class="btn-zondy success" onclick="window.location.href='user.php?act=order_list';">完成付款</button>
+                        <button onclick="window.open('{$myself_base_url}{$gisstore_vars.buy_error_url}')" class="btn-zondy problem">付款遇到问题</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="goto-buy-page" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="alert in" id="try-again-notice" style="display:none;">
+                            <span></span>
+                    </div>
+                    <div class="row info">
+                        <div class="img-wrap {if $platform eq 'mobile'} mobile{/if}">
+                            <img src="{if $goods.goodsImg}{$goods.goodsImg}{else}./images/app_01.png{/if}"/>
+                        </div>
+                        <!-- {if $bac_act eq 'order'} -->
+                        <div class="confirm-info re-customize">
+                            <div class="confirm-name">{$goods_name}</div>
+                            <div class="confirm-date">{if $is_trial}试用期限：<span style="color:#de4820;">{else}购买期限：<span>{/if}</span></div>
+                            <div class="confirm-deadline">到期时间：<span></span></div>
+                        <!-- {else} -->
+                        <div class="confirm-info">
+                            <div class="confirm-name">{$goods.goodsName}</div>
+                            <div class="confirm-date">申请期限：<span></span></div>
+                            <div class="confirm-count" style="display:none">申请份数：<span></span></div>
+                            <div class="confirm-deadline">到期时间：<span></span></div>
+                        <!-- {/if} -->
+                            <div class="confirm-price" style="display:none">消费点数：<span></span></div>
+                            <button id='goto-buy-page-btn' class="btn-zondy success">提&nbsp;&nbsp;&nbsp;交</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+
+    <script id="has-been-chosen-template" type="text/x-jquery-tmpl">
+        <div class="addon-item">
+            <!--{if $version_sign eq 'pre'}-->
+            <div class="app-beta"></div>
+            <!--{elseif $version_sign eq 'test'}-->
+            <div class="app-test"></div>
+            <!--{/if}-->
+            <a class="addon-box" href="${url}{if $bac_act eq 'order'}&bac=reassemble&order_sn={$order_sn}{/if}">
+                {literal}{{{/literal}if move{literal}}}{/literal}
+                <img src = "${pic}" />
+                {literal}{{{/literal}else{literal}}}{/literal}
+                <img src = "" data-echo = "${pic}" />
+                {literal}{{{/literal}/if{literal}}}{/literal}
+                <div class="name name-tooltip" data-toggle="tooltip" data-original-title="${name}">
+                    <span>${name}</span>
+                </div>
+            </a>
+            <div class="price"><label>{literal}{{{/literal}if price == '0.00'{literal}}}{/literal}免费{literal}{{{/literal}else{literal}}}{/literal}${price}点/月{literal}{{{/literal}/if{literal}}}{/literal}</label></div>
+            <div class="delete"></div><span class="triangle"></span>
+            {literal}{{{/literal}if is_official{literal}}}{/literal}
+                <!-- <div class="official"></div>-->
+            {literal}{{{/literal}/if{literal}}}{/literal}
+            {if $bac_act eq 'order'}
+            <div class="is_purchase"></div>
+            {/if}
+        </div>
+    </script>
+
+    <script id="to-be-chosen-template" type="text/x-jquery-tmpl">
+        <div class="addon-item" data-type="${is_official}" data-show="false">
+            <!--{if $version_sign eq 'pre'}-->
+            <div class="app-beta"></div>
+            <!--{elseif $version_sign eq 'test'}-->
+            <div class="app-test"></div>
+            <!--{/if}-->
+            <div class="addon-back"></div>
+            <a class="addon-box" href="${url}{if $bac_act eq 'order'}&bac=reassemble&order_sn={$order_sn}{/if}">
+                <img src = "" data-echo = "${pic}" />
+                <div class="name name-tooltip" data-toggle="tooltip" data-original-title="${name}">
+                    <span>${name}</span>
+                </div>
+            </a>
+            <div class="price"><label>{literal}{{{/literal}if price == '0.00'{literal}}}{/literal}免费{literal}{{{/literal}else{literal}}}{/literal}${price}点/月{literal}{{{/literal}/if{literal}}}{/literal}</label></div>
+            <div class="add"></div><span class="triangle"></span>
+            {literal}{{{/literal}if is_official{literal}}}{/literal}
+                <!-- <div class="official"></div>-->
+            {literal}{{{/literal}/if{literal}}}{/literal}
+        </div>
+    </script>
+
+    <script>
+    $(function(){
+        //初始化商品大小
+        var sizeItem = $('.row.information .row span[data-name="大小"]');
+        var baseSize = {$goods.capacity} + 1;
+        var addon_type = {
+            official : false,
+            third : false
+        };
+        sizeItem.html(util.kbOrMbOrGB(baseSize));
+
+        var maxBuyCount = 1;
+        var maxBuyCountSpan = $("#max-buy-count");
+        //Iris update--CheckMinOrderCount
+        // var order_count = '{$order_count}' || 1;
+        var order_count = 0;
+        {if $order_count}
+            order_count = {$order_count};
+        {/if}
+        var ori_group_price = 0;
+        var group_price = 0;
+          //Iris update
+        function checkMinOrderCount(){
+            var count = parseInt($.trim($(".order-count-num").val()));
+            var order_group_type = $(".price-group").find("option:selected").val();
+            if(order_group_type){
+                    var price_group = {$price_list_json};
+                     for (var i = 0; i < price_group.length; i++) {
+                                if (price_group[i].group_type == order_group_type) {
+                                    count = price_group[i].minnum;
+                                    break;
+                                }
+                     }
+            }
+            return  count;
+        }
+
+        function checkMinOrderCount4Desktop(){
+            order_count = parseInt($.trim($(".order-count-num4desktop").val()));
+            getPriceGroupByNum(order_count);
+        }
+
+        if($('.order-count-num').val()){
+
+            order_count = checkMinOrderCount();
+            $('.order-count-num').val(order_count);
+
+            $(".order-count-num").keydown(function(e){
+            if(e.which == 8 || e.which == 37 || e.which == 39){ return; }
+            
+            if(e.which < 48 || (e.which > 57 && e.which < 96) || e.which > 105){
+                e.preventDefault();
+                return true;
+            }           
+
+            }).keyup(function(){
+                var count = parseInt($(this).val());
+                if(count){
+                    /*var min_count = checkMinOrderCount();
+                    if(count<min_count){
+                        alert('此版本最少购买 '+min_count+' 份!');
+                        $(this).val(min_count);                            
+                    }
+                    if(count > maxBuyCount){
+                        $(this).val(maxBuyCount);
+                    }*/
+                    order_count = $(this).val();
+                    updatePrice();
+                }
+                
+
+            });
+
+            //Iris update
+            $(".order-count-num").on("change",function(){
+                var count = parseInt($(this).val());
+                if(count){
+                    /*var min_count = checkMinOrderCount();
+                    if(count<min_count){
+                            alert('此版本最少购买 '+min_count+' 份!');
+                            $(this).val(min_count);                         
+                    }*/
+                }else{
+                    $(this).val(1);
+                }
+
+                order_count = $(this).val();
+                updatePrice();         
+            });
+
+
+
+
+        }else if($('.order-count-num4desktop').val()){
+            var price_group = {$price_list_json};
+            checkMinOrderCount4Desktop();
+
+            $(".order-count-num4desktop").keydown(function(e){
+                if(e.which == 8 || e.which == 37 || e.which == 39){ return; }
+                
+                if(e.which < 48 || (e.which > 57 && e.which < 96) || e.which > 105){
+                    e.preventDefault();
+                    return true;
+                }           
+            }).keyup(function(){
+                var count = parseInt($(this).val());
+                if(count){
+                    if(count > maxBuyCount){
+                        $(this).val(maxBuyCount);
+                    }
+                    checkMinOrderCount4Desktop();
+                    pluginRefresh();
+                }
+
+            });
+
+
+            $(".order-count-num4desktop").on("change",function(){
+                var count = parseInt($(this).val());
+                if(!count){
+                    $(this).val(1);
+                }
+                checkMinOrderCount4Desktop();
+                pluginRefresh();
+                
+            });
+
+
+        }
+
+        updateBuyCount(baseSize);
+
+        //事件绑定
+        $('#third-party-addon, #official-addon').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            increaseArea: '0%' // optional
+        });
+
+        $('#official-addon').on('ifChecked',function() {
+            addon_type.official = true;
+            changeAddonShow();
+        }).on('ifUnchecked',function() {
+            addon_type.official = false;
+            changeAddonShow();
+        });
+
+        $('#third-party-addon').on('ifChecked',function() {
+            addon_type.third = true;
+            changeAddonShow();
+        }).on('ifUnchecked',function() {
+            addon_type.third = false;
+            changeAddonShow();
+        });
+
+        
+
+
+        function inputOrderCountToPayModel(){
+
+            var obj = $(".order-count-num");
+            if(!obj.val()){
+                obj = $(".order-count-num4desktop");
+            }
+            var count = parseInt($.trim(obj.val()));
+
+            if(count === '0'){
+                alert("购买数量不能为0！");
+                obj.val(1);
+                return false;
+            }
+
+            if(!count || count < 0){
+                alert("购买数量格式不正确！");
+                obj.val(1);
+                return false;
+            }
+
+            if(count > maxBuyCount){
+                alert("购买数量不允许！");
+                obj.val(maxBuyCount);
+                return false;
+            }
+
+            $(".confirm-count span").html(count);
+            return true;
+        }
+
+        function updateBuyCount(latestSize){
+            maxBuyCount = 1000;
+            /*if(!latestSize){ maxBuyCount = 1; maxBuyCountSpan.text(maxBuyCount); return; }
+
+            maxBuyCount = Math.floor(660 * 1024 * 1024 / latestSize);
+
+            if(maxBuyCount > 1000){maxBuyCount = 1000;}
+
+            maxBuyCountSpan.text(maxBuyCount);*/
+        }
+
+        function changeAddonShow() {
+            var $addon = $('#to-be-chosen .addon-item');
+            $addon.hide().attr('data-show','false');
+            $addon.each(function() {
+                if (!addon_type.third && addon_type.official) {
+                    if ($(this).attr("data-type") === 'true') {
+                        $(this).show().attr('data-show','true');
+                    }
+                } else if (addon_type.third && !addon_type.official) {
+                    if ($(this).attr("data-type") === 'false') {
+                        $(this).show().attr('data-show','true');
+                    }
+                } else if (addon_type.third && addon_type.official) {
+                    $(this).show().attr('data-show','true');
+                } else if (!addon_type.third && !addon_type.official) {
+                    $(this).show().attr('data-show','true');
+                }
+
+            });
+            adjustChooseBoxStyle($('#to-be-chosen'));
+        }
+
+        {if $goods_type == 'addon'}
+            <!-- #BeginLibraryItem "/library/goods_addon_script.lbi" --><!-- #EndLibraryItem -->
+
+        {elseif $goods_type == 'tool'}
+            <!-- #BeginLibraryItem "/library/goods_tool_script.lbi" --><!-- #EndLibraryItem -->
+
+        {elseif $goods_type == 'package'}
+            {if $is_desktop eq '1'}
+                <!-- #BeginLibraryItem "/library/goods_package_script4desktop.lbi" --><!-- #EndLibraryItem -->
+                <!-- #BeginLibraryItem "/library/goods_group_plugin.lbi" --><!-- #EndLibraryItem -->
+            {else}
+                <!-- #BeginLibraryItem "/library/goods_group_plugin.lbi" --><!-- #EndLibraryItem -->
+                <!-- #BeginLibraryItem "/library/goods_package_script.lbi" --><!-- #EndLibraryItem -->
+            {/if}
+        {/if}
+
+        if(hasLogin){
+            $(".name-tip").attr('data-original-title','您还没有使用过此商品！');
+        }else{
+            $(".name-tip").attr('data-original-title','您还没有登录！');
+        }
+
+        //本页面临时用JS代码控制导航栏状态
+        //TODO:后台控制导航栏将本页面也纳入。
+        var max_page = 1;
+        var current_page = 1;
+        var goods_id={$goods.goodsId};
+
+        function initComment(){
+            var comment_number=0;
+            var my_grade=0;
+            var temp_grade=0;
+            var click_star=0;
+            var can_comment=true;
+            var can_star=true;
+
+            var STAR_TEXT = {
+                1:'不够好',
+                2:'一般',
+                3:'还不错',
+                4:'好',
+                5:'非常棒'
+            };
+            if (navigator.userAgent.indexOf("Chrome") > -1) {
+                $('.arrow').addClass('chrome');    
+            }
+          
+            $('.my-star .comment-star .stars').on('mouseover', function(e){
+                if(!can_star){
+                    $(this).parent().removeClass('choose');
+                    $('.my-star .comment-star .star_0').addClass('active');
+                }
+                else{
+                    $(".my-star .comment-star").addClass('choose');
+                    stopBubble(e);
+                    $('.stars-text').html(STAR_TEXT[$(e.target).attr('data-score')])
+                }
+            }).on('mouseout', function(){
+                if(my_grade>0){
+                    $('.my-star star_'+my_grade).addClass('active');
+                    $(".my-star .comment-star").removeClass('choose');
+                    //$('.stars-text').html(STAR_TEXT[my_grade]);
+
+                    if(click_star==0){
+                        $('.stars-text').html(STAR_TEXT[my_grade]);
+                    }
+                    else{
+                        $('.stars-text').html('评分成功');
+                    }                    
+                }
+                else{
+                    $('.stars-text').html('点星星即可评分');
+                }
+                
+            }).on('click', function(e){
+                stopBubble(e);
+                $(this).addClass('active');               
+                var score=$(this).attr('data-score');
+                if(can_star){
+                    clickstar(score);
+                }
+                
+            });
+
+
+            $('.comment-btn').on('click', function(){
+                var comment=$.trim($("textarea").val());
+                if(comment!=''){
+                    $(this).html('提交中');
+                    $(this).addClass('disabled');
+                    $(this).attr('disabled','disabled');
+                    $.post('comment.php', {
+                        comment:comment,
+                        goods_id:goods_id
+                    },comment_submit_callback,"TEXT").done(function(){
+                        $(".no-comment").hide();
+                        $('.comment-btn').html('提交');
+                        $('.comment-btn').removeClass('disabled');
+                        $('.comment-btn').removeAttr('disabled');
+                        $('.edit-comment').hide();
+                        $('.wanna-comment .pull-right').hide();
+                        $('.wanna-comment .pull-right').html('您还能输入：300个字');
+                        $("textarea").val('');                
+                    });
+                }
+                else{
+
+                }
+            });
+
+            function comment_submit_callback(result){                
+                eval("var result = "+result);
+                if(result.success){
+                    alert('评论已经提交，审核通过后将显示在评论列表中.');
+                    comment_number++;                        
+                }
+                else{
+                    alert(result.msg);
+                }
+                getAnotherPage(1);
+            }
+
+            function clickstar(score){
+                $.post('comment.php',{
+                    act: 'grade',
+                    goods_id: goods_id,
+                    grade: score
+                },clickstar_callback,"TEXT");
+                $('.my-star .comment-star').removeClass('choose');
+                $('.stars-text').html('提交中...');
+                temp_grade=score;
+            }
+
+            function clickstar_callback(result){
+                eval("var result = "+result);
+                if(result.success){
+                    click_star=1;
+                    $('.stars-text').html("评分成功");
+                    $(".comment-star-number").html('(共'+result.result.grade_count+'份评分)');
+                    my_grade=temp_grade;
+                    $(".my-star .stars").removeClass('active');
+                    $(".my-star .star_"+my_grade).addClass('active');
+                    var grade=Math.round(result.result.average_grade*10);
+                    $(".comment-star-grade").html('(平均'+grade/10+'分)');
+                    showstar(result.result.average_grade);
+
+                }
+                else{
+                    $('.stars-text').html("评分失败");
+                    $(".my-star .stars.star_0").addClass('active');
+                }
+            }
+            function getCommentList(){
+                $.get('comment.php?goods_id='+goods_id, function(result){
+                    eval("var result = "+result); 
+                    can_comment=result.result.can_comment;
+                    if(!can_comment){
+                        $('.i-wanna-comment').tooltip().css('cursor','default');
+                    }
+                    comment_number=result.result.content.comment_count;
+                    max_page=result.result.content.pager.page_count;
+                    current_page=result.result.content.pager.page;
+                    initPagination();
+                    if(comment_number==0){
+                        $(".no-comment").show();
+                    }
+                    $(".comment-number").html('('+comment_number+')');
+                    data=result.result.content.comments;
+                    for(var i=0;i<data.length;i++){
+                        var comment_info = $("#include-comment-info").tmpl(data[i]);
+                        $('.comment-list').append(comment_info);
+                        $("#content"+data[i].id).html(data[i].content);
+                    }
+
+                });
+            }
+
+            function getVersionHistory() {
+                $.get('goods.php?act=update_history&id='+goods_id, function(result){
+                    eval("var result = "+result);
+                    if (result.success) {
+                        var data = result.result;
+                        for(var i = 0;i < data.length; i++){                           
+                            var version_info = $("#include-version-info").tmpl(data[i]);
+                            $('.version-list').append(version_info);
+                        }
+                    } else {
+                        $('.version-list').html('result.msg')
+                    }
+                })
+            };
+
+            function showstar(score){
+                if (score > 0) {
+                    $(".app-box .app-show-score").show();
+                }
+                var number=Math.round(score);
+                var temp=score-Math.floor(score);
+                $(".all-users-star .stars").removeClass('active');
+                $(".all-users-star .stars").removeClass('half');
+                if(temp>=0 && temp<0.5){
+                    $(".all-users-star .star_"+number).addClass('active');
+                }
+                if(temp>=0.5 && temp<1){
+                    $(".all-users-star .star_"+number).addClass('active half');
+                }
+            }
+
+            $('.comment-title, .feature-title, .version-history-title').on('click', function(){
+                $(this).addClass('active').siblings().removeClass('active');
+                var index = $(this).index();
+                $(this).parent().next('.row.content').children('.row:nth-child('+(index+1)+')').addClass('active').siblings().removeClass('active');
+            });
+
+
+
+            $('.i-wanna-comment').on('click', function(){
+                if(can_comment){
+                    $('.edit-comment').toggle().children('textarea').focus();
+                    $('.wanna-comment .pull-right').toggle();
+                }
+            });
+
+            $('.comment-cancel').on('click', function(){
+                $('.edit-comment').hide();
+                $('.wanna-comment .pull-right').hide();
+            });
+
+
+        };
+        initComment();
+
+        function stopBubble(e)
+        {
+            if (e && e.stopPropagation)
+                e.stopPropagation()
+            else
+                window.event.cancelBubble=true
+        }
+
+        var information=$('.row.feature .content').html();
+        if(information == ''){
+            $('.row.feature').css('display','none');
+            $('.detail .row.include-choose').css('padding-bottom','100px')
+        }
+        $('.disabled').attr('disabled','disabled');
+
+        /*{if $bac_act neq 'order'}
+        $(".btn-zondy.pay").on('click',function(){
+            updateDate(price_num*price_unit*31);
+        });
+        {if $goods.goods_trial_period && $goods.goods_trial_period > 0}
+        $(".btn-zondy.try").on('click',function(){
+            var goods_trial_period = {$goods.goods_trial_period};
+            updateDate(goods_trial_period);
+        });
+        {/if}
+        {/if}*/
+        
+        function DateAdd(interval,number,date){
+            　　/*
+            　　* 功能:实现VBScript的DateAdd功能.
+            　　* 参数:interval,字符串表达式，表示要添加的时间间隔.
+            　　* 参数:number,数值表达式，表示要添加的时间间隔的个数.
+            　　* 参数:date,时间对象.
+            　　* 返回:新的时间对象.
+            　　* var now = new Date();
+            　　* var newDate = DateAdd( "d ",5,now);
+            　　*--------------- DateAdd(interval,number,date) -----------------
+            　　*/
+            　　switch(interval)
+            　　{
+            　　　　case "y " : 
+            　　　　　　date.setFullYear(date.getFullYear()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "q " : 
+            　　　　　　date.setMonth(date.getMonth()+number*3);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "m " : 
+            　　　　　　date.setMonth(date.getMonth()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "w " : 
+            　　　　　　date.setDate(date.getDate()+number*7);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "d " : 
+            　　　　　　date.setDate(date.getDate()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "h " : 
+            　　　　　　date.setHours(date.getHours()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "m " : 
+            　　　　　　date.setMinutes(date.getMinutes()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "s " :
+            　　　　　　date.setSeconds(date.getSeconds()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　default : 
+            　　　　　　date.setDate(d.getDate()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　}
+            }
+
+
+            function updateDate(number){
+                date = new Date();
+                newDate = DateAdd( "d ",number,date );
+
+                var year = newDate.getFullYear();
+                var month = newDate.getMonth()+1;
+                var day = newDate.getDate();
+
+                if(month<10){
+                    month=String('0'+month);
+                }
+                if(day<10){
+                    day = String('0'+day);
+                }
+
+                date = String(year+'-'+month+'-'+day);
+
+                $(".confirm-deadline span").html(date);
+            }
+
+
+            var prev_page = $('.pagination li').first();
+            var next_page = $('.pagination li').last();
+            var baselink = '{$current_url}';
+
+            var initPagination = function(){
+                if(max_page <= 1){
+                    $(".pagination").hide();
+                } else if (max_page <= 10) {
+                    $(".pagination").show();
+                    forCreate(max_page);
+                } else {
+                    $(".pagination").show();
+                    switch (current_page) {
+                        case 1:
+                        case 2:
+                        case 3:
+                            forCreate(4);
+                            omission();
+                            normalCreate(max_page);
+                            break;
+                        case 4:
+                            forCreate(5);
+                            omission();
+                            normalCreate(max_page);
+                            break;
+                        case max_page:
+                        case max_page - 1:
+                        case max_page - 2:
+                            normalCreate(1);
+                            omission();
+                            forCreate(max_page,max_page-3);
+                            break;
+                        case max_page - 3:
+                            normalCreate(1);
+                            omission();
+                            forCreate(max_page,max_page-4);
+                            break;
+                        default:
+                            normalCreate(1);
+                            omission();
+                            normalCreate(current_page-1);
+                            normalCreate(current_page);
+                            normalCreate(current_page+1);
+                            omission();
+                            normalCreate(max_page);
+                            break;
+                    }
+
+ 
+
+                }
+                $('.pagination-arrow').removeClass('disabled');
+                if (current_page == 1) {
+                    prev_page.addClass('disabled').children('a').attr('href','javascript:void(0)');
+                    prev_page.attr('disabled','disabled');
+                } 
+                else if (current_page == max_page) {
+                    next_page.addClass('disabled').children('a').attr('href','javascript:void(0)');
+                    next_page.attr('disabled','disabled');
+                }
+                prev_page.find('a').off().on('click',function(){
+                    var page=current_page-1;
+                    getAnotherPage(page);
+                })
+                next_page.find('a').off().on('click',function(){
+                    var page=current_page+1;
+                    getAnotherPage(page);
+                })
+            };
+
+            function forCreate(max,min){
+                var i=1;
+                if(min!=undefined){
+                    i=min;
+                }
+                for (i; i <= max; i++) {
+                    var active = '';
+                    if (i == current_page) {
+                        active = 'class="active"';
+                    }
+                    next_page.before('<li '+ active +'><a>'+ i +'</a></li>');
+                }
+            };
+
+            function omission(){
+                next_page.before('<li class="disabled"><a>...</a></li>');
+            };
+
+            function normalCreate(page){
+                next_page.before('<li><a>'+ page +'</a></li>');
+            };
+
+            $(".pagination ul li:not('.pagination-arrow') a").live("click",function(){
+                var page=$(this).html();
+                getAnotherPage(page);
+            })
+            function getAnotherPage(page){
+                $.get('comment.php?goods_id='+goods_id+'&page='+page, function(result){
+                eval("var result = "+result);
+                $(".pagination ul li").removeClass('active');
+                can_comment=result.result.can_comment;
+                comment_number=result.result.content.comment_count;
+                max_page=result.result.content.pager.page_count;
+                current_page=result.result.content.pager.page;
+                $('.comment-list').html('');
+                $(".pagination li").not('.pagination-arrow').remove();
+
+                if(comment_number==0){
+                    $(".no-comment").show();
+                }
+                $(".comment-number").html('('+comment_number+')');
+                data=result.result.content.comments;
+                for(var i=0;i<data.length;i++){
+                    var comment_info = $("#include-comment-info").tmpl(data[i]);
+                    $('.comment-list').append(comment_info);
+                    $("#content"+data[i].id).html(data[i].content);
+                }
+                initPagination();
+
+            }); 
+            }
+
+        function checkTextarea(){
+            var maxlength=300;
+            var content = $('#comment-content').val();
+            var length=content.length;
+            var last_length=maxlength-length;
+            if(last_length<0){
+                last_length=0;
+                $('#comment-content').val(content.substring(0,maxlength));
+            }
+            $('.wanna-comment .pull-right').html('您还能输入：'+last_length+'个字');
+        }
+        $('#comment-content').on('keydown input propertychange',function(){
+            checkTextarea();
+         });
+
+        $(".row .desc img").css({'width':'','height':''});
+
+        $('.tab-body ul li:first-child').addClass('title-select');
+        $('.row.content .row:first-child').addClass('active');
+        $(document).on('click','.tab-body .tab-body-title li:not(.title-select)',function(){
+            $(this).addClass('title-select').siblings().removeClass('title-select');
+            var index = $(this).index();
+            $(this).parent().next('.row.content').children('.row:nth-child('+(index+1)+')').addClass('active').siblings().removeClass('active');            
+        });
+        {if $want_comment}
+            $('.comment-title').click();
+            $('.i-wanna-comment').click();
+            $('.textarea').focus();
+        {/if}
+    });
+    </script>
+    <script id="include-comment-info" type="text/x-jquery-tmpl">
+    <li>
+        <div class="row comment-list-title">
+            <span class="comment-list-name">${user_name}</span>
+            <span class="comment-list-date">发表于${add_time}</span>
+        </div>
+        <div class="row comment-list-content" id="content${id}">
+        </div>
+    </li>
+    </script>
+    <script id="include-version-info" type="text/x-jquery-tmpl">
+    <li>
+        <div class="row version-list-title">
+            <span class="version-list-name">版本：${version}</span>&nbsp;&nbsp;
+            <span class="version-list-date">创建时间：${createtime}</span>
+        </div>
+        <div class="row version-list-content" id="version-${uh_id}">
+            ${notes}
+        </div>
+    </li>
+</script>
+</body>
+<script type="text/javascript" src="js/index.js"></script>
+</html>

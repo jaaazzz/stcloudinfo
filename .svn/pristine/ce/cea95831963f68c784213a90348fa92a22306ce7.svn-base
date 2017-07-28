@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>资源中心_地图服务_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/mapservice.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="resource-navigation clearfix">
+                <a href="resource.php?do=mapservice" class="col-sm active">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/map_s.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            地图服务
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=sdk" class="col-sm sdk">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/sdk.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            SDK
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=service" class="col-sm">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/cat_27_active.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            服务资源
+                        </div>
+                    </div>
+                </a>
+                <div class="col-sm blank-div"></div>
+            </div>
+            <div class="resource-content">
+                <div id="apply-btn" onclick="delete_batch_modal()" style="width:100px;height:30px;line-height:30px;border:1px solid #3dac69;background-color:#3dac69;color:#ffffff;text-align:center;border-radius:5px;cursor:pointer;margin-bottom:10px;">
+                申请服务Token
+                </div>
+                <ul>
+                    <!-- {if $items }  -->
+                    <!-- {foreach from=$items item=item key=key name=items} -->
+                    <li class="clearfix">
+                        <div class="content-img col-sm">
+                            {if strtoupper($item.type) == 'MRMS_MAPX'}
+                            <img src="themes/appcloud/images/home/map_server.png" alt="map_server_logo"/>
+                            {elseif strtoupper($item.type) == 'VECTOR_OGC'}
+                            <img src="themes/appcloud/images/home/map_ogc.png" alt="map_ogc_logo"/>
+                            {elseif strtoupper($item.type) == 'TILE_OGC'}
+                            <img src="themes/appcloud/images/home/ogc.png" alt="ogc_logo"/>
+                            {elseif strtoupper($item.type) == 'MRMS_TDF'}
+                            <img src="themes/appcloud/images/home/tile.png" alt="tile_logo"/>
+                            {elseif strtoupper($item.type) == 'G3D'}
+                            <img src="themes/appcloud/images/home/g3d.png" alt="g3d_logo"/>
+                            {else}
+                            <img src="themes/appcloud/images/home_map_icon.png" alt="other_logo"/>
+                            {/if}
+                        </div>
+                        <div class="content-body col-sm">
+                            <div class="content-body-title"><a href="{$item.detail_info_address}">{$item.name}</a></div>
+                            <div class="content-body-substance">
+                                <div class="substance">
+                                    <!-- {if $item.wfs_base_address || $item.wmts_base_address || $item.wms_base_address }  -->
+                                    <div class="gis-inline-block" style="vertical-align:top">服务地址：</div>
+                                    <div class="gis-inline-block">
+                                        <!-- {if $item.wfs_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wfs_base_address}">{$item.wfs_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                        <!-- {if $item.wmts_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wmts_base_address}">{$item.wmts_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                        <!-- {if $item.wms_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wms_base_address}">{$item.wms_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                    </div>
+                                    <!-- {/if} -->
+                                </div>
+                                <div class="substance">
+                                    <span>服务类型：</span>
+                                    <span data-type="{$item.type}" class="serviceType">{$item.type}</span>
+                                </div>
+                                <div class="substance token-div">
+                                    <!-- {if $item.token_str }  -->
+                                    <div class="gis-inline-block" style="vertical-align:top">服务tokens：</div>
+                                    <div class="gis-inline-block service-token">
+                                    <!-- {foreach from=$item.token_str item=item2 key=key2 name=items2} -->
+                                        <!-- {if $key2 eq 0 }  -->
+                                        <div>
+                                            {$item2}
+                                            {if $smarty.foreach.items2.total > 2}
+                                            <a href="javascript:void(0)" onclick="spread(event)" class="spread-a">展开</a>
+                                            {/if}
+                                        </div>
+                                        <!-- {else} -->
+                                        <div class="hide">{$item2}</div>
+                                        <!-- {/if} -->
+                                    <!-- {/foreach} -->
+                                    </div>
+                                    <!-- {/if} -->
+                                </div>
+                            </div>
+                            <div class="content-body-btn">
+                                <!-- {if $item.preview_address }  -->
+                                <a target="_blank" href="{$item.preview_address}" class="gis-inline-block p-btn">预览</a>
+                                <!-- {/if} -->
+                                <!-- {if $item.surface_preview_address }  -->
+                                <a target="_blank" href="{$item.surface_preview_address}" class="gis-inline-block p-btn">平面预览</a>                                
+                                <!-- {/if} -->
+                                <!-- {if $item.globe_preview_address }  -->
+                                <a target="_blank" href="{$item.globe_preview_address}" class="gis-inline-block p-btn">球面预览</a>                                
+                                <!-- {/if} -->
+                                <!-- <a href="javascript:void(0)" class="gis-inline-block p-btn" onclick="apply_token()">申请</a> -->
+                                <!-- {if $item.is_collection }  -->
+                                <a href="javascript:;" onclick="cancle_collection('{$item.is_collection}','{$item.sid}','map',event)" class="collection">{$item.collection_count}</a>
+                                <!-- {else} -->
+                                <a href="javascript:;" onclick="add_collection('{$item.sid}','map',event)" class="no-collection">{$item.collection_count}</a>
+                                <!-- {/if} -->
+                            </div>
+                        </div>
+                    </li>                    
+                    <!-- {/foreach} -->
+                    <!-- {/if} -->
+                </ul>
+            </div>
+            
+        </div>
+        <div id="pageId">
+        </div>
+        <div id="prompt_content_delelt_app" class="modal prompt_content_modal hide" style="width: 400px; min-height: 200px; margin-left: -200px; margin-top: -138px; background-color: rgb(255, 255, 255);  border: 1px solid #cdcdcd !important;">
+    <div class="modle-title" style="height: 45px;line-height: 45px;padding-left: 20px;font-size: 16px;font-weight: bold;border-bottom: 1px solid #cdcdcd;">
+      申请地图服务Token<div class="" style="float: right;width: 40px;text-align: center;cursor: pointer;font-size: 22px;color: #333;" onclick="close_modal()">×</div>
+    </div>
+    <div style="width: 300px;margin: auto;font-size: 14px;">
+        <div style="float:left;line-height:44px;">申请期限:</div>
+        <div style="text-indent:10px;">
+        <select id="time-limit" style="display:inline-block;width:60px;margin-top:8px;" onchange="select_time(this)">
+        <option value="1" selected="selected">永久</option>
+        <option value="2">限时</option>
+        </select>
+
+    <select name="time-num" class="time-num"  style="display:none;width:50px;margin-top:8px;">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+    </select>
+    <select name="time-unit" class="time-unit" style="display:none;width:50px;margin-top:8px;">
+        <option value="1">月</option>
+        <option value="12">年</option>
+    </select>
+    </div>
+    </div>
+    <div style="width: 300px;margin: auto;font-size: 14px;">
+    <div style="float:left;">选择类型:</div>
+    <div style="text-indent:10px;">
+    <table>
+        <thead>
+            <tr>
+                <td><input type="checkbox" id="checkall" onclick="checkall()"></td>
+                <td>全选/反选</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="checkbox" class="checkone" value="矢量地图服务"></td>
+                <td>矢量地图服务</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="checkone" value="瓦片地图服务"></td>
+                <td>瓦片地图服务</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="checkone" value="三维地图服务"></td>
+                <td>三维地图服务</td>
+            </tr>
+        </tbody> 
+    </table>
+    </div>
+    </div>
+    <div class="modle-foot" style="width:350px;height:65px;margin:auto;margin-top: 5px;">
+      <div class="ok-btn" id="delete-app-can-btn" style="width: 130px;height: 30px;line-height: 30px;border: 1px solid #3dac69;background-color: #3dac69;color: #ffffff;float: left;text-align: center;border-radius: 5px;cursor: pointer;margin-top: 10px;margin-left: 25px;font-size: 14px;">
+        申请
+      </div>
+      <div class="can-btn" style="width: 100px;height: 30px;line-height: 30px;float: left;text-align: center;cursor: pointer;margin-top: 10px;margin-left:5px;font-size: 14px;color: #3a85c6;"  onclick="close_modal()">
+        取消
+      </div>
+  </div>
+</div>
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript">
+        $(function(){
+            for(var i = 0;i<$('.serviceType').length;i++){
+                if($('.serviceType')[i].dataset.type == 'TILE_OGC'){
+                    $('.serviceType')[i].innerHTML = "WMTS";
+                }else if($('.serviceType')[i].dataset.type == 'VECTOR_OGC'){
+                    $('.serviceType')[i].innerHTML = "矢量OGC";
+                }else if($('.serviceType')[i].dataset.type == 'MRMS_TDF'){
+                    $('.serviceType')[i].innerHTML = "瓦片地图";
+                }else if($('.serviceType')[i].dataset.type == 'MRMS_MAPX'){
+                    $('.serviceType')[i].innerHTML = "矢量地图";
+                }else if($('.serviceType')[i].dataset.type == 'G3D'){
+                    $('.serviceType')[i].innerHTML = "三维地图";
+                }
+            }
+            
+
+            /* 分页 begin */
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        return "{$p_url}p="+n;
+                    }
+                })            
+            }
+            /* 分页 end */
+        })
+
+        function delete_batch_modal(){
+            $('#prompt_content_delelt_app').css("display","block");
+            $('#delete-app-can-btn').attr("onclick","apply_service_token()");
+        }
+
+        function close_modal(){
+            $('.prompt_content_modal').css("display","none");
+        }
+
+       function select_time(n){
+            if(n.value==2)
+            {
+                $(".time-num").css("display","inline-block");
+                $(".time-unit").css("display","inline-block");
+            }else if(n.value==1)
+            {
+                $(".time-num").css("display","none");
+                $(".time-unit").css("display","none");
+            }
+        }
+
+        function checkall(){
+            if($("#checkall").is(":checked")){
+                $(".checkone").prop("checked",true);
+            }else{
+                $(".checkone").prop("checked",false);
+            }
+        }
+
+        function apply_service_token(){
+            var time_limit = $("#time-limit").val();
+            var time_num = $(".time-num").val();
+            var time_unit = $(".time-unit").val();
+            var service_type = "";
+            $(".checkone:checked").each(function(){
+                service_type = service_type + $(this).val() + ",";
+            });
+            var data = {
+                "act" : "apply_service_token",
+                "time_limit" : time_limit,
+                "time_num" : time_num,
+                "time_unit" : time_unit,
+                "service_type" : service_type
+            };
+            if(service_type == ""){
+                alert("未选择任何地图服务类型!");
+            }else{
+                $.get('ajax.php',data,function(result){
+                    if(result.status==200){
+                        window.location="user.php?act=my_token";
+                    }else{
+                        if(result.msg == "not_login"){
+                            GucLogin();
+                        }else{
+                            alert(result.content.text);
+                        }
+                    }
+                },'JSON');
+            }
+        }
+    </script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/mapservice.js"></script>
+</html>

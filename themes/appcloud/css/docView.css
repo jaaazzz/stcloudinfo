@@ -1,0 +1,33 @@
+.doc-title{
+	text-align: center;
+	font-size: 16px;
+	color: #333333;
+	height: 45px;
+	line-height: 45px;
+	border-bottom: 1px solid #dcdcdc;
+}
+
+.doc-other{
+	position: relative;
+}
+
+.doc-other .doc-other-share{
+	margin-left: 750px;
+}
+
+.doc-other .doc-other-download{
+	height: 46px;
+	line-height: 46px;
+	margin-right: 20px;
+	position: absolute;
+	top: 0px;
+	left: 700px;
+}
+
+.doc-other .doc-other-download a{
+	color: rgba(22, 155, 213, 1);
+}
+
+.container{
+	text-align: center;
+}

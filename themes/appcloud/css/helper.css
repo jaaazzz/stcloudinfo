@@ -1,0 +1,261 @@
+.sign-header{
+    position:fixed;
+    left:0;
+    right:0;
+    z-index:1000;
+    background-color:#f6f6f6;
+    height: 117px;
+    border-bottom:3px solid #3a85c6
+}
+.anchor{
+    position:absolute;
+    top:-80px;
+}
+.sign-header .container .logo{
+    width:231px;
+    height: 81px;
+    margin-top: 12px;
+}
+.sign-header .container .logo img{
+    width:181px;
+    height: 51px;
+}
+.sign-header .right-tool{
+    width: 280px;
+    margin-top: 6px;
+    height: 36px;
+    margin-right: 70px;
+    float: right;
+    position: relative;
+}
+.sign-header .right-tool .navi-right-container li{
+    float:left;
+}
+.navi-right-container a{
+    color: #595757;
+    font-size: 14px;
+    cursor: pointer;
+}
+.navi-right-container a:hover{
+    color: #1094d6;
+    text-decoration: none;
+}
+li.top-li-with-popup>a.active{
+    background-color: #ffffff;
+}
+li.top-li-with-popup{
+    position: relative;
+    padding: 0 10px 0 10px;
+    width:85px;
+}
+li.top-li-with-popup>a{
+    padding: 0 20px 0 8px;
+    line-height: 20px;
+    display: inline-block;
+}
+.logout-popup{
+    padding: 3px 0;
+}
+.top-li-with-popup .ul_popup_menu{
+    position: absolute;
+    z-index: 1000;
+    display: none;
+    padding: 3px 0 0 0;
+    margin: 0;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+}
+.top-li-with-popup .ul_popup_menu a{
+    color: #595757;
+    padding: 2px 8px;
+    display: block;
+    font-size: 14px;
+}
+.top-li-with-popup .ul_popup_menu a:hover{
+    text-decoration: none;
+    color: #1094d6;
+}
+.news-arrow {
+    background-repeat: no-repeat;
+    background-image: url(../themes/gisstore/images/top-arrow-down.png);
+    display: inline-block;
+    height: 20px;
+    width: 8px;
+    background-position: center 8px;
+}
+.news-arrow.mousein{
+    -webkit-animation:arrow_rotate_mousein 0.3s;
+    -webkit-transform:rotate(180deg);
+    animation:arrow_rotate_mousein 0.3s;
+    -ms-animation:arrow_rotate_mousein 0.3s;
+    -moz-animation:arrow_rotate_mousein 0.3s;
+    -moz-transform:rotate(180deg);
+    -ms-transform:rotate(180deg);
+    transform:rotate(180deg);}
+.news-arrow.mouseout{
+    -webkit-animation:arrow_rotate_mouseout 0.3s;
+    -webkit-transform:rotate(0deg);
+    -moz-animation:arrow_rotate_mouseout 0.3s;
+    -ms-animation:arrow_rotate_mouseout 0.3s;
+    animation:arrow_rotate_mouseout 0.3s;
+    -ms-transform:rotate(0deg);
+    -moz-transform:rotate(0deg);
+    transform:rotate(0deg);}
+.navi-popup-border{
+    border-right: 1px solid #eeeeee;
+    border-left: 1px solid #eeeeee;
+    border-bottom: 1px solid #eeeeee;
+}
+.help-content p{
+    position:relative !important;
+}
+.help-sidebar{
+    /*position:fixed;*/
+    width:186px;
+    border: 1px solid #dcdcdc;
+    float:left;
+    z-index: 2;
+    background:#fff;
+}
+.help-sidebar .first:first-child {
+    border-top: none; 
+}
+.help-sidebar .first{
+    border-top: 1px solid #dcdcdc;
+}
+.help-sidebar .first:last-child a{
+    height: 47px;
+}
+.help-sidebar .first:last-child ul{
+    border-bottom: 1px solid #dcdcdc;
+}
+.help-content .help-sidebar ul {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 0px;
+    -moz-border-radius: 0px;
+    -weikit-border-radius: 0px;
+    font-family: "Microsoft Yahei";
+}
+.first .first-a .icon{
+    width: 10px;
+    height:10px;
+    float: left;
+    margin:18px 0px 10px 17px
+}
+.first-a{
+    font-size:14px;
+    line-height:45px;
+    display:block;
+    margin-bottom:0px;
+    height:45px;
+}
+.first-a .first-title{
+    color: #666666;
+    font-family: "simsun";
+}
+.first-a.open .first-title{
+    color:#fff
+}
+.first-a.open{
+    background-image: url(../images/select-arrow.png);
+    background: #3a85c6;
+}
+.first .first-a .icon15{
+/*    background: url(../images/helpcenter-second-expand.png) no-repeat;*/
+
+}
+.first .first-a.open .icon15{
+    background: url(../images/select-arrow.png) no-repeat;
+
+}
+.first .first-a .icon_open{
+    width: 21px;
+    height: 40px;
+    float: right;
+    margin-right: 14px;
+    background: url(../themes/gisstore/images/icon-nav-close.png) no-repeat 0px 11px;
+}
+.first .first-a.open .icon_open{
+    width: 21px;
+    height: 20px;
+    float: right;
+    margin-right: 14px;
+    margin-top: 10px;
+    background: url(../themes/gisstore/images/icon-nav-open.png) no-repeat;
+}
+.second .dropdown-li{
+    border-top:1px solid #d5d5d5;
+    height: 31px;
+}
+.second .dropdown-li .tag-title2 {
+    line-height:31px;
+    display:block;
+    height:31px;
+    width:100%;
+    font-size: 13px;
+}
+.second .dropdown-li .tag-title2 .icon-title2 {
+/*    background: url(../images/helpcenter-second-expand.png) no-repeat;*/
+    float:left;
+    width: 10px;
+    height: 10px;
+    margin: 12px 0px 0px 20px;
+}
+.second .dropdown-li .tag-title2 .span-title2 {
+    display:inline-block;
+    margin: 0px 0px 0px 10px;
+    color: #333333;
+    font-family: "simsun";
+}
+.second .dropdown-li .tag-title2.active .span-title2 {
+    color: #2486c9;
+}
+.help-content {
+    min-height: 75%;
+    padding-top: 26px;
+    height: auto; 
+}
+.help-content .help-sidebar {
+    float: left; 
+}
+.help-content .help-content-inner {
+    width: 764px;
+    position: relative;
+    margin-left: 196px;
+    border: 1px solid #dcdcdc;
+    min-height: 865px;
+    background-color: #ffffff;
+    color: #333333;
+    font-size: 12px;
+}
+.help-content .help-content-inner .help-article {
+    display: none;
+    margin: 0px 30px 0px 30px; 
+}
+.help-content .help-content-inner .help-article.active {
+    display: block; 
+    margin: 35px 30px 0px 30px;
+}
+.help-content .help-content-inner .help-article  a{
+    font-size: 16px;
+    color: #2486c9;
+    cursor: text;
+}
+.help-content .help-content-inner .help-article  p{
+    margin: 13px 0px 0px 0px; 
+    line-height: 25px;
+}
+.help-content .help-content-inner .help-article  hr {
+    margin: 10px 0;
+}
+.help-content .help-content-inner .help-article li{
+    list-style: initial;
+    margin-left: 26px;
+    color: #2486c9;
+    margin-top: 16px;
+    margin-bottom: -10px;
+}

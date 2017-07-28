@@ -1,0 +1,99 @@
+﻿/**
+* 事件处理类
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var Event = function () {
+    /**
+    * events listener functions  
+    * @type {Array.<Hashtable>}
+    */
+    this.listeners = {};
+    /**
+    * list of support application events 
+    * @type {Array.<String>}
+    */
+    this.eventTypes = [];
+    /**
+    * 绘图监听器
+    * @type {Array.<Hashtable>}
+    */
+    this.drawListeners = {};
+    /**
+    * 派发事件
+    * @param {EventType} type 事件类型
+    * @param {Object} args 事件传入参数
+    */
+    this.dispatchEvent = function (type, args) {
+        if (!type) return;
+        var listeners = this.listeners[type];
+        // fast path
+        if (listeners && listeners.length > 0) {
+            for (var i = 0; i < listeners.length; i++) {
+                var callback = listeners[i];
+                // bind the context to callback.obj
+                if (callback) {
+                    if (callback.func.apply(callback.obj, args) === false) {
+                        break;
+                    }
+                }
+            }
+        }
+    };
+    /**
+    * 添加事件类型
+    * @param {EventType} type 事件类型
+    */
+    this.addEventType = function (type) {
+        if (!this.listeners[type]) {
+            this.eventTypes.push(type);
+            this.listeners[type] = [];
+        }
+    };
+    /**
+    * 移除事件类型
+    * @param {EventType} type 事件类型
+    */
+    this.removeListeners = function (type) {
+        if (type && this.listeners[type] != null) {
+            this.listeners[type] = [];
+        }
+    };
+    /**
+    * 注册事件
+    * @param {EventType} type 事件类型
+    * @param {Function} func 函数
+    * @param {object} 对象
+    */
+    this.register = function (type, func, obj) {
+        if ((func != null) && this.eventTypes.indexOf(type) > -1) {
+            if (obj == null) {
+                obj = window;
+            }
+            var listeners = this.listeners[type];
+            listeners.push({ obj: obj, func: func });
+        }
+    };
+    /**
+    * 反注册事件
+    * @param {EventType} type 事件类型
+    * @param {Function} func 函数
+    * @param {object} 对象
+    */
+    this.unregister = function (type, func, obj) {
+        if (obj == null) {
+            obj = window;
+        }
+        var listeners = this.listeners[type];
+        if (listeners != null) {
+            for (var i = 0, len = listeners.length; i < len; i++) {
+                if ((listeners[i] && listeners[i].obj == obj) && listeners[i].func == func) {
+                    listeners.splice(i, 1);
+                    i--;
+                    if (listeners && (listeners.length > 0)) continue;
+                    break;
+                }
+            }
+        }
+    };
+};

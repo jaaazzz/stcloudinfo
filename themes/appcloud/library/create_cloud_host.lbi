@@ -1,0 +1,165 @@
+<style type="text/css">
+.itme
+{
+  width: 100%;
+  line-height: 40px;
+  margin-top: 10px;
+  min-height: 40px;
+}
+.itme-title
+{
+   float: left;
+   width: 100px;
+   text-align:right;
+   line-height: 35px;
+   font-size: 14px;
+}
+.itme-info
+{
+  display: inline-block;
+  width: 700px;
+  text-align: left;
+  margin-left: 20px;
+  line-height: 35px;
+  float: left;
+}
+.table th, .table td
+{
+  padding-left:0px;padding-right:0px;
+}
+.table .zy-table-name
+{
+  width: 50px;
+  padding-left:0px;padding-right:0px;
+}
+.zy-table-name1
+{
+  width: 50px;
+}
+.zy-table-name2
+{
+  width: 50px;
+}
+.zy-table-name3
+{
+  width: 50px;
+}
+.zy-table-name4
+{
+  width: 50px;
+}
+.zy-table-name5
+{
+  width: 50px;
+}
+input[type="radio"]
+{
+  margin: 0px;
+}
+.itme-info-table
+{
+  width: 550px !important;
+}
+.itme-info-one
+{
+  height: 40px;
+}
+.app-host-resources-one
+{
+    width:85px;
+    text-align: center;
+    float: left;
+}
+</style>
+<div class="create_cloud_host">
+  <div class="itme">
+      <div class="itme-title">云主机名称:</div>
+      <div class="itme-info">
+        <input type="text" id="host_name" class="sv-req-title input-content" style="float:left;margin-bottom:0;height: 25px;width: 222px;border-radius: 5px;" placeholder="云主机名称" value="">&nbsp;&nbsp;&nbsp;<span style="color:#EA4614;">初始化用户名:Administrator，密码123456</span>
+      </div>
+  </div>
+  <div style="clear: both;"></div>
+ <!--  <input style='vertical-align:middle;' type='checkbox'value=''> -->
+  <div class="itme">
+      <div class="itme-title">资源:</div>
+      <div class="itme-info itme-info-table">
+        <div class="itme-info-one">
+            <div class="app-host-resources-one" style="width: 60px;">
+              镜像名称：
+            </div>
+            <div>
+              <select style="width: 180px;outline: none;" id="openstack_image_id">
+              <!-- {foreach from=$image_list item=image name=image_list} -->
+                <option value="{$image.id}" minDisk="{$image.minDisk}">{$image.name}</option>
+              <!-- {/foreach} -->
+              </select>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="itme-info-one">
+            <div class="app-host-resources-one" style="width: 60px;">
+              规格名称：
+            </div>
+            <div>
+              <select style="width: 180px;outline: none;" id="openstack_flavor_id">
+              <!-- {foreach from=$flavor_list item=flavor name=flavor_list} -->
+                <option value="{$flavor.id}" cpu_core_num="{$flavor.vcpus}" memory_size="{$flavor.ram}" hdd_volume="{$flavor.disk}" >{$flavor.name}</option>
+              <!-- {/foreach} -->
+              </select>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="itme-info-one">
+            <div class="app-host-resources-one" style="width: 60px;">
+              规格详情：
+            </div>
+            <div class="app-host-resources-one">
+              CPU&nbsp;<span id="cpu_core_num" style="color: #EA4614;"></span>核
+            </div>
+            <div class="app-host-resources-one">
+              内存&nbsp;<span id="memory_size" style="color: #EA4614;"></span>MB
+            </div>
+            <div class="app-host-resources-one" style="text-align: left;">
+              
+            </div>
+            <div class="app-host-resources-one">
+              硬盘&nbsp;<span id="hdd_volume" style="color: #EA4614;"></span>G
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+      </div>
+       <div style="clear: both;"></div>
+  </div>
+  <div style="clear: both;"></div>
+</div>
+<script type="text/javascript">
+$(function()
+ {   
+     var is_openstack_huawei = {$is_openstack_huawei};
+
+     function creart_init()
+     {
+        var cpu_core_num  = $('#openstack_flavor_id').find("option:selected").attr("cpu_core_num");
+        var memory_size = $('#openstack_flavor_id').find("option:selected").attr("memory_size");
+        var hdd_volume = $('#openstack_flavor_id').find("option:selected").attr("hdd_volume");
+        $('#cpu_core_num').text(cpu_core_num);
+        $('#memory_size').text(memory_size);
+        $('#hdd_volume').text(hdd_volume);
+
+        if(is_openstack_huawei===1)
+        {
+          var hdd_volume = $('#openstack_image_id').find("option:selected").attr("minDisk");
+          $('#hdd_volume').text(hdd_volume);
+        }
+     }
+     $('#openstack_flavor_id').change(function(){
+        creart_init();
+     })
+     
+     $('#openstack_image_id').change(function(){
+        creart_init();
+     })
+
+     creart_init()
+ })
+</script>

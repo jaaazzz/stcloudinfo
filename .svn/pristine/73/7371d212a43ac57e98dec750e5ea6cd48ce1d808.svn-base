@@ -1,0 +1,1439 @@
+﻿[
+  {
+    "id": "1",
+    "text": "基础数据",
+    "children": [
+      {
+        "id": "11",
+        "text": "DEM",
+        "children": [
+          {
+            "id": "111",
+            "text": "全市",
+            "children": [
+              {
+                "id": "1111",
+                "text": "2012",
+                "children": [
+                  {
+                    "id": "11111",
+                    "text": "1:2000",
+                    "children": [
+                      {
+                        "id": "111111",
+                        "text": "晕渲图",
+                        "children": null,
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "DEM2000YX9_19",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": null,
+                    "wmslayer": null,
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": null,
+                "wmslayer": null,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          }
+        ],
+        "state": "closed",
+        "lx": null,
+        "maptype": 0,
+        "url": null,
+        "wmslayer": null,
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "layer": null,
+        "checked": false,
+        "type": 0,
+        "iconCls": null
+      },
+      {
+        "id": "12",
+        "text": "DOM",
+        "children": [
+          {
+            "id": "121",
+            "text": "全市",
+            "children": [
+              {
+                "id": "1211",
+                "text": "2015",
+                "children": [
+                  {
+                    "id": "12111",
+                    "text": "1:10000",
+                    "children": [
+                      {
+                        "id": "121111",
+                        "text": "永州市影像",
+                        "state": "open",
+                        "lx": 1,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "永州市_DOM_G",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 1,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "122",
+            "text": "冷水滩区",
+            "children": [
+              {
+                "id": "1221",
+                "text": "2015",
+                "children": [
+                  {
+                    "id": "12211",
+                    "text": "1:2000",
+                    "children": [
+                      {
+                        "id": "122111",
+                        "text": "冷水滩影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "冷水滩_DOM_I",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "123",
+            "text": "零陵区",
+            "children": [
+              {
+                "id": "1231",
+                "text": "2015",
+                "children": [
+                  {
+                    "id": "12311",
+                    "text": "1:2000",
+                    "children": [
+                      {
+                        "id": "123111",
+                        "text": "零陵区影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "零陵区_DOM_I",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "124",
+            "text": "江华县",
+            "children": [
+              {
+                "id": "1241",
+                "text": "2012",
+                "children": [
+                  {
+                    "id": "12411",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "123111",
+                        "text": "江华县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "江华县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "125",
+            "text": "江永县",
+            "children": [
+              {
+                "id": "1251",
+                "text": "2013",
+                "children": [
+                  {
+                    "id": "12511",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "125111",
+                        "text": "江永县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "江永县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": "",
+            "wmslayer": "",
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "127",
+            "text": "道县",
+            "children": [
+              {
+                "id": "1271",
+                "text": "2012",
+                "children": [
+                  {
+                    "id": "12711",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "127111",
+                        "text": "道县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "道县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "128",
+            "text": "东安县",
+            "children": [
+              {
+                "id": "1281",
+                "text": "2012",
+                "children": [
+                  {
+                    "id": "12811",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "128111",
+                        "text": "东安县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "东安县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "129",
+            "text": "金洞管理区",
+            "children": [
+              {
+                "id": "1291",
+                "text": "2012",
+                "children": [
+                  {
+                    "id": "12911",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "129111",
+                        "text": "金洞管理区影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "金洞管理区_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "130",
+            "text": "蓝山县",
+            "children": [
+              {
+                "id": "1301",
+                "text": "2013",
+                "children": [
+                  {
+                    "id": "13011",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "130111",
+                        "text": "蓝山县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "蓝山县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "131",
+            "text": "宁远县",
+            "children": [
+              {
+                "id": "1311",
+                "text": "2013",
+                "children": [
+                  {
+                    "id": "13111",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "131111",
+                        "text": "宁远县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "宁远县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "132",
+            "text": "祁阳县",
+            "children": [
+              {
+                "id": "1321",
+                "text": "2013",
+                "children": [
+                  {
+                    "id": "13211",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "132111",
+                        "text": "祁阳县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "祁阳县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "133",
+            "text": "双牌县",
+            "children": [
+              {
+                "id": "1331",
+                "text": "2013",
+                "children": [
+                  {
+                    "id": "13311",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "133111",
+                        "text": "双牌县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "双牌县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "134",
+            "text": "新田县",
+            "children": [
+              {
+                "id": "1341",
+                "text": "2013",
+                "children": [
+                  {
+                    "id": "13411",
+                    "text": "1:5000",
+                    "children": [
+                      {
+                        "id": "134111",
+                        "text": "新田县影像",
+                        "state": "open",
+                        "lx": 2,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 9,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "新田县_DOM_H",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          }
+        ],
+        "state": "closed",
+        "lx": null,
+        "maptype": 0,
+        "url": null,
+        "wmslayer": null,
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "layer": null,
+        "checked": false,
+        "type": 0,
+        "iconCls": null
+      },
+      {
+        "id": "13",
+        "text": "DLG",
+        "children": [
+          {
+            "id": "131",
+            "text": "全市",
+            "children": [
+              {
+                "id": "1311",
+                "text": "2012",
+                "children": [
+                  {
+                    "id": "13111",
+                    "text": "全比例尺",
+                    "children": [
+                      {
+                        "id": "131111",
+                        "text": "矢量地图",
+                        "state": "open",
+                        "lx": 1,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "永州DLG全比例尺_1_19",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 1,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  },
+                  {
+                    "id": "13112",
+                    "text": "1:10000",
+                    "children": [
+                      {
+                        "id": "131121",
+                        "text": "矢量地图",
+                        "state": "open",
+                        "lx": 1,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "永州DLG10000_9_19",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 1,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  },
+                  {
+                    "id": "13113",
+                    "text": "1:2000",
+                    "children": [
+                      {
+                        "id": "131131",
+                        "text": "矢量地图",
+                        "state": "open",
+                        "lx": 1,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "永州DLG2000_9_19",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 1,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  },
+                  {
+                    "id": "13114",
+                    "text": "1:1000",
+                    "children": [
+                      {
+                        "id": "131141",
+                        "text": "矢量地图",
+                        "state": "open",
+                        "lx": 1,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "永州DLG1000_9_19_",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 1,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 1,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "132",
+            "text": "冷水滩区",
+            "children": [
+              {
+                "id": "1321",
+                "text": "2015",
+                "children": [
+                  {
+                    "id": "13211",
+                    "text": "1:500",
+                    "children": [
+                      {
+                        "id": "132111",
+                        "text": "矢量地图",
+                        "state": "open",
+                        "lx": 1,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "冷水滩区DLG500_9_20",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          },
+          {
+            "id": "133",
+            "text": "零陵区",
+            "children": [
+              {
+                "id": "1331",
+                "text": "2015",
+                "children": [
+                  {
+                    "id": "13311",
+                    "text": "1:500",
+                    "children": [
+                      {
+                        "id": "133111",
+                        "text": "矢量地图",
+                        "state": "open",
+                        "lx": 1,
+                        "maptype": 1,
+                        "url": null,
+                        "wmslayer": null,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "layer": "零陵区DLG500_9_20",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null
+                      }
+                    ],
+                    "state": "closed",
+                    "lx": null,
+                    "maptype": 0,
+                    "url": "",
+                    "wmslayer": "",
+                    "zoom": 0,
+                    "centerx": 0,
+                    "centery": 0,
+                    "layer": null,
+                    "checked": false,
+                    "type": 0,
+                    "iconCls": null
+                  }
+                ],
+                "state": "closed",
+                "lx": null,
+                "maptype": 0,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+              }
+            ],
+            "state": "closed",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          }
+        ],
+        "state": "open",
+        "lx": null,
+        "maptype": 0,
+        "url": null,
+        "wmslayer": null,
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "layer": null,
+        "checked": false,
+        "type": 0,
+        "iconCls": null
+      },
+      {
+        "id": "14",
+        "text": "三维数据",
+        "children": [
+          {
+            "id": "141",
+            "text": "市区",
+            "children": [
+              {
+                "id": "1411",
+                "text": "平面三维",
+                "state": "open",
+                "children": null,
+                "lx": 3,
+                "maptype": 2,
+                "url": null,
+                "wmslayer": null,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": "yz0509Last",
+                "checked": false,
+                "type": 1,
+                "iconCls": null,
+                "surface":true
+              },
+              {
+                "id": "1412",
+                "text": "球状三维",
+                "children": null,
+                "state": "open",
+                "lx": "3",
+                "maptype": 2,
+                "url": "",
+                "wmslayer": "",
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "layer": "global3D",
+                "checked": false,
+                "type": 1,
+                "iconCls": null,
+                "surface":false
+              }
+            ],
+            "state": "open",
+            "lx": null,
+            "maptype": 0,
+            "url": null,
+            "wmslayer": null,
+            "zoom": 0,
+            "centerx": 0,
+            "centery": 0,
+            "layer": null,
+            "checked": false,
+            "type": 0,
+            "iconCls": null
+          }
+        ],
+        "state": "open",
+        "lx": null,
+        "maptype": 0,
+        "url": null,
+        "wmslayer": null,
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "layer": null,
+        "checked": false,
+        "type": 0,
+        "iconCls": null
+      }
+    ],
+    "state": "open",
+    "lx": null,
+    "maptype": 0,
+    "url": null,
+    "wmslayer": null,
+    "zoom": 0,
+    "centerx": 0,
+    "centery": 0,
+    "layer": null,
+    "checked": false,
+    "type": 0,
+    "iconCls": null
+  }
+]

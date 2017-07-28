@@ -1,0 +1,409 @@
+<?php
+
+defined('_JEXEC') or die();
+global $file_server_api_ip,$file_server_api_port;
+$file_url= '';
+$file_download_url = "";
+?>
+<style type="text/css">
+    .upload-file-model{
+        display: none;
+        color: #333333;
+    }
+    .upload-file-model .model-background{
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2014;
+        background-color: #666666;
+        filter:alpha(opacity=30);
+        -moz-opacity:0.3;
+        opacity:0.3;
+    }
+    .upload-file-model .model-main-container{
+        position: fixed;
+        width: 500px;
+        height: 294px;
+        left: 50%;
+        top: 50%;
+        background-color: #ffffff;
+        z-index: 2015;
+        margin-left: -250px;
+        margin-top: -147px;
+        /*color: #f9f9f9;*/
+        font-size: 12px;
+        border: 1px solid #f0f0f0;
+    }
+    .upload-file-model .model-main-container .model-header{
+        height:40px;
+        line-height:40px;
+        /*border-bottom: 1px solid #DCDCDC;*/
+        color: #333333;
+    }
+    .upload-file-model .model-main-container .model-header .title{
+        font-size:16px;
+        margin-left:10px;
+        float:left;
+    }
+    .upload-file-model .model-main-container .model-header .close-btn{
+        float: right;
+        height: 30px;
+        width: 30px;
+        text-align: center;
+        margin-top: 5px;
+        margin-right: 5px;
+        line-height: 30px ! important;
+        cursor: pointer;
+        font-size: 18px;
+    }
+    .upload-file-model .model-main-container .model-header .close-btn.active{
+        background: #3A85C6 ! important;
+        color: white ! important;
+    }
+
+    .upload-file-model .model-main-container .model-body{
+        /*height:320px;*/
+        /*margin:0 10px;*/
+    }
+
+    .model-divide-line{
+        height:1px;
+        border-bottom:1px solid #DCDCDC;
+        margin:0px auto;
+    }
+
+    .upload-file-model .model-main-container .model-body .search-result{
+        height: 25px;
+        color: #666666;
+        font-size: 14px;
+        margin: 15px 5px 5px 5px;
+    }
+    .upload-file-model .model-main-container .model-body .search-result .upload-file .upload-text{
+        margin-top: 3px;
+        margin-left: 5px;
+    }
+    .upload-file-model .model-main-container .model-body .search-result .upload-file .upload-select{
+        margin-left: 10px;
+    }
+    .upload-file-model .model-main-container .model-body .search-result .upload-file .upload-select .select-file-title{
+        padding:5px 10px;
+        border: 1px solid #3A85C6;
+        color: #3A85C6;
+        cursor: pointer;
+    }
+    .upload-file-model .model-main-container .model-body .search-result .upload-file .upload-select input.gs-upload-file{
+        position:relative; 
+        width:76px;
+        height:25px;
+        filter:alpha(opacity=0);
+        opacity:0; 
+        cursor: pointer;
+        margin-left: -80px;
+        z-index: 10;
+    }
+    .upload-file-model .model-main-container .model-body .search-result .upload-file .upload-select .upload-file-name{
+        cursor: default;
+        width: 300px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: block;
+        margin-top: 5px;
+    }
+    .upload-file-model .model-main-container .model-body .file-upload-items{
+        height: 60px;
+        /*line-height: 30px;*/
+        /*text-align: center;*/
+        font-size: 14px;
+        color: #3A85C6;
+        margin-left: 83px;
+    }
+    .upload-file-model .model-main-container .model-body .upload-file-option{
+        margin-top: 10px;
+    }
+    .upload-file-model .model-main-container .model-body .upload-file-option .upload-file-ok{
+        width: 50px;
+        background: #3A85C6;
+        padding: 5px;
+        margin: 0 auto;
+        color: white;
+        cursor: pointer;
+        text-align: center;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+    .upload-file-model .model-main-container .model-body .explain-text{
+        padding: 5px;
+        border:1px solid #EBB28B;
+        background: #FFFDEE;
+        color: #333333;
+    }
+    .upload-file-model .model-main-container .model-body .explain-text .text-1{
+        margin-left: 5px;
+    }
+
+    .f-l{
+        float: left;
+    }
+    input[type="file"]{
+        cursor: pointer;
+    }
+
+    .file-item{
+                height:20px;
+                font-size: 14px;
+    }
+    .file-item .file-name-left{
+                float:left;
+                width:285px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+    }
+    .file-item .file-view-a{
+                float:left;
+    }
+    .file-item .remove-doc-file a{
+                float:left;
+                width: 20px;
+                height: 20px;
+                display: block;
+                background: url(../images/requirement_op.png) no-repeat 0 0;
+                cursor: pointer;
+    }
+    .file-item .remove-doc-file a:hover{
+               background-position: 0 -20px;
+    }
+</style>
+<div class="upload-file-model">
+    <div class="model-background"></div>
+    <div class="model-main-container">
+        <div class="model-header">
+            <div class="title">上传文件</div>
+            <div class="close-btn close-upload-file-modal">×</div>
+        </div>
+        <div class="model-body">
+            <div class="explain-text">
+                <div class="text-1">
+                    <span >温馨提示：</span>
+                    <span>1、上传文件大小不超过50M</span>
+                </div>
+                <div class="text-1">
+                    <span style="visibility:hidden;">温馨提示：</span>
+                    <span>2、最多只能上传3个文件</span>
+                </div>
+                <div class="text-1">
+                    <span style="visibility:hidden;">温馨提示：</span>
+                    </span>3、文件格式：(1)文档 "doc/docx/txt"；(2)压缩文件： "rar/zip/7z/tar"</span>
+                </div>
+            </div>
+
+            <div  class="search-result">
+                <div class="upload-file">
+                    <iframe id="file_upload_iframe_1" name="file_upload_iframe_1"  style="display:none;"></iframe>
+                                <form action="" method="post" target="file_upload_iframe_1" name="adminForm" id="file_upload_form_1" class="form-inline" enctype="multipart/form-data" >
+                                    <div class="upload-text f-l" >上传文件：</div>
+                                    <div class="upload-select f-l">
+                                        <span class="select-file-title">选择文件</span>
+                                        <input type="file" name="gs_upload_file" class="gs-upload-file upload-1" value="选择文件" onchange="fileSubmit(1);" />
+                                        <span id="upload_file_name" class="upload-file-name" style="display:none;"></span>
+                                    </div>
+                                </form>
+                </div>
+            </div>
+            <div class="file-upload-items">
+            </div>
+            <div class="upload-file-option">
+
+                <div class="upload-file-ok">完成</div>
+            </div>
+            
+        </div>
+    </div>
+    <input type="hidden" id="current_file_type">
+    <input type="hidden" id="current_option_load">
+</div>
+<script type="text/javascript">
+    $(function(){
+        $('.model-header .close-upload-file-modal').on('mouseover',function(e){
+            $(this).addClass('active');
+        }).on('mouseleave',function(e){
+            $(this).removeClass('active');
+        }).on('click',function(e){
+            hideModal();
+        })
+    })
+
+</script>
+
+<script type="text/javascript">
+$(function(){
+    $('.upload-file-option .upload-file-ok').on('click',function(){
+        var file_list = $('.file-upload-items').html();
+
+        $('#file_upload_list .file-upload-list').append(file_list);
+        removeDocFile();
+
+        var file_num = $('.file-upload-items .file-item').length;
+        var file_page_num = $('#file_upload_list .file-upload-list .file-item').length;
+        if (file_num>=file_page_num) {
+            $('#file_upload_list').css('height',file_num*20+'px');
+        }else{
+            $('#file_upload_list').css('height',file_page_num*20+'px');
+        };
+
+        hideModal();
+    })
+    
+    $('.remove-doc-file a').on('click',function(e){
+        var parent = $(e.target).closest('.file-item');
+        var file_path = parent.find('.file-view-a a').attr('data');
+
+        var url =  '/dev/requirement-form-sub/4';
+        parent.remove();
+        var file_num = $('#file_upload_list .file-upload-list .file-item').length;
+        $('#file_upload_list').css('height',file_num*20+'px');
+    })
+})
+    //set form action
+    function fileSubmit(load_pos){
+        var file_url= '{$file_server_base_url}file/uploadex/';
+        var fileName = $('#file_upload_form_'+load_pos+' .upload-'+load_pos).val();
+        if (fileName == '') {
+            alert('请选择要上传的文件');
+            return false;
+        }
+
+        if(load_pos ==1){
+            var file_num = $('.file-upload-items .file-item').length;
+            var file_page_num = $('#file_upload_list .file-upload-list .file-item').length;
+            if (file_num>=3 || file_page_num>=3) {
+                alert('最多允许上传3个文件');
+                return false;
+            }
+        }
+
+
+        var fileType = fileName.substring(fileName.lastIndexOf('.')+1,fileName.length);
+        fileType = fileType.toLowerCase();
+
+        var checkFile = checkFileType(fileType,load_pos);
+        if (checkFile) {
+
+            $('#file_upload_form_'+load_pos).attr('action',file_url+fileType);
+            $('#file_upload_iframe_'+load_pos).attr('src',file_url+fileType);
+            $('#current_file_type').val(fileType);
+            $('#current_option_load').val(load_pos);
+
+            $('#file_upload_form_'+load_pos).submit();
+            return true;
+        }else{
+            alert('文件类型不支持！');
+            return false;
+        }
+    }
+    function checkFileType(fileType,load_pos){
+        var support_file_type = new Array('doc','docx','txt','rar','zip','tar','7z');//'jpg','jpge','gif','png',
+        switch(load_pos){
+            case 1:
+                //setFile(file_info,file_type);
+                break;
+            case 2:
+                //setImg(file_info,file_type,load_pos);
+                support_file_type = new Array('png','gif','jpg','jpge');
+                break;
+            default:
+                break;
+        }
+
+        for (var i = 0; i < support_file_type.length; i++) {
+            if (fileType == support_file_type[i]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    var onMessage = function(data){
+        // console.info(data);
+        var file_info = data.data;
+        var file_type = $('#current_file_type').val();
+        var load_pos = $('#current_option_load').val();
+        var upload_remind_span = $('.upload_file_frame_content_remind_text_attrid').find("span");
+        if (file_info){
+
+            file_info = $.parseJSON(file_info);
+            if (file_info.success) {
+                 var p  = $("<p></p>").addClass('upload_file_msg l');
+                upload_remind_span.text("");
+                upload_remind_span.text(data.success);
+                switch(load_pos){
+                    case '1':
+                        setFile(file_info,file_type);
+                        break;
+                    case '2':
+                        setImg(file_info,file_type,load_pos);
+                        break;
+                    default:
+                        break;
+                }
+
+
+            }else{
+
+            };
+           
+        }
+        else{
+            upload_remind_span.text("");
+            upload_remind_span.text(data.src);
+        }
+
+    }
+    if (window.addEventListener) {
+        window.addEventListener('message', onMessage, false);
+    }else{
+        window.attachEvent('onmessage', onMessage);
+    };
+
+    function setFile(data,file_type){
+
+        var file_download_url = '/ajax/app_ajax.php?act=download_file&size=128&real_name=';
+        var file_text = '';
+        var t_key = file_type+'/'+data.result.file_guid;
+
+        var doc_text = '<div class="file-item" >'+
+                                        '<div class="file-name-left"><a href="'+file_download_url+data.result.original_file_name+'&file_key='+t_key+'" >'+data.result.original_file_name+'</a></div>'+
+                                        '<div class="file-view-a"><a target="_blank" data="'+t_key+'">'+file_text+'</a></div>'+
+                                        '<div class="remove-doc-file"><a title="移除"></a></div>'+
+                                    '</div>';
+
+        $('.file-upload-items').append(doc_text);
+        removeDocFile();
+    }
+    function removeDocFile(){
+        $('.remove-doc-file a').on('click',function(e){
+            var parent = $(e.target).closest('.file-item');
+            var file_path = parent.find('.file-view-a a').attr('data');
+
+            var url =  '/dev/requirement-form-sub/4';
+            parent.remove();
+            var file_num = $('#file_upload_list .file-upload-list .file-item').length;
+            $('#file_upload_list').css('height',file_num*20+'px');
+        })
+    }
+    function hideModal(){
+        $('.upload-file-model').css('display','none');
+        $('.file-upload-items').html('');
+    }
+function setImg(file_info,file_type,load_pos,size){
+     var file_key = file_type+"/"+file_info.result.file_guid;
+    // var url ="/file/downloadex/"+file_key;
+    var url ='/uploadlink/file/'+file_info.result.store_path.slice(-7)+'256_'+file_info.result.store_file_name;
+    $('.business-logo-input').val(file_key);
+    $('.business-license-logo').attr('src','{$file_server_base_url}'+url);
+    $('#product-logo-img').val(url);
+}
+</script>

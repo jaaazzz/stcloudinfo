@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>首页</title>
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="themes/appcloud/css/savedResource.css" type="text/css" rel="stylesheet"/>
+    <link href="themes/appcloud/css/savedResource4.css" type="text/css" rel="stylesheet"/>
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css"/> -->
+
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+    <!--[if lt IE 8]>
+    <script type="text/javascript" src="js/iconfont-ie7.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <link type="text/css" rel="stylesheet" href="css/headerIe.css"/>
+    <script type="text/javascript" src="js/html5.js"></script>
+    <![endif]-->
+
+    {* insert_scripts files='DialogBySHF.js' *}
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/saved_resource_3.js"></script>
+    <style type="text/css">
+        .navbar-wrapper-active{background: rgba(0,0,0,0.1) ! important;}
+    </style>
+</head>
+<body>
+    <div class="space-time-cloud-home">
+        <!-- 引入Header开始 -->
+            <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <!-- 引入Header结束 -->
+        <!-- banner开始 -->
+        <section>
+        	<div class="jumbotron"  style="background: url(../images/homeimage/banner.png) 0% 100% /cover no-repeat;min-height: 298px;">
+                <div class="col-md-6" style="top:80px;float:none;margin:0 auto;filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="">
+                </div>
+        	</div>
+        </section>
+        <!-- {if $banner_arr && count($banner_arr) > 0}
+        <div class="space-time-cloud-home-banner"> -->
+            <!--<ul class="banner" id="banner">-->
+                <!--<li class="fw fw1 active" style="background-image: url('./themes/appcloud/images/banner/banner1.png');">-->
+                <!--</li>-->
+                <!--<li class="fw fw2" style="background-image: url('./themes/appcloud/images/banner/banner2.png');">-->
+                <!--</li>-->
+                <!--<li class="fw fw3" style="background-image: url('./themes/appcloud/images/banner/banner3.png');">-->
+                <!--</li>-->
+                <!--<li class="fw-controller">-->
+                    <!--<span class="fw-button active" data-index=1>-->
+                    <!--</span>-->
+                    <!--<span class="fw-button" data-index=2>-->
+                    <!--</span>-->
+                    <!--<span class="fw-button" data-index=3>-->
+                    <!--</span>-->
+                <!--</li>-->
+            <!--</ul>-->
+            <!-- <div data-spm="418686" data-moduleid="175947" data-name="aliyun-index-top-banner-2016" data-guid="418686" id="guid-418686" data-scene-id="431827" data-scene-version="11" data-hidden="" data-gitgroup="ali-mod" data-ext="" class="aliyun-index-top-banner-2016 J_Module" tms="aliyun-index-top-banner-2016/0.0.71" tms-datakey="431827">
+                <div class="module-wrap J_tb_lazyload dbl_tms_module_wrap" style="position: relative; z-index: 100;" -->
+                    <!--[if lte IE 8]>
+                    indexBanner_isIE8 = true;
+                    <![endif]-->
+                    <!--[if lte IE 9]>
+                    <script>
+                        indexBanner_isIE9 = true;
+                    </script>
+                    <![endif]-->
+                    
+                    <!-- <div class="banner-container dark" style="background: rgb(34, 37, 42);">
+                        <div class="index-top-banner" data-hover-container="">
+                            {foreach from=$banner_arr item=item key=key name=banner_arr}
+                            <div data-group="" data-isimage="" data-group-open="" data-active="dark" data-groupindex="0" class="{if $item.index == '0'}'center animating-enter-down'{else}'bottom'{/if}">
+                                <div class="y-row" data-ignore-group="">
+                                    <div class="layer left-header" data-ignore="">
+                                        {$banner_des_arr.$key}
+                                    </div>
+                                </div>
+                                <a href="javascript:;" target="_blank">
+                                    <div data-base-layer="" style="transform: rotateX(0deg) rotateY(0deg);">
+                                        <div class="banner-row">
+                                            {foreach from=$item.info item=i_item key=i_key name=i_name}
+                                            <div class="layer right-image no-transition" data-zindex="{$i_item.z_index}" style="{$i_item.transform}">
+                                                <img src="{$i_item.path}" alt=""/>
+                                            </div>
+                                            {/foreach}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {/foreach}
+                        </div>
+                        <ul class="banner-tab dark" style="visibility: visible;{$banner_margin}"><
+                            {foreach from=$banner_ul item=item}
+                            <li class="banner-tab-li {if $item == '0'}'active'{/if}" data-index="{$item}"></li>
+                            {/foreach}
+                        </ul>
+                    </div> -->
+             <!--    </div>
+            </div>
+            <script type="text/javascript" src="js/saved_resource_35.js"></script>
+        </div>
+        {/if} -->
+        <!-- banner结束 -->
+
+        <!-- 地质产品 -->
+       <section>
+            <div class="container-fluid">
+                <div class="row geo-product">
+                    <div class="midnav midnav-white">
+                        <h1 class="text-center">地质产品</h1>
+                    </div>
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <a href="geologyproduct.php?act=geodata">
+                            <div class="product-card">
+                                <div class="product-card_image">
+                                    <img class="center-block" src="themes/appcloud/images/homeimage/地质数据.png" alt="暂无图片" height="80" width="80">
+                                </div>
+                                <div class="product-card_content">
+                                    <h4 class="text-center">地质数据</h4>
+                                </div> 
+                            </div>
+                        </a>
+                        <!-- <div class="product-card_bottom">
+                            <p><a href="sfw.php?" class="btn btn-success btn-more" role="button">更多 ></a></p>
+                        </div> -->
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <a href="geologyproduct.php?act=specialser">
+                            <div class="product-card">
+                                <div class="product-card_image">
+                                    <img class="center-block" src="themes/appcloud/images/homeimage/科普产品.png" alt="暂无图片" height="80" width="80">
+                                </div>
+                                <div class="product-card_content">
+                                    <h4 class="text-center">科普产品</h4>
+                                    <!-- <p>为促进、普及地学科学知识的科普图书、多媒体、科普模型产品，以及一些其他形式的科普产品</p> -->
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <a href="geologyproduct.php?act=technolgy">
+                           <div class="product-card">
+                                <div class="product-card_image">
+                                    <img class="center-block" src="themes/appcloud/images/homeimage/研究报告.png" alt="暂无图片" height="80" width="80">
+                                </div>
+                                <div class="product-card_content">
+                                    <h4 class="text-center">研究报告</h4>
+                                </div>
+                           </div>
+                       </a>
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <a href="geologyproduct.php?act=publication">
+                           <div class="product-card">
+                                <div class="product-card_image">
+                                    <img class="center-block" src="themes/appcloud/images/homeimage/出版物.png" alt="暂无图片"  height="80" width="80">
+                                </div>
+                                <div class="product-card_content">
+                                    <h4 class="text-center">出版物</h4>
+                                </div>
+                           </div>
+                        </a>
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <a href="geologyproduct.php?act=geomap">
+                           <div class="product-card">
+                                <div class="product-card_image">
+                                    <img  class="center-block" src="themes/appcloud/images/homeimage/地质图.png" alt="暂无图片" height="80" width="80">
+                                </div>
+                                <div class="product-card_content">
+                                    <h4 class="text-center">地质图</h4>
+                                </div>
+                           </div>
+                        </a>
+                    </div>
+                </div>      
+            </div>
+        </section>
+
+        <!-- 专题服务 -->
+        <section style="background-color: #162f43;padding-bottom: 10px;">
+            <div class="container-fluid">
+                <div class="midnav midnav-default">
+                    <h1 class="text-center">专题服务</h1>
+                </div>
+                <div class="row">
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/区域与基础地质.png" alt="区域与基础地质" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">雄安新区</a></h3>
+                                <p class=""><a href="">提供全国多比例尺地质图空间数据库</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/矿产地质.png" alt="矿产地质" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">一带一路</a></h3>
+                                <p class=""><a href="">可查询全国矿产地及矿产资源信息</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/物化瑶.png" alt="物化遥" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">长江经济带</a></h3>
+                                <p class=""><a href="">提供物探、化探与遥感影像数据库</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/水工环地址.png" alt="水工环地质" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">京津冀</a></h3>
+                                <p class=""><a href="">共享1:20万和1:50万水文地质信息</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/海洋地质.png" alt="海洋地质" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">黑土地示范</a></h3>
+                                <p class=""><a href="">了解全国重要地质钻孔数据</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+
+                <!-- <div class="row">
+                    <div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/钻孔.png" alt="钻孔" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">钻孔</a></h3>
+                                <p class=""><a href="">了解全国重要地质钻孔数据</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/能源矿产.png" alt="能源矿产" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">能源矿产</a></h3>
+                                <p class=""><a href="">提供全国尤其资源地质调查数据库</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                        <div class="service-box">
+                            <div class="service-box_img">
+                                <a href="#">
+                                    <img src="themes/appcloud/images/homeimage/文献与资料.png" alt="文献与资料" width="80" height="80">
+                                </a>
+                            </div>
+                            <div class="service-box_body">
+                                <h3 class="service-box_h3"><a href="">文献与资料</a></h3>
+                                <p class=""><a href="">共享全国地质相关图文资料</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div> -->
+            </div>
+        </section>
+
+        <!-- 数据共享 -->
+        <section>
+        	<div class="midnav midnav-black">
+        		<h1 class="text-center">数据共享</h1>
+        	</div>
+        	<div style="background: url(../images/homeimage/banner2.png) 0% 100% /cover no-repeat; min-height: 300px;">
+        		<!-- <img src="img/Singapore.jpg" alt="" style="height: 200px;"> -->
+        	
+
+        	<div class="container" style="color:#fff;width:100%">
+        		<div class="row" style="margin-top:35px">
+        			<div class="col-md-3 col-sm-6 col-xs-6">
+        				<div class="infoCaption">
+        			        <h4 class="infoTitle"><strong style="color:#fff">原始数据</strong></h4>
+        			        <p>提供最全面最新的第一手原始地质数据查询、浏览、下载服务</p>
+        			        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+        				</div>
+        	        </div>
+        	        <div class="col-md-3 col-sm-6 col-xs-6">
+        				<div class="infoCaption">
+        			        <h4 class="infoTitle"><strong style="color:#fff">成果资料</strong></h4>
+        			        <p>提供经过专业分析与处理，权威有料的地质成果资料</p>
+        			        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+        				</div>
+        	        </div>
+        	        <div class="col-md-3 col-sm-6 col-xs-6">
+        				<div class="infoCaption">
+        			        <h4 class="infoTitle"><strong style="color:#fff">专题报告</strong></h4>
+        			        <p>根据专题分类，可查询相关方面研究报告方面研究报方面研究报</p>
+        			        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+        				</div>
+        	        </div>
+        	        <div class="col-md-3 col-sm-6 col-xs-6">
+        				<div class="infoCaption">
+        			        <h4 class="infoTitle"><strong style="color:#fff">专题图件</strong></h4>
+        			        <p>提供全国及各区域多比例尺地质专题图件数据</p>
+        			        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+        				</div>
+        	        </div>	
+        		</div>
+                
+        
+        	</div>
+            </div>
+        	
+        </section>
+
+        <!-- 地质工具 -->
+        <section style="">
+        	<div class="midnav midnav-black">
+        		<h1 class="text-center">地质工具</h1>
+        	</div>
+            <div class="container row" style="margin:0 auto;width:100%;color:#000">
+        	<div class="col-md-4 col-sm-6 col-xs-6" style="">
+                <div>
+                    <div class="toolimage" style="text-align: center;">
+                        <img src="themes/appcloud/images/homeimage/1.png" alt="暂无图片">
+                    </div>
+                </div>
+        		<div>
+        			<div class="tooltext">
+        				<div class="infoCaption">
+        					<h3 class="text-center infoTitle_h3" style="color:#000">地学软件</h3>
+        			        <p class="text-center info-tips" style="color:#000">专业桌面处理软件</p>
+        			        <!-- <p class="text-right info-tips">软件共享|软件在线使用|软件资源下载</p> -->
+        			        <ul class="list-inline text-center">
+        			          <li><a href="#" style="color:#000">软件共享</a></li>
+        			          <li><a href="#" style="color:#000">软件在线使用</a></li>
+        			          <li><a href="#" style="color:#000">软件资源下载</a></li>
+        			        </ul>
+        				</div>
+        			</div>
+        		</div>
+
+        	</div>
+
+        	<div class="col-md-4 col-sm-6 col-xs-6" style="background-color:#fff;">
+                <div>
+                    <div class="toolimage" style="text-align: center;">
+                        <img src="themes/appcloud/images/homeimage/2.png" alt="暂无图片">
+                    </div>
+                </div>
+        		<div>
+        			<div class="tooltext">
+        				<div class="infoCaption">
+        					<h3 class="text-center infoTitle_h3" style="color:#000">地质在线</h3>
+        			        <p class="text-center info-tips" style="color:#000">在线地图呈现各类专题服务</p>
+        			        <ul class="list-inline text-center">
+        			          <li><a href="#" style="color:#000">在线地图呈现各类专题服务</a></li>
+        			          <li><a href="#" style="color:#000">在线地图呈现各类专题服务</a></li>
+        			        </ul>
+        				</div>
+        			</div>
+        		</div>
+
+        	</div>
+
+        	<div class="col-md-4 col-sm-6 col-xs-6" style="background-color: #fff;">
+                <div>
+                    <div class="toolimage" style="text-align: center;">
+                        <img src="themes/appcloud/images/homeimage/1.png" alt="暂无图片">
+                    </div>
+                </div>                
+        		<div>
+        			<div class="tooltext">
+        				<div class="infoCaption">
+        					<h3 class="text-center infoTitle_h3" style="color:#000">数据分析</h3>
+        			        <p class="text-center info-tips" style="color:#000">专业数据统计分析系统</p>
+        			        <ul class="list-inline text-center">
+        			          <li><a href="#" style="color:#000">专业数据统计分析系统</a></li>
+        			          <li><a href="#" style="color:#000">专业数据统计分析系统</a></li>
+        			        </ul>
+        				</div>
+        			</div>
+        		</div>
+
+        	</div>
+        </div>
+        </section>
+
+        <!-- 引入Footer开始 -->
+            <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        <!-- 引入Footer结束 -->
+    </div>
+    <!-- #BeginLibraryItem "/library/load_animation.lbi" --><!-- #EndLibraryItem -->
+    <!-- <div class="backgroundNull" style="display:none;width:100%;height:100%;background:rgba(0,0,0,0.5);position:fixed;left:0;top:0;z-index:999999;">
+    <div class="registerMessage" style="width:568px;background:#fff;left: 395px;top: 200px;position:fixed;border-radius:3px;">
+        <a href="" title="关闭" class="register-close" style="float:right;font-size: 25px;cursor: pointer;margin-right: 10px;">×</a>
+        <div style="clear:both;width:100%;height:2px"></div>
+        <form style="width:100%;text-align:center;">
+            <input class="usernameRegister" type="text" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入账号" required><br>
+            <input class="userEmaiRegisterRegister" type="text" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入邮箱" required><br>
+            <input class="passwordRegister1" type="password" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入密码" required><br>
+            <input class="passwordRegister2" type="password" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入密码" required><br>
+            <input class="submitRegister" type="submit" style="width:20%;height:28px;margin:8px auto 10px;" value="提交"><br>
+        </form>
+    </div> -->
+<!-- </div> -->
+</body>
+<script type="text/javascript">
+    $(function(){
+        //$(".zoom").hoverZoom();
+        $('#map_serve').click(function () {
+            $(this).css('border-bottom','2px solid #6288DD');
+            $('#map_SDK').css('border-bottom','2px');
+            $('#space-time-cloud-home-resource-map').show();
+            $('#space-time-cloud-home-resource-sdk').hide();
+        });
+
+        $('#map_SDK').click(function () {
+            $(this).css('border-bottom','2px solid #6288DD');
+            $('#map_serve').css('border-bottom','2px');
+            $('#space-time-cloud-home-resource-map').hide();
+            $('#space-time-cloud-home-resource-sdk').show();
+        });
+        for(var i = 0;i<$('.serviceType').length;i++){
+            if($('.serviceType')[i].dataset.type == 'TILE_OGC'){
+                $('.serviceType')[i].innerHTML = "WMTS";
+            }else if($('.serviceType')[i].dataset.type == 'VECTOR_OGC'){
+                $('.serviceType')[i].innerHTML = "矢量OGC";
+            }else if($('.serviceType')[i].dataset.type == 'MRMS_TDF'){
+                $('.serviceType')[i].innerHTML = "瓦片地图";
+            }else if($('.serviceType')[i].dataset.type == 'MRMS_MAPX'){
+                $('.serviceType')[i].innerHTML = "矢量地图";
+            }else if($('.serviceType')[i].dataset.type == 'G3D'){
+                $('.serviceType')[i].innerHTML = "三维地图";
+            }
+        }
+        // $('register-close').click(function(){
+        //     $('.backgroundNull').css({'display':'none'});
+        //     $('.registerMessage input').value = '';
+        //     $('.submitRegister').value = '提交';
+        //     return false;
+        // });
+
+        // $('.submitRegister').click(function(){
+        //     $('.guc-login-prompt').css({'display':'none'});
+        //     var userName = $('.usernameRegister').val();
+        //     var userEmail = $('.userEmaiRegisterRegister').val();
+        //     var password1 = $('.passwordRegister1').val();
+        //     var password2 = $('.passwordRegister2').val();
+        //     if(password1 == password2){
+        //         var data = {};
+        //         data.username = userName;
+        //         data.email = userEmail;
+        //         data.password = password1;
+        //         data.role_id = 6;
+        //         // $.cors = true;
+        //         $.ajax({
+        //             url:'../ajax.php?act=user_regist',
+        //             data:data,
+        //             type:'post',
+        //             // dataType:'json',
+        //             success:function(res){
+        //                 var message = JSON.parse(res);
+        //                 // alert('111');
+        //                 if(message.code == 1){
+        //                     alert('申请成功，等待审核！');
+        //                     $('.backgroundNull').css({'display':'none'});
+        //                     $('.registerMessage form input').val('');
+        //                     $('.submitRegister').val('提交');
+        //                 }else if(message.code == -1){
+        //                    alert(message.msg); 
+        //                 }   
+        //             },
+        //             error:function(res){
+        //                 alert('ajax失败');
+        //             }
+        //         })
+        //     }else{
+        //         alert('两次密码不一致！');  
+        //     } 
+        //     return false;
+        // })
+    });
+</script>
+</html>

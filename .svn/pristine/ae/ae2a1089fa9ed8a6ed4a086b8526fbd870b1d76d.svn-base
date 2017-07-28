@@ -1,0 +1,595 @@
+﻿body, html, div, dl, dt, dd, ul, li, p, img, label, hr {
+    padding: 0;
+    margin: 0;
+}
+html{
+    overflow-x: hidden;
+}
+body, html {
+    width: 100%;
+    height: 100%;
+
+}
+
+body {
+    font-size: 10px;
+    color: #000;
+    font-family: "微软雅黑";
+
+}
+
+label {
+    display: inline;
+}
+
+/*左侧目录树菜单项的样式设置*/
+.categoryList, .mapList {
+    display: block;
+    margin: 0;
+}
+
+
+ul {
+    list-style: outside none none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 0 !important;
+}
+
+img {
+    border: 0;
+}
+
+/*=S =======================================主体框架 =======================================*/
+#content {
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #ccc;
+    top: 5px;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    /* bottom: 50px;*/
+}
+
+#onlinesrc-content {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-bottom: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+}
+
+/*=E ========================================主体框架 =====================================*/
+
+/*=S=========================================滚动条（chrom浏览器）==========================*/
+/*定义滚动条轨道 内阴影+圆角*/
+/*.leftsidebar_box::-webkit-scrollbar {
+    width: 10px;
+    height: 7px;
+}
+
+.leftsidebar_box::-webkit-scrollbar-track {
+    background: #fff;
+}*/
+
+/*定义滑块 内阴影+圆角*/
+/*.leftsidebar_box::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    border: 2px solid #fff;
+    background-color: #4AAFE4;
+}
+
+.leftsidebar_box::-webkit-scrollbar-thumb:hover {
+    border-radius: 5px;
+    border: 2px solid #fff;
+    background-color: rgba(7, 170, 247, 1);
+}*/
+/*=E ===================================滚动条（chrom浏览器） =====================================*/
+
+/*=S====================================滚动条（jQuery插件，兼容所有浏览器）==========================*/
+.mCS-my-theme.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+    background-color: #4AAFE4;
+}
+
+.mCS-my-theme.mCSB_scrollTools .mCSB_draggerRail {
+    background-color: white;
+}
+
+.mCSB_container_wrapper {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.mCSB_inside > .mCSB_container {
+    margin-right: 10px;
+}
+
+#mCSB_1_scrollbar_vertical, .mCSB_scrollTools {
+    width: 10px;
+}
+
+.mCSB_scrollTools a + .mCSB_draggerContainer {
+    margin: 6px 0;
+}
+
+.mCSB_vertical_horizontal > .mCSB_scrollTools.mCSB_scrollTools_horizontal {
+    right: 10px;
+}
+
+.mCSB_scrollTools.mCSB_scrollTools_horizontal a + .mCSB_draggerContainer {
+    margin: 0 6px;
+}
+
+.mCSB_scrollTools.mCSB_scrollTools_horizontal {
+    height: 10px;
+}
+
+.mCSB_scrollTools.mCSB_scrollTools_horizontal .mCSB_dragger .mCSB_dragger_bar {
+    margin: 3px auto;
+}
+
+.mCSB_vertical_horizontal > .mCSB_scrollTools.mCSB_scrollTools_vertical {
+    bottom: 10px;
+}
+
+/*=E ===================================滚动条（jQuery插件，兼容所有浏览器） =========================*/
+/*=S =======================================导航部分left================================= */
+.leftsidebar_box {
+    /*max-width: 370px;*/
+    min-width: 360px;
+    background-color: #F8F8FF;
+    /*overflow-y: scroll;*/
+    position: absolute;
+    height: inherit;
+    box-shadow: 2px 0 2px rgba(0, 0, 0, .3);
+    z-index: 1;
+}
+
+#firstList {
+    height: 100% !important;
+    position: relative;
+}
+
+#content a {
+    cursor: pointer;
+}
+/*一级菜单项*/
+.categoryList {
+    background-repeat: no-repeat;
+    background-position: 20px center;
+    background-color: #4AAFE4;
+    padding-left: 30px;
+    color: #f5f5f5;
+    font-size: 14px;
+    font-weight: normal;
+    position: relative;
+    line-height: 40px;
+    cursor: pointer;
+    width:auto;
+    border-bottom: 1px solid #F5F5F5;
+
+    -webkit-transition: all .1s ease;
+    -moz-transition: all .1s ease;
+    transition: all .1s ease;
+}
+.categoryList:hover {
+    /*position: relative;
+    top: 1px;*/
+    background-color: #1c8fcc;
+    /*box-shadow: 0px 1px 5px rgba(81, 112, 182, 1) inset;*/
+}
+.categoryList:active {
+    background-color: #1c8fcc;
+    box-shadow: 0px 3px 3px #1783bd inset;
+}
+
+.on-list-show{
+    background-color: #1c8fcc;
+}
+
+.categoryList a {
+    color: #FFFFFF;
+    margin-left: 2px;
+}
+
+.mapList {
+    color: #f5f5f5;
+    background-color: #F8F8FF;
+    padding-left: 45px;
+    height: 35px;
+    line-height: 35px;
+    cursor: pointer;
+}
+.mapList a {
+    font-size: 14px;
+    color: #000;
+}
+
+/*=E =========================================导航部分left================================ */
+
+/*=S =======================================地图容器部分================================== */
+.iframe_wrapper {
+    /*width: 100%;*/
+    width: auto;
+    height: 100%;
+    border: none;
+    z-index: 1; /*margin-left: 220px;*/
+    margin-left: 190px;
+    top: 0;
+    bottom: 0;
+
+}
+
+#mapControl {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+/*=E ========================================地图容器部分================================ */
+
+/*=s ===========================常用快捷工具栏================================ */
+#header-line {
+    width: 100%;
+    height: 3px;
+    background-color: #2B99FF;
+}
+
+#toolBars {
+    z-index: 1;
+    height: 36px;
+    position: absolute;
+    left: 370px;
+    background-color: #F5F5F5;
+    width: 100%;
+    border: 1px solid #DBDBDB;
+}
+
+.shortMenus {
+    text-align: center;
+    float: left;
+    margin-left: 8px;
+    line-height: 36px;
+}
+
+#shortMenus-first {
+    margin-left: 12px;
+}
+
+/*非分隔线元素进行居中显示*/
+.tooltip-test {
+    margin-top: 3px;
+    width: 32px;
+    height: 28px;
+    border-radius: 3px;
+}
+
+.tooltip-test:hover {
+    background-color: #DCDCDC;
+}
+
+/*单个功能菜单按钮的图标设置*/
+#measureLen {
+    background: url(../images/onlinesrcImg/measure-len.png) no-repeat;
+}
+
+#measureArea {
+    background: url(../images/onlinesrcImg/measure-area.png) no-repeat;
+}
+
+#clearAll {
+    background: url(../images/onlinesrcImg/clkear-icon.png) no-repeat;
+}
+
+#zoomIn {
+    background: url(../images/onlinesrcImg/zoomin-icon.png) no-repeat;
+}
+
+#zoomOut {
+    background: url(../images/onlinesrcImg/zoomout-icon.png) no-repeat;
+}
+
+#restore {
+    background: url(../images/onlinesrcImg/restore-icon.png) no-repeat;
+}
+
+#curPosition {
+    background: url(../images/onlinesrcImg/curpos-icon.png) no-repeat;
+}
+
+.closeBox {
+    background: url(../images/onlinesrcImg/close-icon.png) no-repeat;
+}
+
+.title-icon {
+    background: url(../images/onlinesrcImg/title-icon.png) no-repeat;
+}
+
+/*下拉列表的默认样式清除与新样式定义*/
+.measure-unit-box {
+    color: #666666;
+    width: 128px;
+    margin-top: 10px;
+    display: inline-block;
+
+    height: 40px;
+    vertical-align: middle;
+}
+
+.measure-unit-showbox {
+    border: 1px solid #DBDBDB;
+    background-color: #F4F4F4;
+    height: 30px;
+    padding-left: 5px;
+    display: inline-block;
+    width: 128px;
+    border-radius: 3px;
+}
+
+.measure-unit-icon-bg{
+    background-color: #2B99FF;
+    height: 30px;
+    width: 30px;
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+    float: right;
+    text-align: center;
+    line-height: 30px;
+}
+.measure-unit-txt {
+    vertical-align: middle;
+    width: 67px;
+    font-family: "Microsoft Yahei";
+    font-size: 14px;
+
+    float: left;
+    line-height: 30px;
+}
+
+.measure-unit-option {
+    border: 1px solid #DBDBDB;
+    border-radius: 3px;
+    border-top: none;
+    display: none;
+    position: absolute;
+    width: 133px;
+    background-color: #FFFFFF;
+    margin-top: -9px;
+}
+
+.measure-unit-option li {
+    padding-left: 5px;
+}
+
+.measure-unit-option li.selected {
+    background-color: #DDDDDD;
+    color: #999;
+}
+
+.measure-unit-option li.hover {
+    background: #74B9EF;
+    color: #fff;
+}
+
+/*清除菜单栏元素的浮动*/
+.onlinemap-menubar {
+    line-height: 36px;
+    text-align: center;
+    margin-left: 0px;
+}
+
+.clearfix:after {
+    content: "\200B";
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+/*IE/7/6*/
+/*地图基本操作项*/
+.shortMenus > img {
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    margin-top: -9px;
+}
+
+.verticalLine {
+    height: 33px;
+    border-left: 1px solid #DBDBDB;
+    box-shadow: 1px 1px 1px #ffffff;
+}
+
+/*测量*/
+.shortBox {
+    position: absolute;
+    right: 50px;
+    width: 250px;
+    display: none;
+    background-color: #FFFFFF;
+    margin-top: -39px;
+}
+
+.boxTitle {
+    margin-left: -20px;
+    margin-top: 10px;
+    display: inline;
+    line-height: 35px;
+    color: #333;
+}
+
+.title-icon {
+    margin-left: 18px;
+    line-height: 35px;
+    display: inline;
+    margin-top: 8px;
+}
+
+/*测量弹框的小三角*/
+.trangle-icon {
+    top: -12px;
+    left: 20px;
+    position: absolute;
+
+}
+
+/*测量的二级弹框*/
+.shortMenus > ul > li {
+    width: 250px;
+}
+
+/*测量的弹框*/
+.shortMenus > ul {
+    line-height: 27px;
+    list-style-type: none;
+    text-align: left;
+    width: 250px;
+    position: absolute;
+    display: none;
+    z-index: 2;
+    margin-top: 13px;
+    left: 18px;
+    border-radius: 5px;
+    border: 1px solid rgba(220,220,220,1);
+    box-shadow: 0 2px 5px rgba(0,0,0,.175);
+}
+
+/*测量弹框样式*/
+.measureUnit {
+    width: 130px;
+}
+
+/*测量控制面板除标题外的内部内容样式*/
+.measureUnitLabel {
+    margin-left: 25px !important;
+    line-height: 50px;
+    vertical-align: middle;
+}
+
+.measureRltLabel, #measureLenRlt, #measureAreaRlt {
+    margin-left: 18px !important;
+    margin-top: -3px !important;
+    margin-bottom: 14px;
+    line-height: 50px;
+}
+
+.closeBox {
+    float:right;
+    margin-top: 8px;
+}
+
+.geodesicCheckbox {
+    font-size: 14px;
+    color: #666;
+    margin-left: 24px !important;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.horizon-line-before-measurerlt {
+    margin-top: 10px;
+}
+
+#measureLenRlt, #measureAreaRlt {
+    color: #4AAFE4;
+}
+
+/*快捷功能的tooltip*/
+.tooltip-test:hover {
+    cursor: pointer;
+}
+
+.tooltip {
+    line-height: 20px;
+}
+
+/*测量的提示信息*/
+.measureTip {
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    color: white;
+    padding: 4px 8px;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.tooltip-measure {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.tooltip-static {
+    background-color: #ffcc33;
+    color: black;
+    border: 1px solid white;
+}
+
+.tooltip-measure:before, .tooltip-static:before {
+    border-top: 6px solid rgba(0, 0, 0, 0.5);
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    margin-left: -7px;
+    left: 50%;
+}
+
+.tooltip-static:before {
+    border-top-color: #ffcc33;
+}
+
+/*=E =====================================常用快捷工具栏======================================= */
+
+/*=S =====================================信息提示（三维插件、浏览器兼容性）======================================= */
+.tip-win
+{
+    width: 250px;
+    height: 150px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #f5f5f5;
+    z-index:1;
+}
+.tip-info{
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.download-ocx-btn{
+    margin-top: 30px;
+    display: inline-block;
+    margin-left: 170px;
+    width: 82px;
+    height: 30px;
+    border: 1px;
+    background-color: White;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.3);
+    font-size: 12px;
+    font-family: Microsoft YaHei;
+}
+.download-ocx-btn:hover{
+    background-color: #4AAFE4;
+    color: #FFFFFF;
+}
+.closeBox{
+    cursor: pointer;
+}
+/*=E =====================================信息提示（三维插件、浏览器兼容性）======================================= */

@@ -1,0 +1,694 @@
+//var map;
+var wmtsDocLayer, wmtsDocCva, vectorMapdoc;
+var selectflag, cardflag = false;
+var editflag = true, boxflag = true, queryflag = true;
+var selectPointerMove, selectSingleClick, selectedFeatures,resultCollections,tempSelectedFeatures, selectedFeature, selectwhere = -1;
+//当前marker选中的要素
+var picgeom, picwhere;
+//查询得到的图层类型
+var geomType;
+var myArray= null;
+var sourceMarker, markerLayer, lonlat;
+var markerobj = {};
+//记载右上角上一个点击的对象
+var switchTex = "";
+var layersArray = [];
+var resultLayers;
+var view;
+var featuerInfo;
+var styless;
+var Mypopup;
+
+
+
+//当浏览器窗口大小改变时，设置显示内容的高度
+window.onresize = function () {
+    changeDivHeight();
+}
+
+function changeDivHeight() {
+    //获取页面可见高度  
+    var hg = document.documentElement.clientHeight;
+    $("#left-panel").css("height", hg * 0.9);
+    $("#panel_main").css("height", hg * 0.7);
+}
+//分类查询
+function favoritePoint(item){
+    var option = {
+        data: {
+            pageIndex: 0,
+            selectfun: true,
+            searchKey:$(item).children().text(),
+            searchVal:$(item).attr('value')
+        }
+    }
+    serchClick(option);
+}
+//获取键盘回车指令，如果回车则执行查询
+$(document).keypress(function(e) {
+        if(e.keyCode == 13){
+            $("#search-button").trigger("click");
+        }
+    });
+//POI初始化
+function typeSearch() {
+    var layers=map.getLayerGroup().getLayers().getArray();
+    var flag=false;
+    for(var i=0;i<layers.length;i++){
+        if(layers[i].zdytype=='poi'){
+            flag = true;
+        }else{
+            map.removeLayer(layers[i]);
+            i=0;
+        }
+    }
+    if(flag==false){
+        $.ajax({
+               url: 'themes/appcloud/onlinesrc/POI.json',//json文件位置
+               type: "GET",//请求方式为get
+               dataType: "json", //返回数据格式为json
+               async:false,
+               success: function(data) {
+                var zoompoi;
+                var centerpoi;
+                    for(var i=0;i<result.length;i++){
+                        if(result[i].lx=="1"){
+                            data.defaultMapSL=result[i].layer;
+                            zoompoi = result[i].zoom;
+                            centerpoi = [result[i].centerx,result[i].centery];
+                        }else if(result[i].lx=="2"){
+                            data.defaultMapYX=result[i].layer;
+                        }else if(result[i].lx=="3"){
+                            data.defaultDoc=result[i].layer;
+                        }
+                    }
+                    TileLayer = new Zondy.Map.TileLayer(data.defaultMapSL, data.defaultMapSL, {
+                        ip: ip,
+                        port: port
+                    });
+                    TileLayer.zdytype='poi';
+                    map.addLayer(TileLayer);
+                    view = map.getView();
+                    view.setZoom(zoompoi);
+                    view.setCenter(centerpoi);
+               }
+        });
+    }
+    //获取查询类别
+    $.ajax({
+       url: 'themes/appcloud/onlinesrc/layersName.json',//json文件位置
+       type: "GET",//请求方式为get
+       dataType: "json", //返回数据格式为json
+       success: function(data) {//请求成功完成后要执行的方法 
+           //each循环 使用$.each方法遍历返回的数据date
+           var listr = "";
+           layersArray = data.layers;
+           $.each(data.layersProp, function(i, item) {
+              
+              listr +="<li class='dim-search' value='" + item.firstClass + "' style='background: url("+ item.url +") 50% 0 no-repeat;' onclick='favoritePoint(this)'>" +
+              "<span class='search-title' style='display:inline-block;width:100%;'>"+ item.name +"</span>" +
+              "</li>";
+           })
+           
+         //  $(".subject-search").append(listr);
+           $("#poiid").html(listr);
+       }
+    });
+    /**
+    * 实现popup的html元素
+    */
+    var Mycontainer = document.getElementById('poiPopup');
+    var contentPop = document.getElementById('popup-content');
+    /**
+    * 在地图容器中创建一个Overlay
+    */
+    Mypopup = new ol.Overlay(
+        /** @type {olx.OverlayOptions} */
+        ({
+            //要转换成overlay的HTML元素
+            element: Mycontainer,
+            //当前窗口可见
+            autoPan: true,
+            //Popup放置的位置
+            positioning: 'bottom-center',
+            //是否应该停止事件传播到地图窗口
+            stopEvent: false,
+            autoPanAnimation: {
+                //当Popup超出地图边界时，为了Popup全部可见，地图移动的速度
+                duration: 250
+            }
+        }));
+    map.addOverlay(Mypopup);
+    //创建一个矢量标注图层
+    sourceMarker = new ol.source.Vector({ wrapX: false });
+    markerLayer = new ol.layer.Vector({
+        source: sourceMarker
+    });
+    //将标注图层添加到地图容器中
+    markerLayer.tip="marker";
+    map.addLayer(markerLayer);
+
+    //关联鼠标移上去选择控件与区要素的图层
+    selectPointerMove = new ol.interaction.Select({
+        layers: [markerLayer],
+        condition: ol.events.condition.pointerMove
+    });
+
+    //关联鼠标单击选择控件与区要素的图层
+    selectSingleClick = new ol.interaction.Select({
+        layers: [markerLayer]
+    });
+    //将选择控件添加到地图中
+    map.addInteraction(selectPointerMove);
+    //将选择控件添加到地图中
+    map.addInteraction(selectSingleClick);
+    //鼠标移到要素上时改变marker点的颜色（红变蓝，鼠标移开则恢复红色）
+    selectPointerMove.on("select", function (evt) {
+        var geomStyle;
+        if (evt.selected.length > 0) {
+            picgeom = evt.selected[0];
+            picwhere = picgeom.values_.geomwhere;
+            geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + picwhere + ".png");
+        }
+        else
+            geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + picwhere + ".png");
+        if (picwhere != selectwhere) {
+            picgeom.setStyle(geomStyle);
+        } else return;
+    });
+    //地图点击事件
+    selectSingleClick.on("select", function (evt) {
+        myCloser();
+        $('#poiPopup').css('display','block');
+        if (evt.selected.length > 0) {
+            selectedFeatures = selectSingleClick.getFeatures();
+            selectedFeature = selectedFeatures.array_[0];
+            var coordinate;
+            //这里是获取鼠标点击位置的坐标点
+            // var coordinate = evt.mapBrowserEvent.coordinate;
+            //判断当前单击处是否有要素，捕获到要素时弹出popup
+            var feature = map.forEachFeatureAtPixel(evt.mapBrowserEvent.pixel, function (feature, layer) { return feature; });
+            if (feature) {
+                //这里是获取背选中的要素位置的坐标点，如果要素存在，则优先选择使用要素的坐标点
+                coordinate = feature.values_.geometry.flatCoordinates;
+                //清空popup的内容容器
+                $('#popup-content').html('');
+                //示例标注点信息对象
+                featuerInfo = {
+                    geo: lonlat,
+                    att: {
+                        //标注信息的标题内容
+                        title: resultLayers[selectedFeature.values_.geomwhere].AttValue['NAME'],
+                        //标注详细信息链接
+                        // titleURL: "http://www.openlayers.org/",
+                        //标注内容简介
+                        text: resultLayers[selectedFeature.values_.geomwhere].AttValue['ADDNAME'],
+                        TEL: resultLayers[selectedFeature.values_.geomwhere].AttValue['TEL']
+                    }
+                }
+                //在popup中加载当前要素的具体信息
+                MyaddFeatrueInfo(featuerInfo);
+                if (Mypopup.getPosition() == undefined) {
+                    //设置popup的位置
+                    Mypopup.setPosition(coordinate);
+                    view = map.getView();
+                    var pan = ol.animation.pan({
+                            duration: 1000,
+                            //松开的参数值
+                            /** @type {ol.Coordinate} */
+                            source: (view.getCenter())
+                        });
+                        //地图渲染前设置动画效果(pan)
+                        map.beforeRender(pan);
+                        //定位
+                        view.setCenter(coordinate);
+                }
+            }
+            //改变被点击marker点的样式，呈激活状态
+            if(tempSelectedFeatures == undefined){   
+            }else{
+                var geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + selectwhere + ".png");
+                tempSelectedFeatures.setStyle(geomStyle);
+            }
+            tempSelectedFeatures = selectedFeature;
+            selectwhere = selectedFeature.values_.geomwhere;
+            var geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + selectwhere + ".png");
+            selectedFeature.setStyle(geomStyle);
+        } else return;
+    });
+
+    //为搜索按钮绑定click事件
+    $("#search-button").click({ pageIndex: 0, selectfun: true,searchKey:"",searchVal:"" }, serchClick);
+    //输入框清除事件
+    $(".right-button").on("click", function(){
+        if(!$(".searchbox-content-button").hasClass("loading")){
+            $('#closeSearch').css({'display':'none'});
+            $('#search-button').css({'display':'block'});
+            $("#sole-input").val("");
+            $(".input-clear").hide();
+            clearLayer(markerLayer);
+            $("#cards-level0").html("");
+            $("#cards-level1").html("");
+        }     
+    });
+}
+//查询
+function serchClick(option) {
+    //判断是分类查询还是关键字搜索
+    if($.trim(option.data.searchKey) == ""){
+       var wherecon = $("#sole-input").val(); 
+   }else{
+        $("#sole-input").val($.trim(option.data.searchKey));
+        var wherecon = $.trim(option.data.searchVal); 
+   }
+    if (wherecon != "") {
+        selectflag = option.data.selectfun;
+        //判断图层内是否有内容，有内容就将其清空
+        clearLayer(markerLayer);
+        if ($("#cards-level1")[0].childNodes.length > 0) {
+            $("#cards-level1").html("");
+            cardflag = false;
+        }
+        //初始化查询结构对象，设置查询结构包含几何信息
+        var queryStruct = new Zondy.Service.QueryFeatureStruct();
+        //是否包含几何图形信息
+        queryStruct.IncludeGeometry = true;
+        //是否包含属性信息
+        queryStruct.IncludeAttribute = true;
+        //是否包含图形显示参数
+        queryStruct.IncludeWebGraphic = false;
+
+        //实例化查询参数对象
+        var queryParam = new Zondy.Service.QueryParameter({
+            resultFormat: "json",
+            struct: queryStruct
+        });
+        //设置查询分页号
+        queryParam.pageIndex = option.data.pageIndex;
+        //设置查询要素数目
+        queryParam.recordNumber = 10;
+        myArray=new Array();
+        //判断是分类查询还是关键字搜索，根据不同的查询方式设置属性条件
+        if($.trim(option.data.searchVal) != ""){
+            if(Number(wherecon) < 10){
+                if(wherecon.indexOf('0') == -1){
+                    wherecon = '0' + wherecon;
+                }
+            }
+            queryParam.where = "CLASID LIKE '" + wherecon + "%'";
+        }
+        else{
+            queryParam.where = "NAME LIKE '%" + wherecon + "%'";
+        }   
+        $.each(layersArray, function(i, item) {
+              myArray.push(Number(item.value));
+           });  
+        //生成等待loading框 
+        if (!$(".searchbox-content-button").hasClass("loading")) {
+            // $(".searchbox-content-button").removeClass("right-button");
+            $(".searchbox-content-button").addClass("loading");
+            $(".searchbox-content-button").attr("title", "加载");
+            $('#search-button').css({'display':'none'});
+            $('#closeSearch').css({'display':'block'});
+        }
+        //实例化地图文档查询服务对象
+        var queryService = new Zondy.Service.QueryDocFeature(queryParam, data.defaultDoc, myArray, {
+            ip: location.hostname,
+            port: IGSS.igss_port || '6160'
+        });
+        //执行查询操作，querySuccess为查询回调函数
+        queryService.query(querySuccess, queryError);
+    } else {
+        //判断图层内是否有内容，有内容就将其清空
+        clearLayer(markerLayer);
+        $("#cards-level0").html("");
+        $("#cards-level1").html("");
+        cardflag = false;
+    };
+}
+
+//查询失败回调
+function queryError(e) {
+    return;
+}
+
+//查询成功回调
+function querySuccess(result) {   
+    //将result中的数组SFEleArray换成键值对的形式
+    if(myArray.length > 1){
+        for(var k = 0; k < myArray.length; k ++){
+            if(result[k].SFEleArray != null){
+                for(var m = 0; m < result[k].SFEleArray.length; m ++){
+                    var AttValue = new Array();
+                    for(var n = 0; n < result[k].SFEleArray[m].AttValue.length; n ++){
+                        AttValue[result[k].AttStruct.FldName[n]] = result[k].SFEleArray[m].AttValue[n];
+                    }
+                    result[k].SFEleArray[m].AttValue = AttValue;
+                }
+            }
+        }
+    }else if(myArray.length == 1){
+        if(result.SFEleArray != null){
+            for(var m = 0; m < result.SFEleArray.length; m ++){
+                var AttValue = new Array();
+                for(var n = 0; n < result.SFEleArray[m].AttValue.length; n ++){
+                    AttValue[result.AttStruct.FldName[n]] = result.SFEleArray[m].AttValue[n];
+                }
+                result.SFEleArray[m].AttValue = AttValue;
+            }
+        }
+    }
+    else{
+        return;
+    }
+    //将查询的多个图层的数组融合成一个数组
+    if (result != null) {      
+        var resultArray = new Array();
+        geomType = "";
+        resultCollections = result;
+        for(var j = 0; j < myArray.length; j ++){
+            if(myArray.length == 1 && result.SFEleArray){
+                if(result.SFEleArray != null){
+                    var fGemo = result.SFEleArray[0].fGeom; 
+                    fGemo.LinGeom.length > 0 && geomType == "" ? geomType = "LinGeom" : geomType = geomType;
+                    fGemo.PntGeom.length > 0 && geomType == "" ? geomType = "PntGeom" : geomType = geomType;
+                    fGemo.RegGeom.length > 0 && geomType == "" ? geomType = "RegGeom" : geomType = geomType;
+                    resultArray = resultArray.concat(result.SFEleArray);
+                    break;
+                } 
+            }else if(result[j].SFEleArray != null){
+                var fGemo = result[j].SFEleArray[0].fGeom; 
+                fGemo.LinGeom.length > 0 && geomType == "" ? geomType = "LinGeom" : geomType = geomType;
+                fGemo.PntGeom.length > 0 && geomType == "" ? geomType = "PntGeom" : geomType = geomType;
+                fGemo.RegGeom.length > 0 && geomType == "" ? geomType = "RegGeom" : geomType = geomType;
+                resultArray = resultArray.concat(result[j].SFEleArray);
+            }
+            else{
+                continue;
+            }
+        }
+        var results = new Array();
+        results.push(resultArray[0]);
+        var flag;
+        //将融合好的数组数据去重复
+        for (var i = 0; i < resultArray.length; i++) {
+            flag = false;
+            for (var j = 0, len = results.length; j < len; j++) {
+                if (resultArray[i].AttValue['NAME'] == results[j].AttValue['NAME'] && resultArray[i].AttValue['ADDCODE'] == results[j].AttValue['ADDCODE'] && resultArray[i].AttValue['ADDNAME'] == results[j].AttValue['ADDNAME']) { 
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag == false){
+                results.push(resultArray[i]);
+            }
+        }
+        //生成左侧的搜索结果栏items
+        if($('#card-1').length < 1)
+        {
+            // var str = "<li id='card-1' class='card card1' style='max-height:570px;'><div class='cardtex' style='display:block;height:24px;line-height:24px;background:#f5f5f5;font-size:16px;color:#666;padding-left:10px;'><span style='color:#f97660;'>共找到<b>" + results.length + "</b>个搜索结果</span></div>" +
+            // "<div class='card1main'><ul class='poilist'>";
+            var str = "<li id='card-1' class='card card1' style='max-height:570px;'><div class='cardtex' style='display:block;height:24px;line-height:24px;background:#f5f5f5;font-size:16px;color:#666;padding-left:10px;'><span style='color:#f97660;'>结果列表</span></div>" +
+            "<div class='card1main'><ul class='poilist'>";
+			var xarray = new Array;
+            var yarray = new Array;
+			for (var i = 0; i < results.length; i++) {
+                xarray.push(results[i].fGeom.PntGeom[0].Dot.x);
+                yarray.push(results[i].fGeom.PntGeom[0].Dot.y);
+                str += "<li class='search-item base-item' style='height:49px;border-bottom:1px solid #666;padding-bottom:15px;'>" +
+                "<div class='cf'>" +
+                "<div class='col-l'>" +
+                "<a href='javascript:void(0)' class='no-" + (i + 1) + "'>" +
+                "</a>" +
+                "</div>" +
+                "</div>" +
+                "<div class='ml_30 mr_90'>" +
+                "<div class='row'>" +
+                "<span>" +
+                "<a href='javascript:void(0);' class='n-blue'>" + results[i].AttValue['NAME'] +
+                "</a>" +
+                "</span>" +
+                "</div>" +
+                "<div class='row addr'>" +
+                "<span class='n-grey' title='" + results[i].AttValue['ADDNAME'] + "'>"  + results[i].AttValue['ADDNAME'] +
+                "</span>" +
+                "</div>" +
+                "</div>" +
+                "</li>";
+                if(i == 9){
+                    break;
+                }
+            }
+             jumpLevel(xarray,yarray);
+            str += "</ul><div id='poi_page' class='poi-page'></div></div></li>";            $("#cards-level1").append(str);
+        }
+        //获取查询结果的第一个marker点的坐标，并将该点设置为中心点，让地图以该点为中心显示
+        view = map.getView();
+        var pan = ol.animation.pan({
+                duration: 1000,
+                //松开的参数值
+                /** @type {ol.Coordinate} */
+                source: (view.getCenter())
+            });
+            //地图渲染前设置动画效果(pan)
+            map.beforeRender(pan);
+            //定位
+            view.setCenter([results[0].fGeom.PntGeom[0].Dot.x, results[0].fGeom.PntGeom[0].Dot.y]);
+        //讲处理过的数组缓存到全局变量
+        resultLayers = results;
+        //如果查询结果大于10条，则进行分页显示，这里分页没做，所以代码暂时屏蔽
+        // if (resultArrayr.length > 10) {
+        //     var paging = new PageturnJQ({ pagesize: 4, totalpage: parseInt(resultArray.length / 10) + 1, divCon: "poi_page", selectflag: selectflag });
+        // }
+        switch (geomType) {
+            case "PntGeom":
+                for (var i = 0; i < results.length; i++) {
+                    lonlat = [results[i].fGeom.PntGeom[0].Dot.x, results[i].fGeom.PntGeom[0].Dot.y];
+                    //实例化Vector要素，通过矢量图层添加到地图容器中
+                    var iconFeature = new ol.Feature({
+                        geometry: new ol.geom.Point(lonlat),
+                        geomwhere: i
+                    });
+                    //给查询出来的marker点设置样式，赋予图文标注等等。
+                    var layerStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + i + ".png");
+                    iconFeature.setStyle(layerStyle);
+                    sourceMarker.addFeature(iconFeature);
+                    markerobj[i] = iconFeature;
+                    //分页暂时没做，marker图标只有10个，所以最多显示十条数据
+                    if(i == 9){
+                        break;
+                    }
+                }
+                break;
+            case "LinGeom":
+                break;
+            default:
+                break;
+        }
+        //为每个查询的list添加hover和click事件
+        $(".search-item.base-item").hover(function () {
+            var picsrc = $(this).index();
+            if(picsrc > -1){
+                var layerStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + picsrc + ".png");
+                markerobj[picsrc].setStyle(layerStyle);
+            }
+            var layerStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + picsrc + ".png");
+            markerobj[picsrc].setStyle(layerStyle);
+        }, function () {
+            var picsrc = $(this).index();
+            if (picsrc != selectwhere) {
+                var layerStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + picsrc + ".png");
+                markerobj[picsrc].setStyle(layerStyle);
+            }
+        });
+        $(".search-item.base-item").click(itemClick);
+    } else return;
+    //结束等待loading框 
+    if ($(".searchbox-content-button").hasClass("loading")) {
+        $(".searchbox-content-button").removeClass("loading");
+        $(".searchbox-content-button").addClass("right-button");
+    }
+}
+
+//创建矢量标注样式函数,设置image为图标ol.style.Icon
+//添加图片标注
+function createLabelStyle(srcurl) {
+    return new ol.style.Style({
+        /**{olx.style.IconOptions}类型*/
+        image: new ol.style.Icon(({
+            anchor: [0.5, 28],
+            anchorOrigin: "top-righ",
+            anchorXUnits: "fraction",
+            anchorYUnits: "pixels",
+            offsetOrigin: "top-right",
+            //透明度
+            opacity: 1,
+            //图标的url
+            src: srcurl
+        }))
+    });
+}
+//图文标注：去掉文字标注
+function createStyle(srcurl) {
+    return new ol.style.Style({
+        /**{olx.style.IconOptions}类型*/
+        image: new ol.style.Icon(({
+            anchor: [0.5, 28],
+            anchorOrigin: "top-righ",
+            anchorXUnits: "fraction",
+            anchorYUnits: "pixels",
+            offsetOrigin: "top-right",
+            //透明度
+            opacity: 1,
+            //图标的url
+            src: srcurl
+        })),
+        text: new ol.style.Text({
+            //位置
+            textAlign: 'center',
+            //基准线
+            textBaseline: 'middle',
+            //文字样式
+            font: 'normal 14px 微软雅黑'
+        })
+    });
+}
+
+
+//创建矢量标注样式函数,设置image为图标ol.style.Icon
+//图文标注：添加文字标注
+function MycreateLabelStyle(srcurl) {
+    return new ol.style.Style({
+        /**{olx.style.IconOptions}类型*/
+        image: new ol.style.Icon(({
+            anchor: [0.5, 28],
+            anchorOrigin: "top-righ",
+            anchorXUnits: "fraction",
+            anchorYUnits: "pixels",
+            offsetOrigin: "top-right",
+            //透明度
+            opacity: 1,
+            //图标的url
+            src: srcurl
+        })),
+        text: new ol.style.Text({
+            //位置
+            textAlign: 'center',
+            //基准线
+            textBaseline: 'middle',
+            //文字样式
+            font: 'normal 14px 微软雅黑',
+            //文本内容
+            text: resultLayers[selectwhere].AttValue['NAME'],
+            //文本填充样式（即文字颜色）
+            fill: new ol.style.Fill({ color: 'blue' })
+        })
+    });
+}
+//搜索结果点击事件
+function itemClick() {
+    //如果之前点击过要素，则先清除之前要素的激活状态（蓝色变红色，文字标注去掉）
+    if(selectwhere > -1){
+        var geomStyle = createStyle("themes/appcloud/onlinesrc/images/markers/markers_" + selectwhere + ".png");
+        markerobj[selectwhere].setStyle(geomStyle);
+    }
+    //否则给要素新增激活状态（红色变蓝色，添加文字标注）
+    selectwhere = $(this).index();
+    var geomStyle = MycreateLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + selectwhere + ".png");
+    markerobj[selectwhere].setStyle(geomStyle);
+    //以被点击的要素为中心定位
+    var pan = ol.animation.pan({
+                duration: 1000,
+                source: (view.getCenter())
+            });
+            map.beforeRender(pan);
+            view.setCenter([resultLayers[selectwhere].fGeom.PntGeom[0].Dot.x, resultLayers[selectwhere].fGeom.PntGeom[0].Dot.y]);
+}
+
+//清空图层
+function clearLayer(layerName) {
+    var mapFeatures = layerName.getSource().getFeatures();
+    if (mapFeatures.length > 0) {
+        //清除鼠标单击选中的要素
+        if (selectedFeatures != null && selectedFeatures.array_.length) {
+            selectedFeatures.clear();
+        }
+        sourceMarker = new ol.source.Vector({ wrapX: false });
+        //清空绘制图形
+        layerName.setSource(sourceMarker);
+    } else return;
+}
+
+//复位图层
+function redraw(layerName) {
+    var mapSource = layerName.getSource();
+    if (mapSource != null) {
+        //清空绘制图形
+        layerName.setSource(null);
+        //添加绘制层数据源
+        layerName.setSource(mapSource);
+    } else return;
+}
+
+/*-------------------------PopUp-----------------------------*/
+/**
+* 动态创建popup的具体内容
+* @param {string} title
+*/
+function MyaddFeatrueInfo(info) {
+    //新增div元素
+    var elementDiv = document.createElement('div');
+    elementDiv.className = "markerText";
+    //elementDiv.innerText = info.att.text;
+    setInnerText(elementDiv, "地名：" + info.att.title);
+    // 为content添加div子节点
+    $('#popup-content').append(elementDiv);
+
+    var elementDiv = document.createElement('div');
+    elementDiv.className = "markerText";
+    //elementDiv.innerText = info.att.text;
+    if(info.att.TEL == undefined){
+       info.att.TEL = ""; 
+    }
+    setInnerText(elementDiv, "电话：" + info.att.TEL);
+    // 为content添加div子节点
+    $('#popup-content').append(elementDiv);
+
+    var elementDiv = document.createElement('div');
+    elementDiv.className = "markerText";
+    //elementDiv.innerText = info.att.text;
+    setInnerText(elementDiv, "地址：" + info.att.text);
+    // 为content添加div子节点
+    $('#popup-content').append(elementDiv);
+    // //新增img元素
+    // var elementImg = document.createElement('img');
+    // elementImg.className = "markerImg";
+    // elementImg.src = info.att.imgURL;
+    // // 为content添加img子节点
+    // $('#popup-content').append(elementImg);
+}
+/**
+* 动态设置元素文本内容（兼容）
+*/
+function setInnerText(element, text) {
+    if (typeof element.textContent == "string") {
+        element.textContent = text;
+    } else {
+        element.innerText = text;
+    }
+}
+
+
+/**
+* 添加关闭按钮的单击事件（隐藏popup）
+* @return {boolean} Don't follow the href.
+*/
+function myCloser() {
+    //未定义popup位置
+    Mypopup.setPosition(undefined);
+    //失去焦点
+    $("#popup-closer").blur();
+    return false;
+}    
+
+

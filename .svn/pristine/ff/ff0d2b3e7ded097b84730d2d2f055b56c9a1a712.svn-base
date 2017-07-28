@@ -1,0 +1,11 @@
+{
+    "layersProp":[
+        {"layer":"KBUIPT433100","name":"楼栋","value":"0","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"layer":"KBUIPT433100","name":"地名","value":"1","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"layer":"KBUIPT433100","name":"地名","value":"2","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"layer":"KBUIPT433100","name":"办事处","value":"3","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"layer":"KBUIPT433100","name":"村庄","value":"4","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"layer":"KBUIPT433100","name":"巷道","value":"5","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"layer":"KBUIPT433100","name":"街道号","value":"6","url":"./themes/appcloud/onlinesrc/images/美食.png"}
+    ]
+}

@@ -1,0 +1,78 @@
+<?php
+$_CACHE['apps'] = array (
+  array (
+    'appid' => '1',
+    'appid' => '3',
+    'type' => 'DISCUZX',
+    'name' => 'appcloudinfo',
+    'url' => 'http://127.0.0.1:8080/appcloudinfo/',
+    'ip' => '127.0.0.1',
+    'name' => 'appcloud',
+    'url' => 'http://192.168.83.158/appcloud',
+    'ip' => '192.168.83.158',
+    'viewprourl' => '',
+    'apifilename' => 'uc.php',
+    'charset' => '',
+    'synlogin' => '1',
+    'extra' => 
+    array (
+      'apppath' => '',
+    ),
+    'recvnote' => '0',
+  ),
+  array (
+    'appid' => '4',
+    'type' => 'DISCUZX',
+    'name' => 'st',
+    'url' => 'http://192.168.83.158/st',
+    'ip' => '192.168.83.158',
+    'viewprourl' => '',
+    'apifilename' => 'uc.php',
+    'charset' => '',
+    'synlogin' => '1',
+    'extra' => 
+    array (
+      'apppath' => '',
+    ),
+    'recvnote' => '1',
+  ),
+  array (
+    'appid' => '5',
+    'type' => 'DISCUZX',
+    'name' => 'clouddisk',
+    'url' => 'http://192.168.83.158/cd',
+    'ip' => '192.168.83.158',
+    'viewprourl' => '',
+    'apifilename' => 'uc.php',
+    'charset' => '',
+    'synlogin' => '1',
+    'extra' => 
+    array (
+      'apppath' => '',
+      'extraurl' => '			',
+    ),
+    'recvnote' => '1',
+  ),
+  array (
+    'appid' => '2',
+    'appid' => '6',
+    'type' => 'DISCUZX',
+    'name' => 'IGSSCloudManager',
+    'url' => 'http://127.0.0.1:8181',
+    'ip' => '127.0.0.1',
+    'type' => 'DISCUZX',
+    'name' => 'Ê±¿ÕÔÆºóÌ¨',
+    'url' => 'http://192.168.83.158:8181',
+    'ip' => '192.168.83.158',
+    'viewprourl' => '',
+    'apifilename' => 'uc.php',
+    'charset' => '',
+    'synlogin' => '1',
+    'extra' => 
+    array (
+      'apppath' => '',
+    ),
+    'recvnote' => '1',
+  ),
+  'UC_API' => 'http://192.168.83.158/uc',
+);

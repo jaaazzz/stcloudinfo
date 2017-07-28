@@ -1,0 +1,39 @@
+<?php
+$_CACHE['apps'] = array (
+  1 => 
+  array (
+    'appid' => '1',
+    'type' => 'DISCUZX',
+    'name' => 'igs_cloud',
+    'url' => 'http://127.0.0.1:8181',
+    'ip' => '127.0.0.1',
+    'viewprourl' => '',
+    'apifilename' => 'uc.php',
+    'charset' => '',
+    'synlogin' => '1',
+    'extra' => 
+    array (
+      'apppath' => '',
+      'extraurl' => '			',
+    ),
+    'recvnote' => '1',
+  ),
+  2 => 
+  array (
+    'appid' => '2',
+    'type' => 'ECSHOP',
+    'name' => 'appcloud',
+    'url' => 'http://localhost:802/STCloudInfo',
+    'ip' => '127.0.0.1',
+    'viewprourl' => '',
+    'apifilename' => 'uc.php',
+    'charset' => '',
+    'synlogin' => '1',
+    'extra' => 
+    array (
+      'apppath' => '',
+    ),
+    'recvnote' => '1',
+  ),
+  'UC_API' => 'http://localhost:802/ucenter',
+);

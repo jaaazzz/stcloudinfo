@@ -1,0 +1,336 @@
+﻿[
+    {
+        "id": "1",
+        "lx": "1",
+        "text": "生活",
+        "children": [
+            {
+                "id": "11",
+                "lx": "1",
+                "text": "兴趣点",
+                "children": [
+                    {
+                        "id": "111",
+                        "lx": "1",
+                        "text": "永州兴趣点",
+                        "children": null,
+                        "state": "open",
+                        "layer": "永州兴趣点",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "degree"
+                    },
+                    {
+                        "id": "112",
+                        "lx": "1",
+                        "text": "线状地物",
+                        "children": null,
+                        "state": "open",
+                        "layer": "线状地物",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "degree"
+                    },
+                    {
+                        "id": "113",
+                        "lx": "1",
+                        "text": "待添加",
+                        "children": null,
+                        "state": "open",
+                        "layer": "待添加",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "degree"
+                    }
+                ],
+                "state": "closed",
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null,
+                "default": false,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "projection": "degree"
+            },
+            {
+                "id": "12",
+                "lx": "1",
+                "text": "墨卡托",
+                "children": [
+                    {
+                        "id": "121",
+                        "lx": "1",
+                        "text": "WorldMKT2",
+                        "children": null,
+                        "state": "open",
+                        "layer": "WorldMKT2",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "meter"
+                    },
+                    {
+                        "id": "122",
+                        "lx": "1",
+                        "text": "WorldMKT_tou",
+                        "children": null,
+                        "state": "open",
+                        "layer": "WorldMKT_tou",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "meter"
+                    },
+                    {
+                        "id": "123",
+                        "lx": "1",
+                        "text": "线状地物",
+                        "children": null,
+                        "state": "open",
+                        "layer": "线状地物",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "degree"
+                    }
+                ],
+                "state": "closed",
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null,
+                "default": false,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "projection": "degree"
+            }
+        ],
+        "state": "closed",
+        "layer": null,
+        "checked": false,
+        "type": 0,
+        "iconCls": null,
+        "default": false,
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "projection": "degree"
+    },
+    {
+        "id": "2",
+        "lx": "2",
+        "text": "服务",
+        "children": [
+            {
+                "id": "21",
+                "lx": "2",
+                "text": "待添加",
+                "children": [
+                    {
+                        "id": "211",
+                        "lx": "2",
+                        "text": "待添加",
+                        "children": null,
+                        "state": "open",
+                        "layer": "待添加",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "degree"
+                    },
+                    {
+                        "id": "212",
+                        "lx": "2",
+                        "text": "待添加",
+                        "children": null,
+                        "state": "open",
+                        "layer": "待添加",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "degree"
+                    },
+                    {
+                        "id": "213",
+                        "lx": "2",
+                        "text": "待添加",
+                        "children": null,
+                        "state": "open",
+                        "layer": "待添加",
+                        "checked": false,
+                        "type": 1,
+                        "iconCls": null,
+                        "default": false,
+                        "zoom": 0,
+                        "centerx": 0,
+                        "centery": 0,
+                        "projection": "degree"
+                    }
+                ],
+                "state": "closed",
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null,
+                "default": false,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "projection": "degree"
+            }
+        ],
+        "state": "closed",
+        "layer": null,
+        "checked": false,
+        "type": 0,
+        "iconCls": null,
+        "default": false,
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "projection": "degree"
+    },
+    {
+        "id": "3",
+        "lx": null,
+        "text": "专题默认地图",
+        "children": [
+            {
+                "id": "31",
+                "lx": "1",
+                "text": "武汉矢量",
+                "children": null,
+                "state": "open",
+                "layer": "武汉矢量",
+                "checked": false,
+                "type": 1,
+                "iconCls": null,
+                "default": true,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "projection": "degree"
+            },
+            {
+                "id": "32",
+                "lx": "2",
+                "text": "专题默认影像",
+                "children": null,
+                "state": "open",
+                "layer": "永州影像数据danfu",
+                "checked": false,
+                "type": 1,
+                "iconCls": null,
+                "default": true,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "projection": "degree"
+            },
+            {
+                "id": "33",
+                "lx": "3",
+                "text": "专题默认地形",
+                "children": null,
+                "state": "open",
+                "layer": "永州底图数据",
+                "checked": false,
+                "type": 1,
+                "iconCls": null,
+                "default": true,
+                "zoom": 0,
+                "centerx": 0,
+                "centery": 0,
+                "projection": "degree"
+            }
+        ],
+        "state": "closed",
+        "layer": null,
+        "checked": false,
+        "type": 0,
+        "iconCls": null,
+        "default": true,
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "projection": "degree"
+    },
+    {
+        "id": "4",
+        "lx": "2",
+        "text": "测试",
+        "children": [
+            {
+                "id": "41",
+                "lx": "2",
+                "text": "待添加",
+                "children": [
+                    {
+                        "id": "411",
+                        "lx": null,
+                        "text": "待添加",
+                        "children": [
+                            {
+                                "id": "4111",
+                                "lx": null,
+                                "text": "待添加",
+                                "children": [
+                                    {
+                                        "id": "41111",
+                                        "lx": null,
+                                        "text": "待添加",
+                                        "children": [
+                                            {
+                                                "id": "411111",
+                                                "lx": null,
+                                                "text": "待添加"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>资源管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/placeholder.js"></script>
+    <link href="js/sweetalert.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/sweetalert.min.js"></script>
+    <script type="text/javascript" src="js/jquery.form.js"></script>
+    <!--[if lt IE 9]>
+    <script>
+        var swal=function(obj){
+            return alert(obj.title);
+        }
+    </script>
+    <![endif]-->
+    <style type="text/css">
+        .modal-body table tr td{
+            /*padding: 3px;*/
+        }
+        .table_tools .disalbe{
+            opacity: 0.5;
+        }
+        .plugin-detail{
+            color: #3f8ccd;
+            cursor: pointer;
+            position: absolute;
+            margin-right: 5px;
+            right: 15%;
+        }
+        .hide-tr{
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        var type='add_user';
+        var user_id=0;
+        $(function(){
+            var url = '{$current_url}' + '?app_name=' + $("input[name='app_name']").val()
+                    + "&app_status=" +$("select[name='app_status']").val() + "&cat_id=" +$("select[name='cat_id']").val();
+
+            //初始化分页
+            var pObj=new pageObj({$total_page},{$page},url,{$size},{$count});
+            pObj.initPagination();
+            set_delete_btn();
+
+            $('.btn_search').on('click',function(){
+                var search_url =  '{$current_url}' + '?app_name=' + $("input[name='app_name']").val()
+                        + "&app_status=" +$("select[name='app_status']").val() + "&cat_id=" +$("select[name='cat_id']").val();
+                window.location.href = search_url;
+
+            });
+
+            $(".app_table input[type=checkbox]").change(function(){
+                set_delete_btn();
+            });
+
+            //点击批量导入弹出框
+            $(".tool_btn.user_import").click(function(){
+                $('.import_file').val('');
+                $(".modal_background,.modal_box.import").show();
+
+            });
+            //点击　确定　导入
+            $(".import .modal_btns .sure").click(function(){
+                if(($('.import_file').val()=='')&&($('.cloud_upload_file').val()=='')){
+                    swal({
+                        title: '请上传文件',
+                        text: "",
+                        type: "error",
+                        allowOutsideClick:true,
+                        confirmButtonText: "关闭"
+                    });
+                    return false;
+                }
+                    $('.modal_box.import').WaitPanel();
+                if($('.import_file').val()){
+                    var fileExtension = $('.import_file').val().split('.').pop().toLowerCase();
+                    var arr=['zip'];
+                    if(arr.indexOf(fileExtension)<0){
+                        swal({
+                            title: '请上传zip文件',
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        $('.modal_box.import').hideWaitPanel();
+                        return false;
+                    }
+                }
+                if($('.cloud_upload_file').val()){
+                    var fileExtension = $('.cloud_upload_file').val().split('.').pop().toLowerCase();
+                    var arr=['zip'];
+                    if(arr.indexOf(fileExtension)<0){
+                        swal({
+                            title: '请上传zip文件',
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        $('.modal_box.import').hideWaitPanel();
+                        return false;
+                    }
+                }
+                    $('#file_form2').ajaxSubmit({
+                        type:'POST',
+                        beforeSubmit:function(){
+
+                        },
+                        success:function(res){
+                            if(res=='ok'){
+                                $('#file_form2').ajaxSubmit({
+                                    type:'POST',
+                                    beforeSubmit:function(){
+
+                                    },
+                                    success:function(res){
+                                        if(res=='ok'){
+                                            swal({
+                                                title: '导入成功',
+                                                text: "",
+                                                type: "success",
+                                                allowOutsideClick:true,
+                                                confirmButtonText: "关闭"
+                                            });
+                                            $('.modal_box.import').hideWaitPanel();
+                                            location.reload();
+                                        }else{
+                                            res=res.length>100?'导入失败':res;
+                                            $('.modal_box.import').hideWaitPanel();
+                                            swal({
+                                                title: res,
+                                                text: "",
+                                                type: "error",
+                                                allowOutsideClick:true,
+                                                confirmButtonText: "关闭"
+                                            });
+
+                                        }
+                                        return true;
+                                    }
+                                });
+                            }else{
+                                res=res.length>100?'导入失败':res;
+                                $('.modal_box.import').hideWaitPanel();
+                                swal({
+                                    title: res,
+                                    text: "",
+                                    type: "error",
+                                    allowOutsideClick:true,
+                                    confirmButtonText: "关闭"
+                                });
+
+                            }
+                            return true;
+                        },
+                        timeout:3000000,
+                        error: function (e) {
+                            console.log(e);
+                            alert(1);
+                        }
+                    });
+
+
+
+            });
+
+            $("#info_file").change(function(){
+                var fileExtension = $('.import_file').val().split('.').pop().toLowerCase();
+                if(fileExtension!='zip'){
+                    swal({
+                        title: '请上传zip文件',
+                        text: "",
+                        type: "error",
+                        allowOutsideClick:true,
+                        confirmButtonText: "关闭"
+                    });
+                    $('.modal_box.import').hideWaitPanel();
+                    return false;
+                }
+                $('.modal_box.import').WaitPanel();
+                $('#file_form').ajaxSubmit({
+                    type:'POST',
+                    beforeSubmit:function(){
+                    },
+                    success:function(res){
+                        if(res=='ok'){
+                            swal({
+                                title: '导入成功',
+                                text: "",
+                                type: "success",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                            $('.modal_box.import').hideWaitPanel();
+                        }else{
+                            res=res.length>100?'导入失败':res;
+                            $('.modal_box.import').hideWaitPanel();
+                            swal({
+                                title: res,
+                                text: "",
+                                type: "error",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+
+                        }
+                        return true;
+                    }
+                });
+
+            });
+
+
+            $(".plugin-detail").click(function(){
+                var id=$(this).attr('data-id');
+                var $tr=$('.tr'+id);
+                if($(this).text()=='详细'){
+                    $tr.slideDown(50,function(){
+                         var m_height=$('.page_container').css('height');
+                        $('.left').css({'height':parseInt(m_height)+15+'px'});
+                    });
+                    $(this).text('收起');
+                }else{
+                    $tr.slideUp(50,function(){
+                        var m_height=$('.page_container').css('height');
+                        $('.left').css({'height':parseInt(m_height)+15+'px'});
+                    });
+                    $(this).text('详细');
+                }
+            });
+
+        });
+
+        function info_upload() {
+            if($('.import_file').val()!=''){
+                $('.modal_box.import').WaitPanel();
+                $('#file_form').ajaxSubmit({
+                    type:'POST',
+                    beforeSubmit:function(){
+                        var fileExtension = $('.import_file').val().split('.').pop().toLowerCase();
+                        var arr=['zip'];
+                        if(arr.indexOf(fileExtension)<0){
+                            swal({
+                                title: '请上传zip文件',
+                                text: "",
+                                type: "error",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                            return false;
+                        }
+                    },
+                    success:function(res){
+                        if(res=='ok'){
+                            swal({
+                                title: '导入成功',
+                                text: "",
+                                type: "success",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                            $('.modal_box.import').hideWaitPanel();
+                            //location.reload();
+                        }else{
+                            res=res.length>100?'导入失败':res;
+                            $('.modal_box.import').hideWaitPanel();
+                            swal({
+                                title: res,
+                                text: "",
+                                type: "error",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+
+                        }
+                        return true;
+                    }
+                });
+            }
+        }
+        function file_colud_upload(){
+            $('#file_could_form').ajaxSubmit({
+                type:'POST',
+                beforeSubmit:function(){
+                    var fileExtension = $('.import_file1').val().split('.').pop().toLowerCase();
+                    var arr=['zip'];
+                    if(arr.indexOf(fileExtension)<0){
+                        swal({
+                            title: '请上传zip文件',
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        return false;
+                    }
+                },
+                success:function(res){
+                    var data = JSON.parse(res);
+                    if(data.success){
+                        swal({
+                            title: '插件文件导入成功',
+                            text: "",
+                            type: "success",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        location.reload();
+                    }else{
+                        swal({
+                            title: res,
+                            text: data.msg,
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                    }
+                    return true;
+                }
+            });
+        }
+        function set_delete_btn(){
+            if($(".app_table tbody input[type=checkbox]:checked").length>0){
+                $('.table_tools .tool_btn.up').removeClass('disalbe');
+                $('.table_tools .tool_btn.down').removeClass('disalbe');
+            }else{
+                $('.table_tools .tool_btn.up').addClass('disalbe');
+                $('.table_tools .tool_btn.down').addClass('disalbe');
+            }
+        }
+        function product_ajax(id, status, name){
+            $.ajax({
+                url:"rm_product.php?act=oper&good_id="+id+"&status="+status+"&name="+name,
+                type:'get',
+                success:function(data){
+                    data = JSON.parse(data);
+                    if(data.success){
+                        alert('操作成功');
+                        window.location.reload();
+                    }
+                    else{
+                        alert('操作失败');
+                    }
+                }
+            });
+        }
+        function fileSubmit1(load_pos){
+            var file_url= '{$file_server_base_url}/file/inputFile/';
+            var fileName = $('#file_upload_form_'+load_pos+' .upload-'+load_pos).val();
+            if (fileName == '') {
+                alert('请选择要上传的文件');
+                return false;
+            }
+
+            if(load_pos ==1){
+                var file_num = $('.file-upload-items .file-item').length;
+                var file_page_num = $('#file_upload_list .file-upload-list .file-item').length;
+                if (file_num>=3 || file_page_num>=3) {
+                    alert('最多允许上传3个文件');
+                    return false;
+                }
+            }
+
+
+            var fileType = fileName.substring(fileName.lastIndexOf('.')+1,fileName.length);
+            fileType = fileType.toLowerCase();
+
+            //var checkFile = checkFileType(fileType,load_pos);
+            var checkFile = true;
+            if (checkFile) {
+
+                $('#file_upload_form_'+load_pos).attr('action',file_url);
+                $('#file_upload_iframe_'+load_pos).attr('src',file_url);
+                $('#current_file_type').val(fileType);
+                $('#current_option_load').val(load_pos);
+                $('.modal_box.import').WaitPanel();
+                $('#file_upload_form_'+load_pos).submit();
+                return true;
+            }else{
+                alert('文件类型不支持！');
+                return false;
+            }
+        }
+        function checkFileType(fileType,load_pos){
+            var support_file_type = new Array('doc','docx','txt','rar','zip','tar','7z');//'jpg','jpge','gif','png',
+            switch(load_pos){
+                case 1:
+                    //setFile(file_info,file_type);
+                    break;
+                case 2:
+                    //setImg(file_info,file_type,load_pos);
+                    support_file_type = new Array('zip');
+                    break;
+                default:
+                    break;
+            }
+
+            for (var i = 0; i < support_file_type.length; i++) {
+                if (fileType == support_file_type[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        var onMessage = function(data){
+            //console.info(data);
+            var file_info = data.data;
+            var file_type = $('#current_file_type').val();
+            var load_pos = $('#current_option_load').val();
+            var upload_remind_span = $('.upload_file_frame_content_remind_text_attrid').find("span");
+            if (file_info){
+
+                file_info = $.parseJSON(file_info);
+                if (file_info.success) {
+                    var p  = $("<p></p>").addClass('upload_file_msg l');
+                    upload_remind_span.text("");
+                    upload_remind_span.text(data.success);
+                    switch(load_pos){
+                        case '1':
+                            setFile(file_info,file_type);
+                            break;
+                        case '2':
+                            //setImg(file_info,file_type,load_pos);
+                            swal({
+                                title: '导入成功',
+                                text: "",
+                                type: "success",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                            $('.modal_box.import').hideWaitPanel();
+                            break;
+                        default:
+                            break;
+                    }
+
+
+                }else{
+
+                };
+
+            }
+            else{
+                upload_remind_span.text("");
+                upload_remind_span.text(data.src);
+            }
+
+        }
+        if (window.addEventListener) {
+            window.addEventListener('message', onMessage, false);
+        }else{
+            window.attachEvent('onmessage', onMessage);
+        };
+        function setFile(data,file_type){
+
+            var file_download_url = '/ajax/app_ajax.php?act=download_file&size=128&real_name=';
+            var file_text = '';
+            var t_key = file_type+'/'+data.result.file_guid;
+
+            var doc_text = '<div class="file-item" >'+
+                    '<div class="file-name-left"><a href="'+file_download_url+data.result.original_file_name+'&file_key='+t_key+'" >'+data.result.original_file_name+'</a></div>'+
+                    '<div class="file-view-a"><a target="_blank" data="'+t_key+'">'+file_text+'</a></div>'+
+                    '<div class="remove-doc-file"><a title="移除"></a></div>'+
+                    '</div>';
+
+            $('.file-upload-items').append(doc_text);
+            removeDocFile();
+        }
+        function removeDocFile(){
+            $('.remove-doc-file a').on('click',function(e){
+                var parent = $(e.target).closest('.file-item');
+                var file_path = parent.find('.file-view-a a').attr('data');
+
+                var url =  '/dev/requirement-form-sub/4';
+                parent.remove();
+                var file_num = $('#file_upload_list .file-upload-list .file-item').length;
+                $('#file_upload_list').css('height',file_num*20+'px');
+            })
+        }
+        function clear_db() {
+            if(confirm('确认要清空产品吗!?')){
+                $.post('rm_product.php?act=clear',{},function (res) {
+                    if(res=='true'){
+                        swal({
+                            title: '数据已清空',
+                            text: "",
+                            type: "success",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        location.reload();
+                    }
+                })
+            }
+
+        }
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container">
+    <div class="page_title">
+        资源管理
+    </div>
+    <div class="page_ul">
+        <ul>
+            <li><a href="rm_cloudhost.php">云主机</a></li>
+            <li class="active"><a href="rm_product.php">产品</a></li>
+            <li><a href="rm_license.php">许可</a></li>
+        </ul>
+    </div>
+    <div class="page_content">
+
+        <div>
+            <div class="table_search">
+                <div class="search_title"></div>
+                <div><span>产品名称：</span><input type="text"  name="app_name" value="{$param.app_name}"/></div>
+                <div><span>分类</span>
+                    <select name="cat_id">
+                        <option {if $param.cat_id eq '0'}selected{/if} value="0">全部</option>
+                        <option {if $param.cat_id eq '2'}selected{/if} value="2">桌面产品</option>
+                        <option {if $param.cat_id eq '3'}selected{/if} value="3">Web产品</option>
+                    </select>
+                </div>
+                <div><span>状态</span>
+                    <select name="app_status">
+                        {foreach from=$param.status_list item=status key=key}
+                        <option {if $key eq $param.app_status}selected{/if} value="{$key}">{$status}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="btn_search" style=""><a>查询</a></div>
+            </div>
+            <div class="table_tools">
+                <a class="tool_btn user_import" style="margin-right: 25px;">导入</a>
+
+            </div>
+            <div style="clear: both;"></div>
+            <table class="app_table">
+                <thead>
+                <tr>
+                    <th width="28%"><span style="padding-left:20px;">产品</span></th>
+                    <th width="12%">分类</th>
+                    <th width="12%">版本</th>
+                    <th width="12%">点数</th>
+                    <th width="12%">状态</th>
+                    <th width="12%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach from=$goods_list item=app}
+                <tr>
+                    <td style="position: relative"><span style="padding-left:20px;">{$app.name}</span>{if $app.child_count>0}<span class="plugin-detail" data-id="{$app.goods_id}">详细</span>{/if}</td>
+                    <td>{$app.goods_type}</td>
+                    <td>{$app.version}</td>
+                    <td>{$app.point}</td>
+                    <td>{if $app.is_on_sale eq 0}未上架{elseif $app.is_on_sale eq 1}已上架{/if}</td>
+                    <td>
+                        {if $app.is_on_sale eq 0}
+                        <a onclick="product_ajax('{$app.goods_id}',1,'{$app.name}')">上架</a>
+                        {else}
+                        <a onclick="product_ajax('{$app.goods_id}',0,'{$app.name}')">下架</a>
+                        {/if}
+                    </td>
+                </tr>
+                {foreach from=$app.child item=c}
+                <tr class="hide-tr tr{$app.goods_id}">
+                    <td style="position: relative"><span style="padding-left:40px;">{$c.name}</span></td>
+                    <td>{$c.goods_type}</td>
+                    <td>{$c.version}</td>
+                    <td>{$c.point}</td>
+                    <td>{if $c.is_on_sale eq 0}未上架{elseif $c.is_on_sale eq 1}已上架{/if}</td>
+                    <td>
+                        {if $c.is_on_sale eq 0}
+                        <a onclick="product_ajax('{$c.goods_id}',1,'{$app.name}')">上架</a>
+                        {else}
+                        <a onclick="product_ajax('{$c.goods_id}',0,'{$app.name}')">下架</a>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                {/foreach}
+                </tbody>
+            </table>
+            <!-- 分页列表 begin-->
+            <div class="page_statics"></div>
+            <div class="pagination pagination-centered">
+                <ul>
+                    <li><a href="javascript:void(0);">上一页</a></li>
+                    <li><a href="javascript:void(0);">下一页</a></li>
+                </ul>
+            </div>
+            <!-- 分页列表 end-->
+        </div>
+
+    </div>
+</div>
+
+<div class="modal_background">
+
+    <div class="modal_box import" style="width: 450px;height: 290px; ">
+        <div class="modal-header">
+            <span class="title-word">产品导入</span>
+            <span class="close refresh" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <br />
+        <div class="modal-body">
+
+            <form action="rm_product.php?act=import" id="file_form" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="act" value="import"/>
+                产品信息包:<input type="file" id="info_file"  class="import_file" name="file" style="display: inline-block;width: 200px"/>
+                <span style="display: block;font-size: 12px;margin-left: 75px;">注:请选择cloud<font color="red">info</font>_xxxxxxxxxx.zip文件</span>
+            </form>
+            <!--<form action="{$file_server_base_url}/file/inputFile2/" id="file_form2" method="get" enctype="multipart/form-data">-->
+                <!--<input type="hidden" name="act" value="import"/>-->
+                <!--<input type="hidden" name="max_file_size" value="100000">-->
+                <!--产品数据包:<input type="file" class="cloud_upload_file" name="cloud_upload_file" style="display: inline-block;width: 200px"/>-->
+                <!--<span style="display: block;font-size: 12px;margin-left: 75px;">注:请选择cloud<font color="red">data</font>_xxxxxxxxxx.zip文件</span>-->
+
+            <!--</form>-->
+            <div style="margin-top:20px;">
+                <div class="itme-title" style="float:left;">产品数据包:</div>
+
+                <div class="itme-info" style="float:left;">
+                    <input type="hidden" class="business-license-input" id="product-logo-img" value="">
+                    <div class="form-input" >
+                        <input type="hidden" class="business-logo-input" value="">
+                        <div class="logo-img business-logo-img product-logo-img">
+                            <a class="add-business-logo-img" style="display:block">
+                                <iframe id="file_upload_iframe_2" name="file_upload_iframe_2"  style="display:none;"></iframe>
+                                <form action="sss" method="post" target="file_upload_iframe_2" name="adminForm" id="file_upload_form_2" class="form-inline" enctype="multipart/form-data" >
+                                    <div class="upload-select f-l">
+                                        <input type="file" name="cloud_upload_file" class="gs-upload-file upload-2" value="选择文件" onchange="fileSubmit1(2);" />
+                                        <span id="upload_file_name_img" class="upload-file-name_img" style="display:none;"></span>
+                                        <span style="display: block;font-size: 12px;">注:请选择cloud<font color="red">data</font>_xxxxxxxxxx.zip文件</span>
+                                    </div>
+                                </form>
+
+                            </a>
+                            <input type="hidden" id="current_file_type">
+                            <input type="hidden" id="current_option_load">
+                            <input type="hidden" id="fileupload">
+                        </div>
+                    </div>
+                </div>
+                <div style="clear:both;"></div>
+            </div>
+
+            <div style="margin-top:20px;">
+                <a onclick="clear_db()">清空数据库表</a><font color="red">(请谨慎使用)</font>
+
+            </div>
+
+
+            <br/>
+
+            <!--<div class="modal_btns">-->
+                <!--<a class="modal_btn sure">确定</a>-->
+                <!--<a class="modal_btn cancel">取消</a>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

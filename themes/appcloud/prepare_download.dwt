@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>准备迁移安装包</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        {if $auto_redirect}
+        <!--
+        <meta http-equiv="refresh" content="3;URL={$message.back_url}" />
+    -->
+        {/if}
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/prepare_download.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,g-common.js'} --> 
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+      
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->        
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+          <div class="container loading-content">                    
+            <div id='state_msg'></div>
+          </div>               
+            
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->       
+    
+        <script type="text/javascript">    
+            +function(){      
+                var platform = "{$platform}";
+                var o_type = "{$o_type}";
+                var app_id = "{$app_id}";
+                var host_have = {$host_have};
+                var timer_line = undefined;
+                //var show_qr = {$show_qr};
+                var show_qr = false;
+                var file_server_url = '{$file_server_url}';
+                var url = '{$url}';           
+                var iframe = $('#iframe1')[0];     
+                var wait_sec = 5;
+
+                var state_settings = {
+                    loading:{
+                        msg     :"<div class='statu-msg'>正在生成安装包，请耐心等待</div>",   
+                        title:   "正在生成安装包，请耐心等待",                  
+                        sub_msg : platform == "mobile" ? "此过程需要较长时间，请耐心等待，不要重复提交" : "聚合时间视安装包大小而定，请耐心等待，不要重复提交",
+                        background : "url(themes/appcloud/images/download_loading.gif) no-repeat 0"
+                    },
+                    success:{
+                        msg:"<div class='statu-msg'>生成成功</div>",
+                        title:"生成成功",
+                        sub_msg : "点击链接开始下载或者右键&gt;另存为",
+                        background : ""
+                    },
+                    fail:{
+                        msg:"<div class='statu-msg'>安装包生成失败，<a class='down_again_href' href='" + location.href + "'>重新生成</a></div>",
+                        title:"安装包生成失败,重新生成",
+                        sub_msg : "请尝试与管理员联系获取帮助",
+                        background : "url(themes/appcloud/images/warning.png) no-repeat 0"
+                    },
+                    download:{
+                        msg:"<div class='statu-msg'>已迁移</div>",
+                        title:"已迁移",
+                        sub_msg : "",
+                        background : "url(themes/appcloud/images/success.png) no-repeat 45% 50%"
+                    },
+                    waiting:{
+                        msg:"<div class='statu-msg'>服务器繁忙，<span id='wait-sec'>"+wait_sec+"</span>秒后重试...</div>",
+                        title:"服务器繁忙，重试...",
+                        sub_msg:"",
+                        background : "url(themes/appcloud/images/warning.png) no-repeat 0"
+                    }
+                };
+
+                $("#state_msg").delegate(".down_href",'click',function(){
+                    set_state('download');
+                    document.title = '已迁移';
+                });
+
+                set_state("loading",undefined,undefined,get_download_url);               
+
+                function set_state(state,msg,sub_msg,callback){      
+                    state = state || "loading";   
+
+                    if(state == 'loading'){ 
+                        timer_line = set_time_line(); 
+                    }else{
+                        timer_line && window.clearInterval(timer_line);
+                    }
+
+                    document.title = state_settings[state]['title'].split('，')[0];
+
+                    $("#state_msg").html(msg || state_settings[state]['msg']).css('background',state_settings[state]['background']);  
+
+                    $("#sub_msg").html(sub_msg || state_settings[state]['sub_msg']);
+
+                    callback && callback();
+                }    
+
+                //for debug only
+                function log_message(content){
+                    if(window.console && window.console.warn){
+                        window.console.warn(content);
+                    }
+                }
+
+                function get_download_url(){            
+                    window.setTimeout(function(){
+                        $.ajax({
+                            url:url,
+                            cache:false,
+                            success:get_download_url_success_callback,
+                            error:function(){
+                                set_state('fail');
+                            }
+                        });
+                    },0);                    
+                }
+
+                function wait_to_download(time){
+                    time = typeof time === 'undefined' ? wait_sec - 1 : time;
+
+                    window.setTimeout(function(){
+                        if(time > 0){                            
+                            $("#wait-sec").html(time);
+                            wait_to_download(time - 1);
+                        }else{
+                            set_state("loading",undefined,undefined,get_download_url);
+                        }
+                    },1000);
+                }
+
+                function get_download_url_success_callback(e){
+                    var content_obj = undefined;
+
+                    try{
+                        content_obj = $.parseJSON(e);
+                    }catch(exception){
+                        set_state("fail", null);
+                        log_message(e);
+                        return;
+                    }                        
+
+                    if(!content_obj.success){
+                        if(content_obj.msg == "server_too_busy"){                            
+                            set_state('waiting',undefined,undefined,wait_to_download);
+                        }else{
+                            set_state("fail", null , content_obj.msg);
+                            log_message(content_obj.debug);
+                        }                        
+                    }else{                           
+                        if(show_qr){
+                            set_state("success", undefined, 
+                                '使用手机扫描二维码迁移，该链接只能被使用一次，<a href="' + content_obj.result.download_url + '">迁移到本地</a>',function(){
+                                $("#state_msg").hide();
+                                $("#qr-show img").attr('src',file_server_url + 'qr?s=' + content_obj.result.download_url);
+                                $("#qr-show").fadeIn(400);
+                            });        
+                        }else{
+                            var subb_msg = platform == "mobile" ? " " : "默认安装方式为在线安装运行时，如果网络环境较差可以<a href='/MapGIS10/OfflineRuntime/MapGIS%2010%20Runtime.exe'>迁移安装离线运行时</a>然后再安装。";
+                            var tip_html = '';
+                            if (o_type == 'reassemble') {
+                                if (app_id != "") {
+                                    tip_html = "<div class='tip-content'>" +
+                                                    "<div class='tip-content-text'>" +
+                                                        "<div class='text-1 suc'>新插件购买成功!</div>" +
+                                                        "<div class='text-2'><a class='down_href' href='javascript:void(0)' onclick=app_update('{$app_id}','{$order_sn}')>添加更新</a></div>" +
+                                                    "</div>" +
+                                                    "<img src='themes/appcloud/images/sfw_success.png'>" +
+                                                "</div>";                                    
+                                }else{
+                                    if (host_have > 0) {
+                                        tip_html = "<div class='tip-content'>" +
+                                                        "<div class='tip-content-text'>" +
+                                                            "<div class='text-1 suc'>新插件购买成功!</div>" +
+                                                            "<div class='text-2'>您可选择<a href='app.php?act=create&sn={$order_sn}'>部署到云主机</a>使用或<a class='down_href' href='" + file_server_url + content_obj.result.download_url+"'>迁移到本地</a>安装使用</div>" +
+                                                        "</div>" +
+                                                        "<img src='themes/appcloud/images/sfw_success.png'>" +
+                                                    "</div>";
+                                    }else{
+                                        tip_html = "<div class='tip-content'>" +
+                                                        "<div class='tip-content-text'>" +
+                                                            "<div class='text-1 suc'>新插件购买成功!</div>" +
+                                                            "<div class='text-2'>您可选择<span class='text-diabled'>部署到云主机</span>使用或<a class='down_href' href='" + file_server_url + content_obj.result.download_url+"'>迁移到本地</a>安装使用</div>" +
+                                                            "<div class='text-3'>" +
+                                                                '抱歉,你没有云主机资源,无法部署应用到云主机,建议您选择迁移到本地' +
+                                                            "</div>" +
+                                                        "</div>" +
+                                                        "<img src='themes/appcloud/images/sfw_success.png'>" +
+                                                    "</div>";                                        
+                                    }
+                                }
+                            }else{
+                                if (host_have > 0) {
+                                tip_html = "<div class='tip-content'>" +
+                                                "<div class='tip-content-text'>" +
+                                                    "<div class='text-1 suc'>安装包生成成功!</div>" +
+                                                    "<div class='text-2'>您可选择<a href='app.php?act=create&sn={$order_sn}'>部署到云主机</a>使用或<a class='down_href' href='" + file_server_url + content_obj.result.download_url+"'>迁移到本地</a>安装使用</div>" +
+                                                "</div>" +
+                                                "<img src='themes/appcloud/images/sfw_success.png'>" +
+                                            "</div>";     
+                                }else{
+                                    tip_html = "<div class='tip-content'>" +
+                                                    "<div class='tip-content-text'>" +
+                                                        "<div class='text-1 suc'>安装包生成成功!</div>" +
+                                                        "<div class='text-2'>您可选择<span class='text-diabled'>部署到云主机</span>使用或<a class='down_href' href='" + file_server_url + content_obj.result.download_url+"'>迁移到本地</a>安装使用</div>" +
+                                                        "<div class='text-3'>" +
+                                                            '抱歉,你没有云主机资源,无法部署应用到云主机,建议您选择迁移到本地' +
+                                                        "</div>" +
+                                                    "</div>" +
+                                                    "<img src='themes/appcloud/images/sfw_success.png'>" +
+                                                "</div>";                                    
+                                }                           
+                            }
+                            set_state("success", tip_html,subb_msg);                     
+                        }                                                
+                    }                
+                }
+
+                function start_download(download_url){
+                     $("body").append("<iframe src='" + download_url + "' style='display:none;'></iframe>");                    
+                }
+
+                function set_time_line(){
+                    var now = 0,$time_line = $("#time_line");
+
+                    return window.setInterval(function(){
+                        var min = parseInt((++now) / 60),sec = now % 60;
+                        if(min < 10 ) min = "0" + min ;
+                        if(sec < 10 ) sec = "0" + sec ;
+                        $time_line.html(min + ":" + sec);
+                    },1000);
+                }
+                
+            }();                   
+            function app_update(app_id,sn){
+                var data = {
+                    'app_id':app_id,
+                    'sn':sn,
+                    'act':'update_install_exe'
+                };
+                $.post('ajax.php',data,function(result){
+                    if (result.status == 200) {
+                        window.location = 'app.php?act=app_prompt';
+                    }else{
+                        alert(result.content.text);
+                    }
+                },'JSON');
+            }            
+        </script>
+    </body>
+</html>

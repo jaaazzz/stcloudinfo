@@ -1,0 +1,1009 @@
+<?php
+// +----------------------------------------------------------------------
+// | zdcyber
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011-2016
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: yukang
+// +----------------------------------------------------------------------
+
+/**
+ * 我的应用操作相关类库
+*/
+require_once(ROOT_PATH .  'includes/init.php');
+// 引入openstack类库
+$openstack_obj = zd_core::instance('zd_openstack_class');
+// 引入openstack常类库
+$const_obj = zd_core::instance('zd_const_class');
+$app_obj   = zd_core::instance('zd_db_app_class');
+$order_obj = zd_core::instance('zd_db_order_class');
+
+class zd_app_class {
+
+     /**
+     *创建云主机
+     *create  at 2016-04-05
+     * @author yukang
+      * @param (必填)$app_id
+     * @param (必填)string $cpu_core_num cpu核心个数
+     * @param (必填)int $memory_size  cpu核心个数
+     * @param (选填)string $hdd_volume 内存大小(单位G)
+     * @param (选填) string $operation_system 操作系统名称
+     * @param (选填) string $host_ip  主机ip
+     * @param (选填) string $host_password 主机密码
+     * @param (选填) string $host_name 主机名
+     * @param (选填) string $host_server_id 
+     * @return 返回值：true/flase
+     **/
+    public static function publish_app_host($app_host_id,$openstack_image_id,$flavorid){
+
+        try{
+            $host_data = static::get_host_data($app_host_id);
+            if(is_null($host_data))
+            {
+                echo json_encode(array("status" => 500, "tip" => "操作失败", "content"=>array("text" => "根据 host_id 查询主机信息失败")));
+                exit;
+            }
+            try{
+
+                $metadata = array(
+                    "app_host_id"=>strval($app_host_id),
+                    'admin_pass' => $host_data->host_password);
+                //$flavor = zd_openstack_class::get_flavor_by_hardware($host_data->cpu_core_num,$host_data->memory_size*1024,$host_data->hdd_volume);
+
+                //$flavorid  = is_null($flavor)?null:$flavor->id;
+
+                $server = zd_openstack_class::create_service($app_host_id,$flavorid,$metadata,null,$openstack_image_id,$host_data->hdd_volume);
+
+                global $is_openstack_huawei;
+                if($is_openstack_huawei)
+                {
+                    $host_data->host_server_id = $server->id;
+                    $host_data->host_name = $server->name;
+                    $host_data->status = 3;
+                    $msg = "创建主机成功";
+                    zd_db_app_class::_update_app_host($app_host_id,$host_data);
+
+                }else
+                {
+                    if(isset($server) && !is_null($server)) {
+                        $host_data->host_server_id = $server->id;
+                        $host_data->host_name = $server->name;
+                        $host_data->status = 3;
+                        $msg = "创建主机成功";
+                        zd_db_app_class::_update_app_host($app_host_id,$host_data);
+                    }else
+                    {
+                        $host_data->status = 2;
+                        zd_db_app_class::_update_app_host($app_host_id,$host_data);
+                    } 
+                }                 
+
+            }catch (Exception $e){
+                $msg = "创建主机失败";
+
+                if(!empty($e->getMessage())){
+                    $msg  = "虚拟主机创建失败,详细信息：".htmlentities($e->getMessage());
+                }
+
+                // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+                $host_data->status = 2;
+                zd_db_app_class::_update_app_host($app_host_id,$host_data);
+                echo json_encode(array("status" => 500, "tip" => "操作失败", content=>array("text" =>"创建云主机异常,请联系管理员帮你解决")));
+                exit;
+            }
+        }catch (Exception $e){
+            $msg = $e->getMessage();
+
+            // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+            $host_data->status = 2;
+            zd_db_app_class::_update_app_host($app_host_id,$host_data);
+        }
+
+        echo json_encode(array("status" => 200, "tip" => "操作成功", content=>array("text" =>$msg)));
+        exit;
+    }
+
+    /**
+     * 重构创建云主机
+     * @param $app_host_id
+     * @param $image_id
+     * @param $flavor_id
+     * @param string $user_id
+     * @return array
+     * @throws Exception
+     */
+    public static function publish_app_host_again($app_host_id,$image_id,$flavor_id,$user_id='')
+    {
+        $bool = false;
+        $host_data = static::get_host_data($app_host_id);
+        if(is_null($host_data))
+        {
+            $msg = '根据 host_id 查询主机信息失败';
+        }
+        else
+        {
+            $server = zd_openstack_class::create_service_again(
+                $app_host_id,
+                $flavor_id,
+                $image_id,
+                $host_data->hdd_volume,
+                $user_id,
+                Array(
+                    "app_host_id"=>strval($app_host_id),
+                    'admin_pass' => $host_data->host_password
+                )
+            );
+
+            if($server['bool'])
+            {
+                $host_data->host_server_id = $server['content']['server']->id;
+                $host_data->host_name = $server['content']['server']->name;
+                $host_data->status = 3;
+                zd_db_app_class::_update_app_host($app_host_id,$host_data);
+            }
+            else
+            {
+                global $is_openstack_huawei;
+                if(!$is_openstack_huawei)
+                {
+                    $host_data->status = 2;
+                    zd_db_app_class::_update_app_host($app_host_id,$host_data);
+                }
+            }
+
+            $bool = $server['bool']; $msg = $server['msg'];
+        }
+
+        return Array('bool' => $bool, 'msg' => $msg);
+    }
+
+    /**
+     * 根据 host_id 查询主机信息
+     * @param $app_host_id
+     * @return null|stdClass
+     */
+    private static function get_host_data($app_host_id)
+    {
+        $host_data = null;
+        try {
+            $host_data = new stdClass();
+            $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+
+            //$host_data->app_host_id = $app_host_id;
+            $host_data->cpu_core_num = $app_host_detail['cpu_core_num'];
+            $host_data->memory_size = $app_host_detail['memory_size'];//数据库中单位是MB
+            $host_data->hdd_volume = $app_host_detail['hdd_volume'];
+            // $host_data->app_type = $data->category1=='在线服务'?zd_const_class::APP_TYPE_WEB:zd_const_class::APP_TYPE_DESKTOP;
+            // $host_data->app_type = zd_const_class::APP_TYPE_WEB;
+            $host_data->host_type = zd_const_class::CLOUD_HOST_MAPGIS;
+            $password = '123456';
+            $host_data->host_user = "Administrator";
+            $host_data->host_password = $password;
+
+        } catch (Exception $e) {
+
+        }
+        return $host_data;
+    }
+    /**
+     *重启云主机
+     *create  at 2016-04-07
+     * @author yukang
+     * @param (必填)$app_host_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function restart_app_host($app_host_id, $user_id='', $is_echo='')
+    {
+        $bool = false; $msg = '';
+        $user_id = !empty($user_id) && !is_null($user_id) ? $user_id : $_SESSION['user_id'];
+
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+        
+        $api_url = $ip."api/ecs/restart/apphost?app_host_id=".$app_host_id."&user_id=".$user_id."&is_echo=".$is_echo;
+        
+        zd_core::autoload('zd_common_class');
+        //发送请求
+        $message_result = zd_common_class::_send_get($api_url);
+
+        $result = json_decode($message_result,true);
+
+        return $result;
+        // try {
+        //     $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+        //     if ($user_id == $app_host_detail['user_id']) {
+        //         $host_data = new stdClass();
+        //         // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+        //         $host_data->status = 4;
+        //         zd_db_app_class::_update_app_host($app_host_id, $host_data);
+        //         zd_openstack_class::restart_server($app_host_detail['host_server_id']);
+        //         // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+        //         $data = new stdClass();
+        //         $data->status = 3;
+        //         zd_db_app_class::_update_app_host($app_host_id, $data);
+
+        //         $bool = true;
+        //     }
+        //     else
+        //     {
+        //         $msg = '你不是该云主机所属者你无权操作';
+        //     }
+        // }
+        // catch(Exception $e)
+        // {
+        //     $msg = '异常信息：'.$e->getMessage();
+        // }
+        // if ((empty($is_echo) || is_null($is_echo)) && !$bool) {
+        //     echo json_encode(array("status" => 500, "tip" => "操作失败", "content" => array("text" => $msg)));
+        //     exit;
+        // }
+
+        // return $bool;
+    }
+    /**
+     *关闭云主机
+     *create  at 2016-04-07
+     * @author yukang
+     * @param (必填)$app_host_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function close_app_host($app_host_id, $user_id='', $is_echo='')
+    {
+        $bool = false; $msg = '';
+        $user_id = !empty($user_id) && !is_null($user_id) ? $user_id : $_SESSION['user_id'];
+
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+        $api_url = $ip."ecs/close/apphost?app_host_id=".$app_host_id."&user_id=".$user_id."&is_echo=".$is_echo;
+        
+        zd_core::autoload('zd_common_class');
+        //发送请求
+        $message_result = zd_common_class::_send_get($api_url);
+
+        $result = json_decode($message_result,true);
+
+        return $result;
+        // try {
+        //     $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+        //     if ($user_id == $app_host_detail['user_id']) {
+        //         zd_openstack_class::stop_server($app_host_detail['host_server_id']);
+        //         $host_data = new stdClass();
+        //         // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+        //         $host_data->status = 4;
+        //         zd_db_app_class::_update_app_host($app_host_id, $host_data);
+        //     } else {
+        //         $msg = '你不是该云主机所属者你无权操作';
+        //     }
+        // }
+        // catch(Exception $e)
+        // {
+        //     $msg = '异常信息：'.$e->getMessage();
+        // }
+        // if ((empty($is_echo) || is_null($is_echo)) && !$bool) {
+        //     echo json_encode(array("status" => 500, "tip" => "操作失败", "content" => array("text" => $msg)));
+        //     exit;
+        // }
+
+        // return $bool;
+    }
+    /**
+     *启动云主机
+     *create  at 2016-04-07
+     * @author yukang
+     * @param (必填)$app_host_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function open_app_host($app_host_id, $user_id='', $is_echo='')
+    {
+        $bool = false; $msg = '';
+        $user_id = !empty($user_id) && !is_null($user_id) ? $user_id : $_SESSION['user_id'];
+
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+        $api_url = $ip."ecs/open/apphost?app_host_id=".$app_host_id."&user_id=".$user_id."&is_echo=".$is_echo;
+        
+        zd_core::autoload('zd_common_class');
+        //发送请求
+        $message_result = zd_common_class::_send_get($api_url);
+
+        $result = json_decode($message_result,true);
+
+        return $result;
+        // try {
+        //     $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+        //     if ($user_id == $app_host_detail['user_id']) {
+        //         zd_openstack_class::start_server($app_host_detail['host_server_id']);
+        //         $host_data = new stdClass();
+        //         // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+        //         $host_data->status = 3;
+        //         zd_db_app_class::_update_app_host($app_host_id, $host_data);
+        //     } else {
+        //         $msg = '你不是该云主机所属者你无权操作';
+        //     }
+        // }
+        // catch(Exception $e)
+        // {
+        //     $msg = '异常信息：'.$e->getMessage();
+        // }
+        // if ((empty($is_echo) || is_null($is_echo)) && !$bool) {
+        //     echo json_encode(array("status" => 500, "tip" => "操作失败", "content" => array("text" => $msg)));
+        //     exit;
+        // }
+
+        // return $bool;
+    }
+     /**
+     *上架下架操作
+     *create  at 2016-04-１９
+     * @author yukang
+     * @param (必填)$app_host_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function app_on_sale($app_id)
+    {
+        $user_id         = $_SESSION['user_id'];
+
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+        $api_url = $ip."ecs/app/onsale?app_id=".$app_id."&user_id=".$user_id;
+
+        zd_core::autoload("zd_common_class");
+
+        $result = json_decode(zd_common_class::_send_get($api_url),true);
+
+        if(!$result['bool']){
+            echo json_encode(array("status" => 500, "tip" => "操作失败", content=>array("text" =>$result['msg'])));
+            exit;
+        }
+        // $app_detail      = zd_db_app_class::_get_app_detail($app_id);
+        // if($user_id==$app_detail['user_id'])
+        // {
+        //     $app_data = new stdClass();
+        //     // is_on_sale 0未上架１已上架
+        //     if($app_detail['is_on_sale']==1)
+        //     {
+        //         $app_data->is_on_sale=0;
+        //     }else
+        //     {
+        //         $app_data->is_on_sale=1;
+        //     }
+        //     zd_db_app_class::_update_app($app_id,$app_data);
+        // }else
+        // {
+        //     echo json_encode(array("status" => 500, "tip" => "操作失败", content=>array("text" =>"你不是该云主机所属者你无权操作")));
+        //     exit;
+        // }    
+        
+    }
+
+    /**
+     * 上架下架操作2
+     * @param $app_id
+     * @param $user_id
+     */
+    public static function app_on_sale_2($app_id,$user_id)
+    {
+        $bool = false; $msg = '删除成功';
+        try {
+            $app_detail = zd_db_app_class::_get_app_detail($app_id);
+            if ($user_id == $app_detail['user_id']) {
+                $app_data = new stdClass();
+                if ($app_detail['is_on_sale'] == 1) {
+                    $app_data->is_on_sale = 0;
+                } else {
+                    $app_data->is_on_sale = 1;
+                }
+
+                zd_db_app_class::_update_app($app_id, $app_data);
+                $bool = true;
+            } else {
+                $msg = '应用不属于您，您无权删除';
+            }
+        }
+        catch(Exception $e)
+        {
+            $msg = '删除应用异常。异常信息：' . $e->getMessage();
+        }
+        return Array('bool' => $bool,'msg' => $msg);
+    }
+
+    /**
+     *删除云主机
+     *create  at 2016-04-07
+     * @author yukang
+     * @param (必填)$app_host_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function _delete_app_host($app_host_id,$user_id='',$is_echo='')
+    {
+        $bool = false; $msg = '';
+        $user_id = !empty($user_id) && !is_null($user_id) ? $user_id : $_SESSION['user_id'];
+
+        try {
+            $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+            if ($user_id == $app_host_detail['user_id']) {
+                if (empty($app_host_detail['host_server_id'])) {
+
+                } else {
+                    zd_openstack_class::delete_server_2($app_host_detail['host_server_id']);
+                }
+
+                $app_list = zd_db_app_class::_get_app_list_to_host_id($app_host_id);
+
+                foreach ($app_list as $val) {
+                    //订单id
+                    if (!empty($val['order_sn'])) {
+                        //调用云狗解绑信息接口
+                        $order_info = zd_db_order_class::_get_order_info_by_id($val['order_sn'], $user_id);
+
+                        //授权号
+                        $serial_no = $order_info['serial_no'];
+                        //获取其绑定信息
+                        $auth_info = $GLOBALS['gis_service']->get_auth_info($serial_no);
+                        //可解除绑定
+                        if ($auth_info['success'] && !empty($auth_info['result']->BingdingMac)) {
+                            $GLOBALS['gis_service']->update_auth_mac_info($serial_no);
+                        }
+                    }
+                }
+
+                $host_data = new stdClass();
+                $host_data->hidden = 1;
+                zd_db_app_class::_update_app_host($app_host_id, $host_data);
+                //删除云主机，同步到用户表
+                zd_app_class::delete_host_for_user($user_id);
+
+                $bool = true;
+            } else {
+                $msg = '你不是该云主机所属者你无权操作';
+            }
+        }
+        catch(Exception $e)
+        {
+            $msg = '异常信息'.$e->getMessage();
+        }
+
+        if ((empty($is_echo) || is_null($is_echo)) && !$bool) {
+            echo json_encode(array("status" => 500, "tip" => "操作失败", "content" => array("text" => $msg)));
+            exit;
+        }
+
+        return $bool;
+    }
+
+    public static function delete_app_host($app_host_id,$user_id='',$is_echo='')
+    {
+        $bool = false; $msg = '';
+        $user_id = !empty($user_id) && !is_null($user_id) ? $user_id : $_SESSION['user_id'];
+
+        try {
+            $ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+            $api_url = $ip."ecs/delete/apphost";
+
+            $api_url_s = $api_url."?app_host_id=".$app_host_id."&user_id=".$user_id;
+            //加载zd_common_class类库
+            zd_core::autoload('zd_common_class');
+            //发送请求
+            $message_result = zd_common_class::_send_get($api_url_s);
+            
+            $result = json_decode($message_result,true);
+
+                $order_list = $result['order_info'];
+
+                foreach ($order_list as $order_info) {
+                    //订单id
+                    // if (!empty($val['order_sn'])) {
+                        // 调用云狗解绑信息接口
+                        // $order_info = zd_db_order_class::_get_order_info_by_id($val['order_sn'], $user_id);
+                        //授权号
+                        $serial_no = $order_info['serial_no'];
+                        //获取其绑定信息
+                        $auth_info = $GLOBALS['gis_service']->get_auth_info($serial_no);
+                        //可解除绑定
+                        if ($auth_info['success'] && !empty($auth_info['result']->BingdingMac)) {
+                            $GLOBALS['gis_service']->update_auth_mac_info($serial_no);
+                        }
+                    // }
+                }
+
+                $bool = $result['result'];
+                $msg = $result['msg'];
+            
+        }
+        catch(Exception $e)
+        {
+            $msg = '异常信息'.$e->getMessage();
+        }
+
+        if ((empty($is_echo) || is_null($is_echo)) && !$bool) {
+            echo json_encode(array("status" => 500, "tip" => "操作失败", "content" => array("text" => $msg)));
+            exit;
+        }
+
+        return $bool;
+    }
+    /**
+     *打开云主机控制台
+     *create  at 2016-04-0８
+     * @author yukang
+     * @param (必填)$app_host_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function console_app_host($app_host_id)
+    {
+        $user_id         = $_SESSION['user_id'];
+
+        //add by zc 20160921
+        //为了兼容应用平台的聚合部署接口,对于参数是非string型，即不是host_server_id，则获取主机对应的host_server_id;
+        // if(!is_string($app_host_id)){
+        //     $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+        //     if($app_host_detail['id']>0)
+        //     {
+        //         $host_server_id = $app_host_detail['host_server_id'];
+        //     }else
+        //     {
+        //         echo json_encode(array("status" => 500, "tip" => "操作失败", content=>array("text" =>"云主机不存在")));
+        //         exit;
+        //     }
+        // }else{
+        //     $host_server_id = $app_host_id;
+        // }
+
+        //$url = zd_openstack_class::get_host_url($host_server_id);
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+        $api_url = $ip."ecs/console/apphost?app_host_id=".$app_host_id."&user_id=".$user_id;
+
+        zd_core::autoload("zd_common_class");
+
+        $msg = zd_common_class::_send_get($api_url);
+
+        $result = json_decode($msg,true);
+
+        if(empty($result['content']['url']))
+        {
+            echo json_encode(array("status" => 500, "tip" => "操作失败", content=>array("text" =>"云主机不存在")));
+            exit;
+        }
+        //$url = $url.'&title='.$app_host_detail['name'];
+        echo json_encode(array("status" =>$result['status'], "tip" => $result['tip'], content=>array("text" =>$result['content']['text'],"url"=>$result['content']['url'])));
+        exit;
+
+//        $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+//        if($app_host_detail['id']>0)
+//        {
+//            $url = zd_openstack_class::get_host_url($app_host_detail['host_server_id']);
+//            $url = $url.'&title='.$app_host_detail['name'];
+//            echo json_encode(array("status" =>200, "tip" => "操作成功", content=>array("text" =>"操作成功","url"=>$url)));
+//            exit;
+//
+//        }else
+//        {
+//            echo json_encode(array("status" => 500, "tip" => "操作失败", content=>array("text" =>"云主机不存在")));
+//            exit;
+//        }
+        
+    }
+
+    /**
+     * 打开云主机控制台2
+     * @param $app_host_id
+     * @return string
+     */
+    public static function console_app_host_2($app_host_id)
+    {
+        $host_server_id = '';
+        if(!is_string($app_host_id))
+        {
+            $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+            if($app_host_detail['id'] > 0)
+            {
+                $host_server_id = $app_host_detail['host_server_id'];
+            }
+        }
+        else
+        {
+            $host_server_id = $app_host_id;
+        }
+
+        if(empty($host_server_id) || is_null($host_server_id))
+        {
+            $url = '';
+        }
+        else
+        {
+            $url = zd_openstack_class::get_host_url($host_server_id);
+        }
+
+        return $url;
+    }
+
+    /**
+     * 2016-09-20 by zc
+     * 自动部署应用(云主机已创建好的前提)
+     * @param $host_id 云主机的唯一标识
+     * @param $order_id　order_info表中的order_id字段
+     * @param $app_id  application表中的id字段
+     * @param string $action
+     */
+    public static function auto_deploy_app($host_id,$order_id,$app_id,$action='install'){
+        $server_ip = $GLOBALS['myself_base_url'];
+        $goods_info = zd_db_order_class::_get_goods_info_by_order_id($order_id,true);
+        //２:桌面 ３:ｗｅｂ
+        $goods_type = $GLOBALS['gis'] -> get_top_parent($goods_info['cat_id']);
+        //app的相关的对象
+        $app_data = new stdClass();
+        //返回值
+        $return_data = new stdClass();
+
+        try
+        {
+            $metadata = array(
+                "action"=>$action,
+                "product_sn"=>strval($order_id),
+                "package_address"=>"$server_ip/gis_api.php?act=package&sn=$order_id",
+                "callback_address"=>"$server_ip/gis_api.php?act=openstack_callback&app_id=$app_id&host_id=$host_id&action=install"
+            );
+            //部署应用，返回主机对象
+            $server = zd_openstack_class::deploy_app_by_host($host_id,$metadata);
+            //获取到对应的云主机对象
+            if(isset($server) && !is_null($server))
+            {
+                if($goods_type ==3)//web应用
+                {
+
+                }else if($goods_type == 2)//桌面应用
+                {
+                    //此方法之前传的id是存在数据库表里的主机id，即int型自增的，而现在传入的是唯一标识的id，因此，此方法之后要改写
+                    //$app_data->app_url = "ajax.php?act=console_app_host?id=$host_id";
+                    $app_data->app_url = $host_id;
+                }
+                //1包括未提交，2正在部署，3已发布，4发布失败
+                $app_data->status = 2;
+                //$app_data->app_type = $goods_type;
+                zd_db_app_class::_update_app($app_id,$app_data);
+
+                $return_data->msg = "向云主机提交部署应用任务成功";
+                $return_data->status = "1";
+                $return_data->app_id = $app_id;
+            }else //未获取对应的云主机
+            {
+                $app_data->status = 4;
+                zd_db_app_class::_update_app($app_id,$app_data);
+
+                $return_data->msg = "未获取对应的云主机";
+                $return_data->status = "-1";
+            }
+            return $return_data;
+        }catch (Exception $ee){
+            //1包括未提交，2正在部署，3已发布，4发布失败
+            $app_data->status = 4;
+            zd_db_app_class::_update_app($app_id,$app_data);
+
+            $return_data->msg = "自动部署应用发生异常";
+            $return_data->status = "-1";
+            return $return_data;
+        }
+    }
+    public static function publish_app_to_host($app_url,$cpu_core_num,$memory_size,$hdd_volomn,$name,$user_id,$app_id,$app_name,$category,$app_description,$app_type,$logo_image,$order_sn,$file_list,$status,$is_on_sale,$is_public,$host_id,$openstack_image_id,$flavorid,$is_edit,$user_ids)
+    {
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+        $api_url = $ip."ecs/publish/app";
+
+        $param  = array(
+            'app_url' => $app_url?$app_url:'',
+            'cpu_core_num' => $cpu_core_num,
+            'memory_size' => $memory_size,
+            'hdd_volomn' => $hdd_volomn,
+            'name' => $name,
+            'user_id' => $user_id,
+            'app_id' => $app_id,
+            'app_name' => $app_name,
+            'category' => $category,
+            'app_description' => $app_description,
+            'app_type' => $app_type,
+            'logo_image' => $logo_image,
+            'order_sn' => $order_sn,
+            'file_list' => $file_list,
+            'status' => $status,
+            'is_on_sale' => $is_on_sale,
+            'is_public' => $is_public,
+            'host_id' => $host_id,
+            'openstack_image_id' => $openstack_image_id,
+            'flavorid' => $flavorid,
+            'is_edit' => $is_edit,
+            'user_ids' => $user_ids
+            );
+
+        // $param['app_url'] => $app_url;
+        $p = http_build_query($param);
+        // $api_url_s =  $api_url."?app_url=".$app_url."&cpu_core_num=".$cpu_core_num."&memory_size=".$memory_size."&hdd_volomn=".$hdd_volomn."&name=".$name."&user_id=".$user_id."&app_id=".$app_id."&app_name=$app_name"."&category=".$category."&app_description=$app_description"."&app_type=".$app_type."&logo_image=".$logo_image."&order_sn=".$order_sn."&file_list=".$file_list."&status=".$status."&is_on_sale=".$is_on_sale."&is_public=".$is_public."&host_id=".$host_id."&openstack_image_id=".$openstack_image_id."&flavorid=".$flavorid."&is_edit=".$is_edit."&user_ids=".$user_ids;
+        $api_url_s = $api_url."?".$p;
+        //加载zd_common_class类库
+        zd_core::autoload('zd_common_class');
+        //发送请求
+        $message_result = zd_common_class::_send_get($api_url_s);
+
+         return json_decode($message_result,true);
+//        return $api_url_s;
+        
+    }
+    /**
+     *创建云主机部署部署应用
+     *create  at 2016-04-11
+     * @author yukang
+     * @param (必填)$app_host_id
+     * @param (必填)int $order_sn  订单id
+     * @return 返回值：true/flase
+     **/
+    public static function publish_app($app_host_id,$order_sn,$app_id,$action='install',$openstack_image_id,$flavorid){
+
+        //$server_ip      = $GLOBALS['myself_base_url'];
+        $server_ip      = $GLOBALS['inner_myself_base_url'];
+        $goods_info     = zd_db_order_class::_get_goods_info_by_order_id($order_sn,true);
+        //２桌面３．ｗｅｂ
+        $goods_type     = $GLOBALS['gis'] -> get_top_parent($goods_info['cat_id']);
+        $success = false;
+        $app_host_detail = zd_db_app_class::_get_app_host_detail($app_host_id);
+        $update_host     = new stdClass();
+        $app_data        = new stdClass();
+        $host_data       = new stdClass();
+        try{
+            $host_data->cpu_core_num = $app_host_detail['cpu_core_num'];
+            $host_data->memory_size  = $app_host_detail['memory_size'];//数据库中单位是MB
+            $host_data->hdd_volume   = $app_host_detail['hdd_volume'];
+            //２桌面３．ｗｅｂ
+            $app_data->app_type      = $goods_type;
+            // $host_data->host_type = zd_const_class::CLOUD_HOST_MAPGIS;
+
+            $password = '123456';
+            $host_data->host_user = "admin";
+            $host_data->host_password = $password;
+            try{
+
+                // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+                $host_data->status = 1;
+                zd_db_app_class::_update_app_host($app_host_id,$host_data);
+
+                $metadata = array(
+                    "app_host_id"=>strval($app_host_id),
+                    "action"=>$action,
+                    "product_sn"=>strval($order_sn),
+//                                "package_address"=>"http://www.smaryun.com/api/v1/order.php?act=package&sn=$order_sn",
+                    "package_address"=>"$server_ip/gis_api.php?act=package&sn=$order_sn",
+                    "callback_address"=>"$server_ip/gis_api.php?act=openstack_callback&app_id=$app_id&action=install",
+                    'admin_pass' => $password);
+                // $flavor     = zd_openstack_class::get_flavor_by_hardware($host_data->cpu_core_num,$host_data->memory_size*1024,$host_data->hdd_volume);
+                // $flavorid   = is_null($flavor)?null:$flavor->id;
+                $server     = zd_openstack_class::create_service($app_host_id,$flavorid,$metadata,null,$openstack_image_id,$host_data->hdd_volume);
+                if(isset($server) && !is_null($server)){
+
+                    $host_data->host_server_id = $server->id;
+                    $host_data->host_name = $server->name;
+                     // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+                    $host_data->status = 3;
+                    $msg = "创建主机成功";
+                    zd_db_app_class::_update_app_host($app_host_id,$host_data);
+
+                    if($app_data->app_type ==3){
+                        //pkg包中json的name字段,web应用的在线使用地址
+                        try{
+                            $update_host->host_ip = $server->bindFloatingIP();
+                        }catch(Exception $x){
+                            try{
+                                $update_host->host_ip = $server->bindFloatingIP();
+                            }catch(Exception $x){
+                                try{
+                                    $update_host->host_ip = $server->bindFloatingIP();
+                                }catch(Exception $x){
+                                }
+                            }
+                        }
+                        //获取WEB应用安装包中json文件name字段
+                        $pkg_file_name  = static::get_pkg_name_by_order_sn($order_sn);
+
+                        if(isset($update_host->host_ip)){
+                            $app_data->app_url = "http://".$update_host->host_ip."/$pkg_file_name";
+                        }else{
+                            $app_data->app_url = "$pkg_file_name";
+                            throw new Exception("为虚拟机分配浮动IP失败");
+                        }
+                    }else if($app_data->app_type == 2){
+                        $app_data->app_url = "ajax.php?act=console_app_host?id=$app_host_id";
+                    }
+                    //1包括未提交，2正在部署，3已发布，4发布失败
+                    $app_data->status = 2;
+                    zd_db_app_class::_update_app($app_id,$app_data);
+                }else{
+                     // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+                    $host_data->status = 2;
+                    $msg = "创建主机成功";
+                    zd_db_app_class::_update_app_host($app_host_id,$host_data);
+                }
+            }catch (Exception $ee){
+                //1包括未提交，2正在部署，3已发布，4发布失败
+                $app_data->status = 4;
+                zd_db_app_class::_update_app($app_id,$app_data);
+                // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+                $host_data->status = 2;
+                $msg = "创建主机成功";
+                zd_db_app_class::_update_app_host($app_host_id,$host_data);
+                $msg = "创建主机失败";
+                if(!empty($ee->getMessage())){
+                    $msg  = "虚拟主机创建失败,详细信息：".htmlentities($ee->getMessage());
+                }
+                echo json_encode(array("status" => 500, "tip" => "操作失败", content=>array("text" =>"创建云主机异常,请联系管理员帮你解决")));
+                exit;
+            }
+        }catch (Exception $e){
+            $msg = $e->getMessage();
+            zd_db_app_class::_update_app($app_id,$app_data);
+            // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+            $host_data->status = 2;
+            zd_db_app_class::_update_app_host($app_host_id,$host_data);
+        }
+        // if(!$success){
+        //     if(isset($app_id)){
+                
+        //         zd_db_app_class::_update_app($app_id,$app_data);
+        //         // status 云主机状态，1正在创建，2创建失败，3正在运行，4已关闭
+        //         $host_data->status = 2;
+        //         zd_db_app_class::_update_app_host($app_host_id,$host_data);
+        //         $msg = "添加云主机失败";
+        //     }
+        //     if(isset($server) && !is_null($server)){
+        //         try{
+        //             $server->delete();
+        //         }catch (Exception $e){}
+        //     }
+        // }
+        echo json_encode(array("status" => 200, "tip" => "操作成功", content=>array("text" =>'操作成功')));
+        exit;
+    }
+
+    /**
+     * 根据应用id获取对应的服务对象
+     * @param $app_id
+     * @return null|\OpenCloud\Compute\Resource\Server
+     */
+    public static function get_server_object_by_appid($app_id)
+    {
+        $app_detail = zd_db_app_class::_get_app_detail($app_id);
+        $server_id  = $app_detail['host_server_id'];
+        if(!empty($server_id)){
+            return zd_openstack_class::get_server($server_id);
+        }
+        return null;
+    }
+
+    /**
+     * 获取WEB应用安装包中json文件name字段
+     * @param $order_sn
+     * @return null
+     */
+    public static function get_pkg_name_by_order_sn($order_sn){
+
+        $goods_info   = zd_db_order_class::_get_goods_info_by_order_id($order_sn,true);
+        //file_info:{"file_size":24919268,"file_guid":"6ghORfxX3VOAV8it","store_file_name":"OL9dLrnio8urbSNu.webpkg","original_file_name":"frame_SLFlexNetDemo_a3cf761291f84ede960aa34605df8700.webpkg","platform":"dotnet","version":"2.0.0.0","md5":"a3cf761291f84ede960aa34605df8700","file_name":"SLFlexNetDemo"}
+        $file_info = json_decode($goods_info['file_info']);
+        return $file_info->file_name;
+    }
+
+
+    /**
+     *创建云主机，同步到用户表
+     *create  at 2016-04-26
+     * @author ygq
+     * @param (必填)$user_id 要创建主机的user_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function create_host_for_user($user_id){
+        if(zd_db_app_class::_is_user_can_create_host($user_id)){
+            zd_db_app_class::_change_host_num_by_user($user_id);
+            return true;
+        }else{
+            echo json_encode(array("status" =>500, "tip" => "操作成功", content=>array("text" =>"该用户主机数量已用完","url"=>'')));
+            exit;
+        }
+    }
+    /**
+     *删除云主机，同步到用户表
+     *create  at 2016-04-26
+     * @author ygq
+     * @param (必填)$user_id 要删除主机的user_id
+     * @return 返回值：json{
+     *                      status:200/500
+     *                      tip:'',操作提示
+     *                      content:返回提示
+     *                      {text:'',result:''}
+     *                   }
+     **/
+    public static function delete_host_for_user($user_id){
+        zd_db_app_class::_change_host_num_by_user($user_id,false);
+        // echo json_encode(array("status" =>200, "tip" => "操作成功", content=>array("text" =>"操作成功","url"=>'')));
+        // exit;
+    }
+
+
+//给地址测试通过
+    public static function dealDocList($docs)
+    {
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+        $api_url = $ip."apps/download/single/file";
+        $url = $api_url."?file_list=".$docs;
+        $message_result = zd_common_class::_send_get($url);
+        $result = json_decode($message_result,true);
+        return $result;
+    }
+
+    public static function dealAllDocList($docs)
+    {   
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+        $api_url = $ip."apps/download/all/files";
+        $url = $api_url."?file_list=".$docs;
+        $message_result = zd_common_class::_send_get($url);
+        $result = json_decode($message_result,true);
+        return $result;
+    }
+    //判断用户对app是否具有操作权限
+    //1.外部应用　2.内部应用桌面 3.内部应用web,4.外部应用填写云主机IＤ
+    public static function select_app_power($app_id)
+    {
+        $app_detail = zd_db_app_class::_get_app_detail($app_id);
+
+        if($app_detail['is_public']==1)
+        {
+            return true;
+        }else if($app_detail['is_public']==0)
+        {
+            $user_id      = $_SESSION['user_id'];
+            if($app_detail['user_id']==$user_id)
+            {
+               return true;     
+            }
+        }
+
+    }
+    
+    
+}
+?>

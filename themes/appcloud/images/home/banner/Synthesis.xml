@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <node code="BANNER" name="时空信息云平台门户Banner">
+        <searchField code="cloud">
+          <Field index="1" type="h3"><lable>云计算支撑海量数据处理</lable></Field>
+          <Field index="2" type="h3"><lable>打造敏捷、智慧、安全、经济的信息云平台</lable></Field>
+          <!--<Field index="3" type="button" url="javascript:;"><lable>查看详情</lable></Field>-->
+        </searchField>
+    </node>
+</root>

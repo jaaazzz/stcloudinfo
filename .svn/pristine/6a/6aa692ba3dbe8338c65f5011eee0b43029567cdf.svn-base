@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>{$page_title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        {if $auto_redirect}
+        <!--
+        <meta http-equiv="refresh" content="3;URL={$message.back_url}" />
+    -->
+        {/if}
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,g-common.js'} -->
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+      
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->        
+        <style type="text/css">
+            .message{
+                width: 960px;
+                margin: 108px auto;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="message">
+            <!-- <div class="row form"> -->
+                <div class="boxCenterList RelaArticle" align="center" style='margin-bottom:300px;'>
+                  <div style="margin:20px auto;">
+                  <p style="font-size: 32px; font-weight:normal; color: #433;display:inline;padding-left:35px;line-height:50px;background:url(themes/appcloud/images/warning.png) no-repeat"> {$message.content}</p>
+                    <div class="blank"></div>
+                    <!-- {if $message.url_info} -->
+                      <!--{foreach from=$message.url_info key=info item=url name=message_foo}-->
+                      <!-- {if $smarty.foreach.message_foo.index == 0} -->
+                      <p style='display:none;'><a class="back" href="{$url}">{$info}</a></p>
+                      <!-- {/if} -->
+                      <!--{/foreach}-->
+                    <!--{/if}-->
+                    {if $auto_redirect}
+                    <p class="auto" style='color:#AAA'><span id='sec_reducer'>5</span>&nbsp;秒后自动跳转</p>
+                    {/if}
+                  </div>
+                </div>
+            <!-- </div> -->
+            <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        </div>
+        <script>
+            $(function(){
+                var secs = 5;
+                <!-- {if $auto_redirect} -->
+                var link=$('.back').attr('href'),$sec_reducer = $("#sec_reducer");
+                //使用IE
+                if ((navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)){
+                    var bro=$.browser;
+                    if (bro.version < 9.0) {
+                        if(history.length <= 1){
+                            link = "{$myself_base_url}";
+                        }
+                    }
+                    else{
+                        if(history.length <= 2){
+                            link = "{$myself_base_url}";
+                        }
+                    }
+                }
+                //使用Firefox
+                else if(navigator.userAgent.indexOf('Firefox') >= 0){
+                    if(window.history.length <= 1){
+                        link = "{$myself_base_url}";
+                    }
+                }
+                //使用Opera
+                else if(navigator.userAgent.indexOf('Opera') >= 0){
+                    if(history.length <= 1){
+                        link = "{$myself_base_url}";
+                    }
+                }
+                else{
+                    if(history.length <= 1){
+                        link = "{$myself_base_url}";
+                    }                   
+                }
+                +function reduce(){
+                    setTimeout(function(){
+                        $sec_reducer.html(--secs);
+                        secs ? reduce() : (window.location.href = link);
+                    },1000);
+                }();
+
+                <!-- {/if} -->
+            });
+        </script>
+    </body>
+</html>

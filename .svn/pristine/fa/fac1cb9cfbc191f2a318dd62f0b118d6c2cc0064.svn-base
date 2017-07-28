@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>登录_{$shop_name}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/user_passport.css" rel="stylesheet" type="text/css" />
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <body>
+    <script type="text/javascript">
+        var browser=navigator.appName 
+        var b_version=navigator.appVersion 
+        var version=b_version.split(";"); 
+        var trim_Version=version[1].replace(/[ ]/g,"");
+        var url = '/browser.php';
+        if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE6.0") 
+        { 
+            window.location.href = url;
+        } 
+        else if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE7.0") 
+        { 
+            window.location.href = url;
+        }
+    </script>
+        <div class="sign-header">
+            <div class="container">
+                <!--{if $action eq 'login'}-->
+                <span class="title-content">登录</span>
+                <!--{elseif $action eq 'register'}-->
+                <span class="title-content">注册</span>
+                <!--{elseif $action eq 'get_password'}-->
+                <span class="title-content">找回密码</span>
+                <!--{elseif $action eq 'reset_password'}-->
+                <span class="title-content">重置密码</span>
+                <!--{/if}-->
+                <div class="sign-header-operation pull-right">
+                    <a href="index.php">{$shop_title}</a>
+                    <a class="help-center" href="helper.php">帮助中心</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sign">
+            
+        <!--#登录界面 start-->
+        <!-- {if $action eq 'login'} -->
+            <div class="row form">
+                <fieldset>
+                    <div class="alert in" id="login-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#login-notice').hide();" >&times;</button>
+                        <span></span><!-- 登录相关提示 -->
+                    </div>
+                    <input type="text" class="login-username" name="username">
+                    <label class="label-placeholder">用户名/邮箱</label>
+                    <div class="clear"></div>
+                    <div class="alert in" id="login-username-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#login-username-notice').hide();" >&times;</button>
+                        <span></span><!-- 登录用户名相关提示 -->
+                    </div>
+                    <label id="login-username-info" class="form-label pull-left" style="display:none;">请输入您的用户名或邮箱</label>
+
+                    
+                    <input type="password" class="login-password" name="password">
+                    <label class="label-placeholder">{$lang.label_password}</label>
+                    <div class="clear"></div>
+                    <div class="alert in" id="login-password-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#login-password-notice').hide();" >&times;</button>
+                        <span></span><!-- 登录密码相关提示 -->
+                    </div>
+                    <label id="login-password-info" class="form-label pull-left" style="display:none;">请输入您的密码</label>
+                    <label class="checkbox pull-left">
+                        <input type="checkbox" value="1" name="remember" id="remember" checked="checked">下次自动登录</label>
+                    <!-- <a href="user.php?act=get_password" class="pull-right forget-password">忘记密码？</a> -->
+                    <button class="btn-zondy login-submit" type="submit">登&nbsp;&nbsp;录</button>
+                </fieldset>
+
+            </div>
+            <div class="row info"><!-- 没有账号？<a href="user.php?act=register&bac={$back_act}">立即注册</a> --></div>
+
+        <!--{/if}-->
+        <!--#登录界面 end-->
+
+
+
+
+        <!--*会员注册界面 start-->
+            <!--{if $action eq 'register'}-->
+            <div class="row sign-up-header">
+                    <span class="sign-up-tab-item active">
+                        个人账号
+                    </span>
+<!--                     <span class="sign-up-tab-item">
+                        开发者账号
+                    </span> -->
+                <span class="info pull-right">
+                    已有账号？<a href="user.php?act=login&bac={$back_act}">立即登录</a>
+                </span>
+            </div>
+            <div class="row form sign-up">
+                <fieldset>
+                    <div class="alert in" id="register-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#register-notice').hide();" >&times;</button>
+                        <span></span><!-- 登录相关提示 -->
+                    </div>
+                    <input type="text" class="register-email" name="email">
+                    <label class="label-placeholder">邮箱</label>
+                    <span id="register-email-confirm" class="form-confirm"></span>
+                    <div class="clear"></div>
+                    <div class="alert in" id="register-email-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#register-email-notice').hide();" >&times;</button>
+                        <span></span><!-- 注册邮箱相关提示 -->
+                    </div>
+                    <label id="register-email-info" class="form-label pull-left" style="display:none;">请输入常用邮箱，通过验证后用于登录</label>
+
+                    <input type="text" class="register-username" name="username" >
+                    <label class="label-placeholder">用户名</label>
+                    <span id="register-username-confirm" class="form-confirm"></span>
+                    <div class="clear"></div>
+                    <div class="alert in" id="register-username-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#register-username-notice').hide();" >&times;</button>
+                        <span></span><!-- 用户名相关提示 -->
+                    </div>
+                    <label id="register-username-info" class="form-label pull-left" style="display:none;">中英文均可，最长可输入14个英文或7个汉字</label>
+                    <input type="password" class="register-password" name="password">
+                    <label class="label-placeholder">密码</label>
+                    <span id="register-password-confirm" class="form-confirm"></span>
+                    <div class="clear"></div>
+                    <div class="alert in" id="register-password-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#register-password-notice').hide();" >&times;</button>
+                        <span></span><!-- 用户名相关提示 -->
+                    </div>
+                    <label id="register-password-info" class="form-label pull-left" style="display:none;">包含字母和数字，至少6个字符，区分大小写</label>
+                    <br/>
+
+                    <label class="checkbox pull-left"><input name="agreement" type="checkbox" value="1" checked="checked" class="register-agreement"><span>我已阅读并同意</span></label>
+                    <a href="helper.php?article_id=18" target="_blank">GIS工具集用户协议</a>
+                    <input name="act" type="hidden" value="act_register" >
+                    <input type="hidden" name="back_act" value="{$back_act}" />
+                    <button type="submit" class="btn-zondy register-submit disabled" name="Submit" >注&nbsp;&nbsp;册</button>
+                </fieldset>
+            </div>
+            {insert_scripts files='utils.js'}
+            <!--{/if}-->
+            <!--#会员注册界面 end-->
+
+            <!--*找回密码界面 -->
+                <!--{if $action eq 'get_password'} -->
+            <div class="row form">
+                <form action="send_email.php" method="post">
+                    <fieldset>
+                        <input name="user_email" type="text" size="30" class="get-email get-password" />
+                        <label class="label-placeholder">请输入注册邮箱</label>
+                        <label id="get-email-info" class="form-label pull-left" style="display:none;">请输入您注册时填写的邮箱</label>
+                        <div class="clear"></div>
+                        <div class="alert in" id="get-email-notice" style="display:none;">
+                            <button type="button" class="close" onclick="$('#get-email-notice').hide();" >&times;</button>
+                            <span></span><!-- 验证邮箱相关提示 -->
+                        </div>                   
+                        <input type="text" class="validate" name="captcha"  size="30">
+                        <label class=" validate label-placeholder">请输入验证码</label>
+                        <span class="validate-img"><img src="captcha.php?{$rand}" alt="captcha" onClick="this.src='captcha.php?'+Math.random()" class="captcha"></span>
+                        <a href="javascript:void(0);" class="changeimg">&nbsp;换一张</a>
+                        <div class="clear"></div>
+                        <div class="alert in" id="get-validate-notice" style="display:none;">
+                            <button type="button" class="close" onclick="$('#get-validate-notice').hide();" >&times;</button>
+                            <span></span><!-- 验证邮箱相关提示 -->
+                        </div>   
+                        <input type="hidden" name="act" value="send_pwd_email" />
+                        <button type="submit" name="submit" class="btn-zondy get-submit" type="submit">发送重置密码地址</button>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="row info">
+                <a href="user.php?act=login">返回登录</a>
+            </div>
+            {insert_scripts files='utils.js'}
+            <script type="text/javascript">
+            {foreach from=$lang.password_js item=item key=key}
+              var {$key} = "{$item}";
+            {/foreach}
+            </script>
+
+
+            <!--{/if}-->
+            <!-- {if $action eq 'reset_password'} -->
+            <div class="row form">
+                <form action="user.php" method="post" name="getPassword2">
+                  <fieldset>
+                    <input name="new_password" type="password" size="25" class="reset-password1" />
+                    <label class="label-placeholder">{$lang.new_password}</label>
+                    <label id="reset-password1-info" class="form-label pull-left" style="display:none;">密码长度6~14位，区分大小写。</label>
+                    <span id="reset-confirm1" class="form-confirm"></span>
+                    <div class="clear"></div>
+                    <div class="alert in" id="get-resetpassword-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#get-resetpassword-notice').hide();" >&times;</button>
+                        <span>密码长度不能小于6位或大于14位</span><!-- 验证邮箱相关提示 -->
+                    </div>  
+                    <input name="reset-password-confirm2" type="password" class="reset-password2"size="25">
+                    <label class="label-placeholder">{$lang.confirm_password}</label>
+                    <label id="reset-password2-info" class="form-label pull-left" style="display:none;">密码长度6~14位，区分大小写。</label>
+                    <span id="reset-confirm2" class="form-confirm"></span>
+                    <div class="clear"></div>
+                    <div class="alert in" id="get-confirmpassword-notice" style="display:none;">
+                        <button type="button" class="close" onclick="$('#get-confirmpassword-notice').hide();" >&times;</button>
+                        <span>两次输入的密码不一致</span><!-- 验证邮箱相关提示 -->
+                    </div>  
+                    <input type="hidden" name="act" value="act_edit_password" />
+                    <input type="hidden" name="uid" value="{$uid}" />
+                    <input type="hidden" name="code" value="{$code}" />
+                    <button type="submit" name="submit" class="btn-zondy reset-submit">{$lang.confirm_submit}</button>
+                  </fieldset>
+                </form>
+            </div>
+            <script type="text/javascript">
+            {foreach from=$lang.password_js item=item key=key}
+              var {$key} = "{$item}";
+            {/foreach}
+            </script>
+            <!--{/if}-->
+            <!--#找回密码界面 end-->
+
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        </div>
+
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,jquery.cookie.js,bootstrap.min.js,g-common.js,jquery.enplaceholder.js'} -->
+        <script>
+            $(function(){
+                $("input:text").val("");
+                var process_request = "{$lang.process_request}";
+                {foreach from=$lang.passport_js item=item key=key}
+                var {$key} = "{$item}";
+                {/foreach}
+                var username_exist = "{$lang.username_exist}";
+
+                var login_notice = $("#login-notice");
+                var login_username_notice = $("#login-username-notice");
+                var login_password_notice = $("#login-password-notice");
+                var register_notice = $("#register-notice");
+                var register_username_notice = $("#register-username-notice");
+                var register_email_notice = $("#register-email-notice");
+                var register_password_notice = $("#register-password-notice");
+
+                var login_username_info = $("#login-username-info");
+                var login_password_info = $("#login-password-info");
+                var register_username_info = $("#register-username-info");
+                var register_email_info = $("#register-email-info");
+                var register_password_info = $("#register-password-info");
+                var get_username_info = $("#get-username-info");
+                var get_email_info = $("#get-email-info");
+                var reset_password1_info = $("#reset-password1-info");
+                var reset_password2_info = $("#reset-password2-info");
+
+                var register_username_confirm = $("#register-username-confirm");
+                var register_email_confirm = $("#register-email-confirm");
+                var register_password_confirm = $("#register-password-confirm");
+
+                var supportPlaceholder = 'placeholder' in document.createElement('input');
+                var emailCouldSubmit = false;//判断是否可以提交
+                var usernameCouldSubmit = false;
+                var passwordCouldSubmit = false;
+                var agreementCouldSubmit = true;
+                var ShowMessage=false;
+                var sendEmailForm=false;
+                var username_auto='';
+                var COOKIE_USERNAME = 'gs_username';
+
+                function init() {
+                    //绑定页面事件
+
+                    if($("input.get-username").val()!=''){
+                        $("input.get-username").siblings('.label-placeholder').hide();
+                    }
+                    if($("input.get-email").val()!=''){
+                        $("input.get-email").siblings('.label-placeholder').hide();
+                        $("#get-email-info").hide();
+                    }
+                    $('.changeimg').on('click',function(){
+                        $('.validate-img').find('img').click();
+                    });
+
+                    $(".login-submit").on("click", function(){chkLogin();});
+                    $(".register-submit").on("click",function(){chkRegister()});
+
+                    $(".label-placeholder").on("click",function(){
+                        $(this).prev('input').focus();
+                    });
+
+                    $('.get-submit').on('click',function(){
+                        if(sendEmailForm==false){
+                            chkEmailValidate();
+                            return false;
+                        }
+                        else{
+                            send_mail();
+                            return true;
+                        }
+                        
+
+                    });
+
+                    $('.reset-submit').on('click',function(){
+                        return check_resetpassword();
+                    });
+
+                    $('.validate').on('focus',function(){
+                        $('#get-validate-notice').hide();
+                    })
+                    $('.get-email').on('focus',function(){
+                        $('#get-email-notice').hide();
+                    })
+
+                    $('.reset-password1').on('focus',function(){
+                        $('#get-resetpassword-notice').hide();
+                    }).on('blur',function(){
+                        resetpassword();
+                    });
+
+                    $('.reset-password2').on('focus',function(){
+                        $('#get-confirmpassword-notice').hide();
+                    }).on('blur',function(){
+                        confirmpassword();
+                    })
+
+                    $("input").on("focus",function(){    
+                        if ($(this).val() =='') {
+                            $(this).next('.label-placeholder').css('color','#ccc');
+                        }
+                    }).on("blur",function(){
+                        if ($(this).val() == '') {
+                             $(this).next('.label-placeholder').show();
+                             $(this).next('.label-placeholder').css('color','#999');
+                        }          
+                    }).on("input propertychange",function(){
+                        if ($(this).val() == ''){
+                            $(this).next('.label-placeholder').show();
+                        } else {
+                            $(this).next('.label-placeholder').hide();
+                        }
+                    });
+
+                    $(".login-username").on("blur",function(){
+                        //login_username_info.hide();
+        
+                    }).on("focus",function(){
+                        login_username_notice.hide();
+                        //login_username_info.show();
+                    }).on("keyup",function(e){
+                        if (e.keyCode == 13) {
+                            $(".login-password").focus();
+                        }
+                    });
+
+                    $(".login-password").on("blur",function(){
+                        //login_password_info.hide();
+
+                    }).on("focus",function(){
+                        login_password_notice.hide();
+                        //login_password_info.show();
+                    }).on("keyup",function(e){
+                        if (e.keyCode == 13) {
+                            return chkLogin();
+                        }
+                    });
+
+                    $(".register-email").on("blur",function(){
+                        if (!supportPlaceholder && ($(this).val() == '' || $(this).val() == $(this).attr('placeholder'))) {
+                            checkEmail('');
+                        } else {
+                            checkEmail($(this).val());
+                        }
+                        register_email_info.hide();
+
+                    }).on("focus",function(){
+                        register_email_notice.hide();
+                        register_email_confirm.hide();
+                        register_email_info.show();
+                    }).on("keyup",function(e){
+                        if (e.keyCode == 13) {
+                            $(".register-username").focus();
+                        }
+                    });
+
+                    $(".register-username").on("blur",function(){
+                        is_registered($(this).val());
+                        register_username_info.hide();
+                    }).on("focus",function(){
+                        register_username_notice.hide();
+                        register_username_confirm.hide();
+                        register_username_info.show();
+                    }).on("keyup",function(e){
+                        if (e.keyCode == 13) {
+                            $(".register-password").focus();
+                        }
+                    });
+
+                    $(".register-password").on("blur",function(){
+                        ShowMessage=true;
+                        check_password($(this).val()); 
+                        register_password_info.hide();
+
+                    }).on("focus",function(){
+                        register_password_notice.hide();
+                        register_password_confirm.hide();
+                        register_password_info.show();
+                    }).on("keyup",function(e){
+                        check_password($(this).val()); 
+                        if (e.keyCode == 13) {
+                            chkRegister();
+                        }
+                    });
+
+                    $(".register-password").on("focus",function(){
+                        register_password_notice.hide();
+
+                    })
+                  
+                    $(".register-agreement").on("change", function(){
+                        agreementCouldSubmit = ($(this).attr("checked") == "checked") ? true : false;
+                    });
+
+                    $(".get-username").on("blur",function(){
+                        get_username_info.hide();
+
+                    }).on("focus",function(){
+                        get_username_info.show();
+                    });
+
+                    $(".get-email").on("blur",function(){
+
+                        get_email_info.hide();
+
+                    }).on("focus",function(){
+                        var email=$('.get-email').val();
+                        if(email !=''){
+                            $("#get-email-info").hide();
+                        }
+                        else{
+                            get_email_info.show();
+                        }
+                    }).on("propertychange",function(){
+                        var email=$('.get-email').val();
+                        if(email !=''){
+                            $("#get-email-info").hide();
+                        }
+                        else{
+                            get_email_info.show();
+                        }
+                    }).on("keyup",function(){
+                        var email=$('.get-email').val();
+                        if(email !=''){
+                            $("#get-email-info").hide();
+                        }
+                        else{
+                            get_email_info.show();
+                        }
+                    });
+
+                    $(".reset-password1").on("blur",function(){
+                        reset_password1_info.hide();
+
+                    }).on("focus",function(){
+                        reset_password1_info.show();
+                    });
+
+                    $(".reset-password2").on("blur",function(){
+                        reset_password2_info.hide();
+
+                    }).on("focus",function(){
+                        reset_password2_info.show();
+                    });
+
+                    $("input")[0].focus();
+
+                    var username=$.cookie(COOKIE_USERNAME);
+                    if(username != null){
+                        $('.login-username').val(username);
+                        $(".login-username").next('.label-placeholder').hide();
+                        $(".login-password").focus();
+                    }
+                    
+                };
+
+
+                function chkLogin () {
+                    var login_username = $(".login-username");
+                    var login_password = $(".login-password");
+                    var login_remember = $("#remember");
+                    var username_value = "";
+                    var password_value = "";
+                    var remember_value = login_remember.attr("checked") ? true : false;
+                    var submit_disabled = false;
+
+                    username_value = login_username.val();
+                    password_value = login_password.val();
+                    
+                    if ( username_value == '' )
+                    {
+                        login_username_notice.find('span').html('请填写您的用户名');
+                        login_username_notice.show();
+                        submit_disabled = true;
+                    }
+
+                    if ( password_value == '' )
+                    {
+                        login_password_notice.find('span').html('请填写您的密码');
+                        login_password_notice.show();
+                        submit_disabled = true;
+                    }
+
+                    if ( submit_disabled )
+                    {   
+                        return false;
+                    }
+                    login_notice.find('span').html('登录中...');
+                    login_notice.removeClass('alert-error').show();
+
+
+                    $.post('user.php?act=uc_login', {
+                        username: username_value,
+                        password: password_value,
+                        remember:remember_value
+                    },check_login_callback); 
+
+                };
+
+                function check_login_callback (result) {
+                    var json = $.parseJSON(result);
+                    if (!json.error) {
+                        if(json.redirect && json.redirect_url){
+                            window.location.href=json.redirect_url;
+                            return false;
+                        }
+                        else{
+                            $('head').append(json.content);
+                            username_auto=$('.login-username').val();
+                            var link='{$back_act}';
+                            $('body').append("<script>location.href = '{$back_act}';</scr" + "ipt>");
+                        }
+                    } else if (json.error == 1) {
+                        login_notice.find('span').html(json.content);
+                        login_notice.addClass('alert-error').show();
+                    }
+                };
+
+                function chkRegister() {
+                    if (!emailCouldSubmit || !passwordCouldSubmit || !usernameCouldSubmit) {
+                        return false;
+                    }
+                    var register_username = $(".register-username");
+                    var register_password = $(".register-password");
+                    var register_email = $(".register-email");
+                    var username_value = "";
+                    var password_value = "";
+                    var email_value = "";
+                    var agreement_value = agreementCouldSubmit ? "true" : "";
+
+                    username_value = register_username.val();
+                    password_value = register_password.val();
+                    email_value = register_email.val();
+
+                    $.post('user.php?act=ajax_register', {
+                        username: username_value,
+                        password: password_value,
+                        email: email_value,
+                        agreement: agreement_value
+                    },ajax_register_callback, "TEXT");
+                };
+
+                function ajax_register_callback (result) {
+                    var json = $.parseJSON(result);
+                    if (!json.error) {
+                        //if(json.email_validate){
+                         //   if(!json.send_validate_mail){
+                         //       send_validate_mail();
+                          //  }                           
+                        //    window.location.href='user.php?act=email_validate';
+
+                        //}
+                       // else{
+                            $('body').append(json.ucdata);
+                            $('body').append("<script>location.href = '{$back_act}';</scr" + "ipt>");  
+                       // }
+           
+                    } else if (json.error == 1) {
+                        register_notice.find('span').html(json.content);
+                        register_notice.addClass('alert-error').show();
+                    }
+                };
+
+                function is_registered (username) {
+                    
+                    var unlen = username.replace(/[^\x00-\xff]/g, "**").length;
+
+                    if ( username == '' )
+                    {   
+
+                        register_username_notice.find('span').html(msg_un_blank);
+                        register_username_notice.show();
+                        register_username_confirm.hide();
+                        var submit_disabled = true;
+                    } else if ( !chkstr( username ) )
+                    {   
+                        register_username_notice.find('span').html(msg_un_format);
+                        register_username_notice.show();
+                        register_username_confirm.hide();
+                        var submit_disabled = true;
+                    } 
+                   else if ( unlen < 4 )
+                    { 
+                        register_username_notice.find('span').html(username_shorter);
+                        register_username_notice.show();
+                        register_username_confirm.hide();
+                        var submit_disabled = true;
+                    } 
+                    else if ( unlen > 14 )
+                    {
+                        register_username_notice.find('span').html(msg_un_length);
+                        register_username_notice.show();
+                        register_username_confirm.hide();
+                        var submit_disabled = true;
+
+                    }
+
+                    if ( submit_disabled )
+                    {
+                        usernameCouldSubmit = false;
+                        chkSubmit();
+                        return false;
+                    }
+
+                    $.get('user.php?act=is_registered', {username: username},registed_callback, "TEXT");
+                };
+
+                function registed_callback(result)
+                {
+                    result=$.trim(result);
+                    if ( result == "false" )
+                    {
+                        usernameCouldSubmit = true;
+                        chkSubmit();
+                        register_username_confirm.css('display','inline-block');
+                    }
+                    else
+                    {
+
+                        register_username_notice.find('span').html(msg_un_registered);
+                        register_username_notice.show();
+                        usernameCouldSubmit = false;
+                        chkSubmit();
+                        register_username_confirm.hide();
+                    }
+                }
+
+                function checkEmail(email)
+                {
+                    var submit_disabled = false;
+
+                    if (email == '')
+                    {
+                        register_email_notice.find('span').html(msg_email_blank);
+                        register_email_notice.show();
+                        submit_disabled = true;
+                    }
+
+                    else if (!Utils.isEmail(email))
+                    {
+                        register_email_notice.find('span').html(msg_email_format);
+                        register_email_notice.show();
+                        submit_disabled = true;
+                    }
+
+                    if( submit_disabled )
+                    {
+                        emailCouldSubmit = false;
+                        chkSubmit();
+                        return false;
+                    }
+
+                    $.get('user.php?act=check_email', {email: email},check_email_callback, "TEXT");
+
+                };
+
+                function check_email_callback(result)
+                {
+                    result=$.trim(result);
+                    if ( result == 'false' )
+                    {
+                        emailCouldSubmit = true;
+                        chkSubmit();
+                        register_email_confirm.css('display','inline-block');                    
+                    }
+                    else
+                    {   
+                        register_email_notice.find('span').html(msg_email_registered);
+                        register_email_notice.show();
+                        emailCouldSubmit = false;
+                        chkSubmit();
+                        register_email_confirm.hide();
+                    }
+                }
+
+                function check_password( password )
+                {
+
+                    if ( password.length < 6 )
+                    {   
+
+                        if(ShowMessage){ 
+                        register_password_notice.find('span').html(password_shorter);
+                        register_password_notice.show();
+                        }
+                        register_password_confirm.hide();
+                        passwordCouldSubmit = false;
+                        chkSubmit();
+                       
+                    }
+                    else
+                    { 
+                        register_password_confirm.css('display','inline-block');
+                        register_password_notice.hide();
+                        passwordCouldSubmit = true;
+                        chkSubmit();
+                    }
+                    
+                    ShowMessage=false;
+                }
+
+                function chkSubmit(){
+                    if (passwordCouldSubmit && emailCouldSubmit && usernameCouldSubmit) {
+                        $('.register-submit').removeClass('disabled').removeAttr('disabled','disabled');
+                    } else {
+                        $('.btn-zondy').addClass('disabled').attr('disabled','disabled');
+                    }
+                };
+
+
+                function chkstr(str) {
+                    for (var i = 0; i < str.length; i++)
+                    {
+                    if (str.charCodeAt(i) < 127 && !str.substr(i,1).match(/^\w+$/ig))
+                    {
+                    return false;
+                    }
+                    }
+                    return true;
+                };
+
+                function chkEmailValidate(){
+                    var email=$('.get-email').val();
+                    var validate=$('.validate').val();
+                    var act='check_email_validate';
+                    if(check_get_email(email)&&validate!=null)
+                    {
+                            $('.get-submit').addClass('disabled');
+                            $('.get-submit').html('邮件发送中...');
+                            $.post('user.php?act=send_pwd_email', {
+                            user_email: email,
+                            captcha: validate,
+                            type: act
+                        },chkEmailValidate_callback, "TEXT");
+                    }
+
+                }
+
+                function chkEmailValidate_callback(result){
+                    var json = $.parseJSON(result);
+                    if(json.validate==false){
+                        $('#get-validate-notice').show();
+                        $('#get-validate-notice').find('span').html('验证码错误');
+                    }
+                    else if(json.email_right==false){
+                       $('#get-email-notice').show();
+                       $('#get-email-notice').find('span').html('此邮箱不存在');
+                    }
+
+
+                    if(json.email_right && json.validate){
+                        sendEmailForm=true;
+                        $('.get-submit').click();
+                    }
+                    else{
+                        sendEmailForm=false;
+                        $('.validate-img').find('img').click();
+                        $('.get-submit').removeClass('disabled');
+                        $('.get-submit').html('发送重置密码地址');
+                    }
+
+                }
+
+                function check_get_email(email){
+                    if (email == '')
+                    {
+                       $('#get-email-notice').show();
+                       $('#get-email-notice').find('span').html('邮箱不能为空');
+                        return false;
+                    }
+
+                    else if (!Utils.isEmail(email))
+                    {
+                       $('#get-email-notice').show();
+                       $('#get-email-notice').find('span').html('邮箱格式错误');
+                        return false;
+                    }
+                    else{
+                        $("get-email-info").hide();
+                        return true;
+                    }
+                }
+
+                function send_mail(){
+                    var act="send_pwd_email";
+                    var email=$('.get-email').val();
+                        $.post('user.php?act=send_pwd_email', {
+                            user_email: email,
+                            type:act
+                        },"TEXT");
+                }
+                function send_validate_mail(){
+                    var act='validate';
+                    $.post('user.php?act=email_validate', {
+                            type:act
+                        },"TEXT");
+                }
+                function resetpassword(){
+                    var new_password=$('.reset-password1').val();
+                    if(new_password.length < 6 || new_password.length >14){
+                        $("#get-resetpassword-notice").show();
+                        $("#reset-confirm1").hide();
+                        return false;
+                    }
+                    else{
+                        $("#get-resetpassword-notice").hide();
+                        $("#reset-confirm1").css('display','inline-block');
+                        return true;
+                    }
+                }
+                function confirmpassword(){
+                    var new_password=$('.reset-password1').val();
+                    var confirm_password=$('.reset-password2').val();
+                    if(new_password != confirm_password){
+                        $("#get-confirmpassword-notice").show();
+                        $("#reset-confirm2").hide();
+                        return false;
+                    }
+                    else{
+                        $("#get-confirmpassword-notice").hide();
+                        if(resetpassword()){
+                            $("#reset-confirm2").css('display','inline-block');
+                        }
+                        return true;
+                    }
+                }
+
+                function check_resetpassword(){
+                    if(resetpassword() && confirmpassword()){
+                        return true;
+                    }
+                    else return false;
+                }
+
+                init();
+
+            });
+        </script>
+    </body>
+</html>

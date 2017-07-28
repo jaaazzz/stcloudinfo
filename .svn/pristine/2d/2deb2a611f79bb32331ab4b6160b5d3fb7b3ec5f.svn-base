@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>软件中心_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/category.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="category-top clearfix">
+                <ul>
+                    <!--<li class="col-sm {if !$id}active{/if}"><a href="{$current_url}">全部</a></li>-->
+                    <li class="col-sm {if $id eq 2}active{/if}"><a href="{$current_url}?id=2">桌面产品</a></li>
+                    <!--<li class="col-sm {if $id eq 3}active{/if}"><a href="{$current_url}?id=3">web产品</a></li>-->
+                </ul>
+                <div class="nav-search col-rm">
+                    <form id="search-form" class="navbar-search  pull-right" onsubmit="return search_check();" action="sfw.php?do=category">
+                        <span class="search-btn  pull-right" style="margin-left: 224px;background: url(../images/search.png) no-repeat;" onclick="if (search_check()){document.getElementById(&quot;search-form&quot;).submit()}"></span>
+                        <input type="text" name="keywords" id="keywords"
+                              style="float: right;width: 235px;border: 1px solid #d6d6d6;font-size:12px;" placeholder="搜索软件产品" {if $key}value="{$key}"{/if}>
+                        <div class="search-div"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="category-body clearfix">
+                <!-- {if $goods_arr }  -->
+                <!-- {foreach from=$goods_arr item=item key=key name=goods_arr} -->
+                <div class="list col-sm {if $smarty.foreach.goods_arr.index % 4 == 0}first-child{/if}">
+                    <div class="goods-img zoom">
+                        <a href="sfw.php?do=goods&id={$item.goods_id}">
+                            <img src="{if $item.goods_img}{$item.goods_img}{else}./images/app_01.png{/if}">
+                        </a>
+                    </div>
+                    <div class="goods-info clearfix">
+                        <div class="goods-name col-sm name-tooltip" data-toggle="tooltip" data-original-title="{$item.name|escape:html}">
+                            <a href="sfw.php?do=goods&id={$item.goods_id}">
+                            <script>
+                                util.cutEllipsis(true,".list","{$item.name|escape:html}");
+                            </script>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="goods-opr">
+                        <!-- {if $item.is_collection }  -->
+                        <a href="javascript:;" onclick="cancle_collection('{$item.is_collection}','{$item.goods_id}','soft',event)" class="collection">{$item.count}</a>
+                        <!-- {else} -->
+                        <a href="javascript:;" onclick="add_collection('{$item.goods_id}','soft',event)" class="no-collection">{$item.count}</a>
+                        <!-- {/if} -->
+                    </div>
+                </div>
+                <!-- {/foreach} -->
+                <!-- {else} -->
+                <div class="tip-content">
+                    <!-- {if $key }  -->
+                    <div class="tip-content-text-2">抱歉，没有找到{$key}相关的产品，建议您重新设置搜索关键字</div>
+                    <!-- {else} -->
+                    <div class="tip-content-text">
+                        <div class="text-1">空空如也～</div>
+                        <div class="text-2">一大波软件正在上架,敬请期待...</div>
+                    </div>
+                    <img src="themes/appcloud/images/no_product_img.png">
+                    <!-- {/if} -->
+                </div>
+                        
+                <!-- {/if} -->
+            </div>
+            <div id="pageId">
+            </div>
+            <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+        </div>
+
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript">
+        $(function(){
+            /* 分页 begin */
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        return "{$p_url}p="+n;
+                    }
+                })            
+            }
+            /* 分页 end */
+        })
+    </script>
+    <script type="text/javascript" src="js/index.js"></script>
+</html>

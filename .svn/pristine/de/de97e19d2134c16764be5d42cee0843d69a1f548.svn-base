@@ -1,0 +1,20 @@
+{
+    "layersProp":[
+        {"name":"美食","firstClass":"01","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"name":"汽车","firstClass":"02","url":"./themes/appcloud/onlinesrc/images/汽车.png"},
+        {"name":"运动","firstClass":"03","url":"./themes/appcloud/onlinesrc/images/运动.png"},
+        {"name":"小区","firstClass":"04","url":"./themes/appcloud/onlinesrc/images/小区.png"},
+        {"name":"购物","firstClass":"05","url":"./themes/appcloud/onlinesrc/images/购物.png"},
+        {"name":"生活","firstClass":"06","url":"./themes/appcloud/onlinesrc/images/生活.png"},
+        {"name":"医疗","firstClass":"07","url":"./themes/appcloud/onlinesrc/images/医疗.png"},
+        {"name":"酒店","firstClass":"08","url":"./themes/appcloud/onlinesrc/images/酒店.png"},
+        {"name":"景点","firstClass":"09","url":"./themes/appcloud/onlinesrc/images/景点.png"},
+        {"name":"政府","firstClass":"10","url":"./themes/appcloud/onlinesrc/images/政府.png"},
+        {"name":"教育","firstClass":"11","url":"./themes/appcloud/onlinesrc/images/教育.png"},
+        {"name":"交通","firstClass":"12","url":"./themes/appcloud/onlinesrc/images/交通.png"},
+        {"name":"金融","firstClass":"13","url":"./themes/appcloud/onlinesrc/images/金融.png"},
+        {"name":"地名","firstClass":"14","url":"./themes/appcloud/onlinesrc/images/地名.png"},
+        {"name":"公司","firstClass":"15","url":"./themes/appcloud/onlinesrc/images/公司.png"},
+        {"name":"公共","firstClass":"16","url":"./themes/appcloud/onlinesrc/images/公共.png"}
+    ]
+}

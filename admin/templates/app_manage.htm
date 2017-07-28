@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>应用管理</title>
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <link href="js/sweetalert.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/sweetalert.min.js"></script>
+    <style type="text/css">
+        .modal-body table tr td{
+            padding: 3px;
+        }
+
+    </style>
+    <script type="text/javascript">
+        var app_id=0;
+        var app_name='';
+        $(function(){
+            var url = '{$current_url}' + '?app_name=' + $("input[name='app_name']").val()
+                    +'&categ=' + $("select[name='categ']").val() + "&status="
+                    +$("select[name='status']").val() ;
+            //初始化分页
+            var pObj=new pageObj({$total_page},{$page},'{$current_url}',{$size},{$count});
+            pObj.initPagination();
+
+            $(".tool_btn.add_user").click(function(){
+                $(".modal_background,.modal_box").show();
+            });
+
+            $('.btn_search').on('click',function(){
+                var search_url =  '{$current_url}' + '?app_name=' + $("input[name='app_name']").val()
+                        +'&categ=' + $("select[name='categ']").val() + "&status="
+                        +$("select[name='status']").val() ;
+                window.location.href = search_url;
+
+            });
+
+            $('.down_product').on('click',function(){
+                batch_product('0');
+            });
+            $('.up_product').on('click',function(){
+                batch_product('1');
+            });
+            $(".modal_btn.sure").click(function () {
+                $.post('app_manage.php',{act:'delete_app',id:app_id,name:app_name},function (res) {
+                    if(res=='ok'){
+                        swal({
+                            title: '删除成功',
+                            text: "",
+                            type: "success",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        app_id=0;
+                        app_name='';
+                        location.reload();
+                    }else{
+                        res=res.length>100?'删除失败':res;
+                        swal({
+                            title: res,
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+
+                    }
+                });
+            })
+
+
+        });
+
+
+        function batch_product(status){
+            if($(this).hasClass('disalbe')){
+                return;
+            }
+            var del_arr=[];
+            $(".app_table tbody input[type=checkbox]:checked").each(function(){
+                del_arr.push($(this).attr('data_id'));
+            });
+            var id = del_arr.join(',');
+            $.ajax({
+                url:"app_manage.php?act=batch_oper&good_id="+id+"&status="+status,
+                type:'get',
+                success:function(data){
+                    //data = JSON.parse(data);
+                    if(data=='ok'){
+                        //alert('操作成功');
+                        window.location.reload();
+                    }
+                    else{
+                        swal({
+                            title: '操作失败',
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                    }
+                }
+            });
+        }
+
+        function product_ajax(id, status, name){
+            $.ajax({
+                url:"app_manage.php?act=oper&good_id="+id+"&status="+status+"&name=" + name,
+                type:'get',
+                success:function(data){
+                    data = JSON.parse(data);
+                    if(data.success){
+                        //alert('操作成功');
+                        window.location.reload();
+                    }
+                    else{
+                        swal({
+                            title: '操作失败',
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                    }
+                }
+            });
+        }
+        function console_app_host(id){
+            $.ajax({
+                url:"app_manage.php?act=console&app_id="+id,
+                type:'get',
+                success:function(data){
+                    result = JSON.parse(data);
+                    if(result.status==403)
+                    {
+                        //GucLogin();
+                    }
+                    else if(result.status==200)
+                    {
+                        window.location.href=result.content.url;
+                    }else
+                    {
+                        //$.DialogBySHF.Alert({ Width: 350, Height: 200, Title:result.tip , Content: result.content.text });
+                    }
+                }
+            });
+        }
+        function delete_app(id,name) {
+            app_id=id;
+            app_name=name;
+            $(".modal_background.app_bg,.modal_box.app").show();
+        }
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container">
+    <div class="page_title">
+        应用管理
+    </div>
+    <div class="page_content">
+        <div class="table_search">
+            <div class="search_title"></div>
+            <div><span>应用名称：</span><input type="text"  name="app_name" value="{$app_name}"/></div>
+            <div><span>分类</span>
+                <select name="categ">
+                    <option value="">全部</option>
+                    {foreach from=$param.cate_list item=cate}
+                        <option {if $cate.id eq $param.categ}selected{/if} value="{$cate.id}">{$cate.name}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div style="display:none;"><span>软件</span><input  name="logmodle" value="{$logmodle}" /></div>
+            <div><span>状态</span>
+                <select name="status">
+                    {foreach from=$param.status_list item=status key=key}
+                    <option {if $key eq $param.app_status}selected{/if} value="{$key}">{$status}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="btn_search" style=""><a>查询</a></div>
+        </div>
+        <div class="table_tools" style="">
+            <a class="tool_btn down_product delete disalbe">下架</a>
+            <a class="tool_btn up_product delete disalbe">上架</a>
+        </div>
+        <div style="clear: both;"></div>
+        <table class="app_table">
+            <thead>
+            <tr>
+                <th width="18%"><input type="checkbox"  class="head_check"/>应用名称</th>
+                <th width="10%">分类</th>
+                <th width="18%">软件</th>
+                <th width="10%">发布者</th>
+                <th width="7%">收藏量</th>
+                <th width="12%">状态</th>
+                <th width="15%">云主机</th>
+                <th width="10%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach from=$app_list item=app}
+            <tr style="height: 70px">
+                <td><input type="checkbox" data_id="{$app.id}"/>{$app.name}</td>
+                <td>{$app.cartgroy}</td>
+                <td>{$app.good_name}</td>
+                <td>{$app.user_name}</td>
+                <td>{$app.number}</td>
+                <td>
+                    {$app.status_name}
+                </td>
+                <td>
+                    {if $app.cloud_name eq ''}
+                    无
+                    {else}
+                    <span  onclick="console_app_host('{$app.host_id}')">{$app.cloud_name}</span>
+
+                    {/if}
+                </td>
+
+                <td>
+                    {if $app.status eq 3 }
+                    {if $app.sale_status eq 0}
+                    <a onclick="product_ajax('{$app.id}',1,'{$app.name}')">上架</a>
+                    {else}
+                    <a onclick="product_ajax('{$app.id}',0,'{$app.name}')">下架</a>
+                    {/if}
+                    {/if}
+                    <a style="margin-left: 5px" onclick="delete_app('{$app.id}','{$app.name}')">删除</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <!-- 分页列表 begin-->
+        <div class="page_statics"></div>
+        <div class="pagination pagination-centered">
+            <ul>
+                <li><a href="javascript:void(0);">上一页</a></li>
+                <li><a href="javascript:void(0);">下一页</a></li>
+            </ul>
+        </div>
+        <!-- 分页列表 end-->
+    </div>
+</div>
+
+<div class="modal_background app_bg">
+
+    <div class="modal_box app" style="width: 450px;height: 210px; ">
+        <div class="modal-header">
+            <span class="title-word">提示</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body" style="padding-top: 30px !important;">
+            确定要删除该应用吗?
+            <div class="error_tip"></div>
+            <div class="modal_btns">
+                <a class="modal_btn sure">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

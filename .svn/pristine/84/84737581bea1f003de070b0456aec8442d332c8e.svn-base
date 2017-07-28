@@ -1,0 +1,11 @@
+{
+    "layersProp":[
+        {"name":"KBUIPT433100","value":"0","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"name":"KINTPT433100","value":"1","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"name":"KLANPT433100","value":"2","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"name":"KREGPT433100","value":"3","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"name":"KRESPT433100","value":"4","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"name":"KSTRPT433100","value":"5","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"name":"uadb","value":"6","url":"./themes/appcloud/onlinesrc/images/美食.png"}
+    ]
+}

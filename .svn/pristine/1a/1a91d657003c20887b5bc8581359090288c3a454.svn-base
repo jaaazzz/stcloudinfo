@@ -1,0 +1,423 @@
+
+function Addmarker() {
+    alert(1);
+            removeMaker();
+            if (!vectorLayer) {
+                vectorLayer = new ol.layer.Vector({
+                    source: vectorSource
+                });
+                map.addLayer(vectorLayer);
+            }
+            map.on('click', clickpopup);
+        }
+//专题图层
+// function initDocLayerGroup(){
+// $.ajax({
+//         url: 'themes/appcloud/onlinesrc/wms.json',
+//         type:"POST",
+//         data:{},
+//         dataType:"json",
+//         success:function(data){
+//             docVectLayerArr=new Array();
+//             var theme = '';
+//             $(data).each(function(i,item){
+//                 var text=item.text;
+//                 var type=item.type;
+//                 var lx=item.lx;
+//                 var children=item.children;
+//                 theme +=  "<div class='accordion-group' style='overflow: hidden;'><div class='accordion-heading'><a class='accordion-toggle theme-option'  data-toggle='collapse' data-parent='#accordion2' href='#collapse"+i+"'>"+text+"</a></div><div id='collapse"+i+"' class='accordion-body collapse' style='height: 0px;'><div class='accordion-inner'><div class='checkbox'>";
+//                 $(children).each(function(j,jtem){
+//                     var layer=jtem.layer;
+//                     var type=jtem.type;
+//                     var text= jtem.layer;
+//                      theme += "<label><input type='checkbox' onchange='addDocLayer(\""+layer+"\",this)'>"+layer+"</label><br/>";
+//                     var mapDocLayer = new Zondy.Map.Doc(text, layer, {
+//                         //IP地址
+//                         ip: ip,
+//                         //端口号
+//                         port: port
+//                     });
+//                     docVectLayerArr.push(mapDocLayer);
+//                 });
+//                 theme +=  "</div></div></div></div>";
+//             });
+//             $('#accordion2').html(theme);
+//         },
+//         error:function(e){
+            
+//         }
+        
+// });
+// }
+
+function initDocLayerGroup(){
+    $('#themeTree').tree({
+        url: 'themes/appcloud/onlinesrc/theme.json',
+        onLoadSuccess: function (node, param) {
+            $(this).find("span.tree-checkbox").unbind().click(function () {
+                $("#themeTree").tree("select",$(this).parent());
+                return false;
+            });
+            var n = $('#themeTree').tree("getChildren");
+            for(var i=0;i<n.length;i++){
+                if(n[i].type==1){
+                    var mapDocLayer = new Zondy.Map.Doc(n[i].text, n[i].layer, {
+                        //IP地址
+                        ip: ip,
+                        //端口号
+                        port: port
+                    });
+                    docVectLayerArr.push(mapDocLayer);
+                }
+            }
+        },
+        onSelect: function (node) {
+            // var flag=isFile(node);
+            // if(flag==true){//选中的是叶子节点或者是最底级文件夹
+
+            // }else{
+
+            // }
+            checkNode(node);
+            // var n = $('#themeTree').tree("getRoot", node.target);
+            // //$('#themeTree').tree("uncheck", n.target);
+            // if (node.type == 1) {//选择的是最子节点数据层
+            //     if (node.checked == true) {
+            //         $('#themeTree').tree("uncheck", node.target);
+            //         addDocLayer(node.layer,false);
+            //     } else {
+            //         $('#themeTree').tree("check", node.target);
+            //         addDocLayer(node.layer,true);
+            //     }
+            // } else {
+            //     var childnodes = $('#themeTree').tree("getChildren", node.target);
+            //     if (childnodes.length == 1) {
+            //         if (node.checked == true) {
+            //             $('#themeTree').tree("uncheck", node.target);
+            //             addDocLayer(node.layer,false);
+            //         } else {
+            //             $('#themeTree').tree("check", node.target);
+            //             addDocLayer(node.layer,true);
+            //         }
+            //     } else {
+            //         if (node.checked == false) {
+            //             alert("只允许选择单个图层");
+            //         }
+            //     }
+            // }
+        },
+        onCheck: function (node, checked) {
+
+        }
+    });
+}   
+function checkNode(node){
+    var pNode=$('#themeTree').tree("getParent", node.target);
+    var f=$('#themeTree').tree("isLeaf", node.target);
+    var checkedNode = $('#themeTree').tree("getChecked");
+    if(f==true){//叶子节点
+         var tmp=false;
+         var pNode=$('#themeTree').tree("getParent", node.target);
+         var pid=pNode.id;
+         for(var k=0;k<checkedNode.length;k++){
+            var pp=$('#themeTree').tree("isLeaf", checkedNode[k].target);
+            if(pp==true){
+                var parentNode=$('#themeTree').tree("getParent", checkedNode[k].target);
+                //var a=$('#themeTree').tree("isLeaf", checkedNode[k].target);
+                var id=parentNode.id;
+                if(pid!=id){
+                    tmp=true;
+                }
+            }
+         }
+         if(tmp==false){
+            if (node.checked == true) {
+                $('#themeTree').tree("uncheck", node.target);
+                checkDocLayer(node);
+            }else{
+                $('#themeTree').tree("check", node.target);
+                checkDocLayer(node);
+            }
+         }else{
+            for(var m=0;m<checkedNode.length;m++){
+                $('#themeTree').tree("uncheck", checkedNode[m].target);
+                checkDocLayer(checkedNode[m]);
+            }
+            if (node.checked == true) {
+                $('#themeTree').tree("uncheck", node.target);
+                checkDocLayer(node);
+            }else{
+                $('#themeTree').tree("check", node.target);
+                checkDocLayer(node);
+            }
+         }
+    }else{//非叶子节点
+        var flag=true;
+        var n = $('#themeTree').tree("getChildren", node.target);
+        for(var i=0;i<n.length;i++){
+            var z=$('#themeTree').tree("isLeaf", n[i].target);
+            if(z==false){
+                flag=false;
+            }
+        }
+        if(flag==true){//是最底级文件夹
+            if (node.checked == true) {
+                $('#themeTree').tree("uncheck", node.target);
+                checkDocLayer(node);
+            }else{
+                for(var m=0;m<checkedNode.length;m++){
+                    $('#themeTree').tree("uncheck", checkedNode[m].target);
+                    checkDocLayer(checkedNode[m]);
+                }
+                $('#themeTree').tree("check", node.target);
+                checkDocLayer(node);
+            }
+        }
+    }
+}
+
+function checkDocLayer(node){
+    if(node.type==1){//数据
+        var flag=node.checked;
+        addDocLayer(node.layer,!flag);
+    }else{//底层文件夹
+        var flag=node.checked;
+        var n = $('#themeTree').tree("getChildren", node.target);
+        for(var i=0;i<n.length;i++){
+            addDocLayer(n[i].layer,!flag);
+        }
+    }
+}
+function addDocLayer(layer,checked){
+    for(var i=0;i<docVectLayerArr.length;i++){
+        if(docVectLayerArr[i].name==layer){
+            if(checked==true){
+                var flag=false;
+                var layers=map.getLayerGroup().getLayers().getArray();
+                for(var j=0;j<layers.length;j++){
+                    if(layers[j].name==layer){
+                        flag=true;
+                        break;
+                    }
+                }
+                if(flag==false){
+                    map.addLayer(docVectLayerArr[i]);
+                }
+            }else{
+                map.removeLayer(docVectLayerArr[i]);
+            }
+        }
+    }
+}
+
+//导航栏选择
+function selectColumn(item){
+    if(item==1){
+        mapCon.show();
+        swipe.hide();
+        layerDiv.show();
+        multi.hide();
+        searchbox.show();
+        defaultMapSL=data.SL;
+        defaultMapYX=data.YX;
+        var layers=map.getLayerGroup().getLayers().getArray();
+        for(var i=0;i<layers.length;i++){
+                map.removeLayer(layers[i]);
+                i=0;
+        }
+        var defaultLayer = new Zondy.Map.TileLayer(defaultMapSL, defaultMapSL, {
+            ip: ip,
+            port: port
+        });
+        map.addLayer(defaultLayer);
+        view = map.getView();
+        view.setZoom(zoom);
+        view.setCenter(center);
+        $('.theme-map').hide();
+        $('#TreeType').hide();
+        $('.theme').find('span').removeClass('choose');
+        $('.search').find('span').removeClass('choose');
+        $('.show').find('span').addClass('choose');
+        $('#tree').show();
+    }else if(item==2){
+        typeSearch();
+        $('.theme-map').hide();
+        $('.show').find('span').removeClass('choose');
+        $('.theme').find('span').removeClass('choose');
+        $('#tree').hide();
+        $('#TreeType').show();
+        $('.search').find('span').addClass('choose');  
+    }else if(item==3){
+        defaultMapSL=data.SL;
+        defaultMapYX=data.YX;
+        var layers=map.getLayerGroup().getLayers().getArray();
+        for(var i=0;i<layers.length;i++){
+                map.removeLayer(layers[i]);
+                i=0;
+        }
+        var defaultLayer = new Zondy.Map.TileLayer(defaultMapSL, defaultMapSL, {
+            ip: ip,
+            port: port
+        });
+        map.addLayer(defaultLayer);
+        view = map.getView();
+        view.setZoom(zoom);
+        view.setCenter(center);
+        initDocLayerGroup();
+        $('.theme-map').show();
+        $('.show').find('span').removeClass('choose');
+        $('.search').find('span').removeClass('choose');
+        $('#tree').hide();
+        $('#TreeType').hide();
+        $('.theme').find('span').addClass('choose');
+    }
+}
+
+//隐藏导航栏
+// $('#moveD').click(function(){
+//     // alert($('.left-box').css('left'));
+//     if($('.left-box').css('left') == '0px'){
+//         $('.left-box').css({'left':'-308px'});
+//         $('#moveD').html(">");
+//         $('#toolBars').css({
+//             width:$(window).width()-60+'px',
+//             left:'50px'
+//         });
+//         $('#mapCon').css({
+//             left:'10px'
+//         })
+//         $('#mapCon').html("");
+//         ShowMap.initMap();
+//     }else if($('.left-box').css('left') == '-308px'){
+//         $('.left-box').css({'left':'0px'});
+//         $('#moveD').html("<");
+//         $('#toolBars').css({
+//             width:'1420px',
+//             left:'370px'
+//         });
+//         $('#mapCon').css({
+//             left:'320px'
+//         })
+//         $('#mapCon').html("");
+//         ShowMap.initMap();
+//     }
+// })
+
+function jumpLevel(xarray, yarray){
+    var xmin=99999,xmax=0,ymin=99999,ymax=0;
+    for(var i in xarray){
+        if(xarray[i]<xmin){
+            xmin=xarray[i];
+        } 
+        if(xarray[i]>xmax){
+            xmax=xarray[i];
+        }
+    }
+    for(var i in yarray){
+        if(yarray[i]<ymin){
+            ymin=yarray[i];
+        } 
+        if(yarray[i]>ymax){
+            ymax=yarray[i];
+        }
+    }
+    var arr=[xmin,ymin,xmax,ymax];
+    var resolution=(xmax-ymin)/256
+    var view = map.getView();
+    view.setResolution(resolution);
+}
+/********************************调整显示级数*****************************/
+// var level_tmp = 0;//地图级数temp变量
+// var minLevel = 0;//最小居中递归级数
+// /**把当前的点居中显示
+//  * xarray : 经度数组。
+//  * yarray : 纬度数组。
+//  */
+// function jumpLevel(xarray, yarray) {
+//     var view = map.getView();
+//     var xs = 0;
+//     var ys = 0;
+//     //_MapApp.zoomTo(getMapApp().getMaxLevel());
+//     //view.setZoom(view.getMaxZoom());
+//     view.setResolution(view.getMaxResolution());
+//     //var points = _MapApp.getBoundsLatLng();
+//     var points = view.calculateExtent(map.getSize());
+//     var xy = points.toString().split(",");
+//     var minx = xy[0];
+//     var miny = xy[1];
+//     var maxx = xy[2];
+//     var maxy = xy[3];
+//     $.each(xarray, function(i, item) {
+//         xs += parseFloat(item);
+//     });
+//     $.each(yarray, function(i, item) {
+//         ys += parseFloat(item);
+//     });
+//     var n = xarray.length;
+//     var midx = xs / n;
+//     var midy = ys / n;
+//     //var level = getMapApp().getMaxLevel();
+//     //var level = view.getMaxZoom();
+//     var level=view.getMaxResolution();
+//     if (n > 0) {
+//         //_MapApp.centerAtPoint(new Point("" + midx + "," + midy + ""));
+//         view.setCenter([midx,midy]);
+//         //level_tmp = _MapApp.getZoomLevel();
+//         //level_tmp= view.getZoom();
+//         level_tmp= view.getResolution();
+//         level = getLevel(xarray, yarray, parseFloat(minx), parseFloat(maxx),
+//                 parseFloat(miny), parseFloat(maxy), level);alert(level);
+//         //_MapApp.zoomTo(parseInt(level));
+//         //view.setZoom(parseInt(level));
+//         view.setResolution(level);
+//     }
+// }
+// *
+//  * 递归获取能显示全部点列的最小地图级数
+//  * @param xarray 经度数组
+//  * @param yarray 纬度数组
+//  * @param minx   最小经度
+//  * @param maxx   最大经度
+//  * @param miny   最小纬度
+//  * @param maxy   最大纬度
+//  * @param level  地图显示级数
+//  * @returns {Number}
+ 
+// function getLevel(xarray, yarray, minx, maxx, miny, maxy, level) {
+//     for ( var i = 0; i < xarray.length; i++) {
+//         var x = xarray[i];
+//         var y = yarray[i];
+//         if (level <= minLevel) {
+//             break;
+//         }
+//         if (parseFloat(x) >= parseFloat(minx)
+//                 && parseFloat(x) <= parseFloat(maxx)
+//                 && parseFloat(y) >= parseFloat(miny)
+//                 && parseFloat(y) <= parseFloat(maxy)) {
+//             if (i == parseInt(xarray.length - 1)) {
+//                 break;
+//             }
+//         } else {
+//    //         level_tmp = parseInt(level) - 1;
+//             //_MapApp.zoomTo(level_tmp);
+//             var view = map.getView();
+//             view.setResolution(level);
+//             var ll=view.getZoom()-1;;
+//        // level_tmp=view.getZoom()-1;
+//             view.setZoom(ll);
+//             level_tmp=view.getResolution();
+//           //  view.setResolution(level_tmp);
+//             //var points = _MapApp.getBoundsLatLng();
+//             var points = view.calculateExtent(map.getSize());
+//             var xy = points.toString().split(",");
+//             var minxtmp = xy[0];
+//             var minytmp = xy[1];
+//             var maxxtmp = xy[2];
+//             var maxytmp = xy[3];
+//             getLevel(xarray, yarray, parseFloat(minxtmp), parseFloat(maxxtmp),
+//                     parseFloat(minytmp), parseFloat(maxytmp), level_tmp);
+//             break;
+//         }
+//     }
+//     return level_tmp;
+// }

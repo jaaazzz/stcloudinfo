@@ -1,0 +1,13 @@
+<select name="price-group" class="price-group"   style="display:none;">
+    <!-- {foreach from=$goods_group  item=ginfo } -->
+    <option value="{$ginfo.scaleType}">{$ginfo.groupName}</option>
+    <!-- {/foreach} -->
+</select>
+<span class="user-group-desc">
+
+</span>
+
+<script>
+$(".price-group").selectbox({  classHolder:'sbHolder4group'  });
+</script>
+

@@ -1,0 +1,154 @@
+﻿[
+            {
+                "id": "2",
+                "lx": "1",
+                "text": "生活",
+                "children": [
+                    {
+                        "id": "3",
+                        "lx": "1",
+                        "text": "兴趣点",
+                        "children": [
+                            {
+                                "id": "4",
+                                "lx": "1",
+                                "text": "永州兴趣点",
+                                "children": null,
+                                "state": "open",
+                                "layer": "永州兴趣点",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            },{
+                                "id": "5",
+                                "lx": "1",
+                                "text": "线状地物",
+                                "children": null,
+                                "state": "open",
+                                "layer": "线状地物",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            },{
+                                "id": "6",
+                                "lx": "1",
+                                "text": "待添加",
+                                "children": null,
+                                "state": "open",
+                                "layer": "待添加",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            }
+                        ],
+                        "state": "closed",
+                        "layer": null,
+                        "checked": false,
+                        "type": 0,
+                        "iconCls": null
+                    },{
+                        "id": "7",
+                        "lx": "1",
+                        "text": "待添加",
+                        "children": [
+                            {
+                                "id": "8",
+                                "lx": "1",
+                                "text": "待添加",
+                                "children": null,
+                                "state": "open",
+                                "layer": "待添加",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            },{
+                                "id": "9",
+                                "lx": "1",
+                                "text": "待添加",
+                                "children": null,
+                                "state": "open",
+                                "layer": "待添加",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            },{
+                                "id": "10",
+                                "lx": "1",
+                                "text": "待添加",
+                                "children": null,
+                                "state": "open",
+                                "layer": "待添加",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            }
+                        ],
+                        "state": "closed",
+                        "layer": null,
+                        "checked": false,
+                        "type": 0,
+                        "iconCls": null
+                    }
+                ],
+                "state": "closed",
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+            },
+            {
+                "id": "11",
+                "lx": "2",
+                "text": "服务",
+                "children": [
+                    {
+                        "id": "12",
+                        "lx": "2",
+                        "text": "待添加",
+                        "children": [
+                            {
+                                "id": "13",
+                                "lx": "2",
+                                "text": "待添加",
+                                "children": null,
+                                "state": "open",
+                                "layer": "待添加",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            },{
+                                "id": "14",
+                                "lx": "2",
+                                "text": "待添加",
+                                "children": null,
+                                "state": "open",
+                                "layer": "待添加",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            },{
+                                "id": "15",
+                                "lx": "2",
+                                "text": "待添加",
+                                "children": null,
+                                "state": "open",
+                                "layer": "待添加",
+                                "checked": false,
+                                "type": 1,
+                                "iconCls": null
+                            }
+                        ],
+                        "state": "closed",
+                        "layer": null,
+                        "checked": false,
+                        "type": 0,
+                        "iconCls": null
+                    }
+                ],
+                "state": "closed",
+                "layer": null,
+                "checked": false,
+                "type": 0,
+                "iconCls": null
+            }
+        ]

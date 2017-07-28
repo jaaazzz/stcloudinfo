@@ -1,0 +1,61 @@
+@charset "utf-8";
+ .socialShare {
+    display: block;
+    width: 54px;
+    height: 54px;
+    position: relative;
+    z-index: 1;
+}
+.socialShare .msb_main {
+    display: block;
+    width: 46px;
+    height: 46px;
+    line-height: 46px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    font-size: 14px;
+    color: #666666;
+}
+.socialShare .msb_main img {
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    border-radius: 23px;
+    border: none;
+    float: left
+}
+.socialShare .msb_network_button {
+    width: 31px;
+    height: 31px;
+    position: absolute;
+    top: 1.5px;
+    z-index: 1;
+    cursor: pointer;
+    text-indent: -9999px;
+    background: no-repeat;
+	border: 6px solid #f5f5f5;
+	border-radius: 50%;
+}
+.socialShare .msb_network_button.sina {
+    background: url(images/social.png) no-repeat -130px -87px;
+    left: 123px;
+}
+.socialShare .msb_network_button.tQQ {
+    background: url(images/social.png) no-repeat -185px -20px;
+    left: 183px;
+}
+.socialShare .msb_network_button.qZone {
+    background: url(images/social.png) no-repeat -73px -20px;
+    left: 243px;
+}
+.socialShare .msb_network_button.douban {
+    background: url(images/social.png) no-repeat -130px -151px;
+    left: 303px;
+}
+.socialShare .msb_network_button.weixin {
+    background: url(images/social.png) no-repeat -73px -87px;
+    left: 63px;
+}
+/*.socialShare .msb_network_button:hover{transition: -moz-transform 2s ease-out 0s;border: 6px solid #eee;}*/

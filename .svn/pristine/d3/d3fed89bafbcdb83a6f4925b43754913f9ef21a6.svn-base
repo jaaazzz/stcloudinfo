@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>{if $app_name}{$app_name}{else}总览{/if}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/highcharts.js"></script>
+    <style type="text/css">
+        .first_table{
+            height: 150px;
+            margin-bottom: 30px;
+            background: #1EBFAF url(images/用户.png) no-repeat 15% 30%;
+            padding-top: 25px;
+            border-radius: 4px;
+            position: relative;
+        }
+        .first_table div,.second_table div{
+            width: 55%;
+            float: right;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .second_table{
+            background: #F0A762 url(images/应用使用量.png) no-repeat 15% 30%;
+            position: relative;
+            padding-top: 25px;
+            height: 190px;
+            border-radius: 4px;
+        }
+        .third_table{
+            background-color: #91A9CF;
+            height: 370px;
+            border-radius: 4px;
+            padding: 20px;
+        }
+        .first_table th{
+            padding-right: 120px;
+        }
+        table tr td{
+            width: 113px;
+        }
+        table tr td{
+            padding: 5px 5px 5px 0;
+        }
+        .show_resource,.show_host,.show_time{
+            color: #3399FF;
+            font-weight: normal;
+            margin-left: 10px;
+        }
+        .show_resource:hover,.show_host:hover,.show_time:hover{
+            text-decoration: underline;
+            color: #3399FF;
+        }
+        .left_table{
+            float: left;
+            width: 310px;
+            color: #E7EBF6;
+            margin-right: 30px;
+        }
+        .right_table{
+            float: left;
+            width: 770px;
+            color: #E7EBF6;
+            font-size: 14px;
+        }
+        .third_top a{
+            color: #637ba1;
+            margin: 0 5px;
+            font-size: 12px;
+        }
+        .third_top a.active{
+            color: white;
+        }
+        .third_top{
+            width: 100%;
+            height: 40px;
+        }
+        .third_center div{
+            margin: 10px 0 17px 70px;
+            position: relative;
+        }
+        .third_center span{
+            width: 160px;
+            display: inline-block;
+        }
+        .left_table a,.third_center a{
+            color: white;text-decoration: underline;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            $(".third_top a").click(function () {
+                if($(this).hasClass('active')){
+                    return
+                }
+                $(".third_top a.active").removeClass('active');
+                $(this).addClass('active');
+                if($(this).text()=='清单显示'){
+                    $(".third_center").show();
+                    $(".third_center2").hide();
+                }else{
+                    $(".third_center").hide();
+                    $(".third_center2").show();
+                }
+            })
+
+            //点数饼图
+            $('.point_pic').highcharts({
+                chart: {
+                    backgroundColor: '#91A9CF'
+                },
+                credits: {
+                    text: '',
+                    href: ''
+                },
+                title: {
+                    text: '点数使用'+parseInt(parseInt('{$user_list.point_have}')/parseInt('{$user_list.point_total}')*100)+'%',
+                    style:{color: "#ffffff",fontSize: "14px"},
+                    verticalAlign:'bottom',
+                    y:10
+                },
+                tooltip: {
+                    enabled: false,
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: 'pointer',
+                        animation:false,
+                        dataLabels: {
+                            enabled: false,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '百分比',
+                    data: [{
+                        name : "已使用",
+                        color : "#006CCF",
+                        y : parseInt('{$user_list.point_have}')/parseInt('{$user_list.point_total}')*100
+                    }, {
+                        name : "剩余点数",
+                        color : "#ffffff",
+                        y : 100-parseInt('{$user_list.point_have}')/parseInt('{$user_list.point_total}')*100
+                    }]
+                }]
+            });
+
+            //cpu饼图
+            $('.cpu_pic').highcharts({
+                chart: {
+                    backgroundColor: '#91A9CF'
+                },
+                credits: {
+                    text: '',
+                    href: ''
+                },
+
+                title: {
+                    text: 'CPU分配'+parseInt((Math.min(1,parseInt('{$host_info.vcpus_used}')/parseInt('{$host_info.vcpus}')))*100)+'%',
+                    style:{color: "#ffffff",fontSize: "14px"},
+                    verticalAlign:'bottom',
+                    y:10
+                },
+                tooltip: {
+                    enabled: false,
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: 'pointer',
+                        animation:false,
+                        dataLabels: {
+                            enabled: false,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '百分比',
+                    data: [{
+                        name : "已使用",
+                        color : "#006CCF",
+                        y : parseInt((Math.min(1,parseInt('{$host_info.vcpus_used}')/parseInt('{$host_info.vcpus}')))*100)
+                    }, {
+                        name : "剩余cpu",
+                        color : "#ffffff",
+                        y : 100-parseInt((Math.min(1,parseInt('{$host_info.vcpus_used}')/parseInt('{$host_info.vcpus}')))*100)
+                    }]
+                }]
+            });
+
+            //内存饼图
+            $('.mem_pic').highcharts({
+                chart: {
+                    backgroundColor: '#91A9CF'
+                },
+                credits: {
+                    text: '',
+                    href: ''
+                },
+                title: {
+                    text: '内存分配'+parseInt((Math.min(1,parseInt('{$host_info.memory_mb_used}')/parseInt('{$host_info.memory_mb}')))*100)+'%',
+                    style:{color: "#ffffff",fontSize: "14px"},
+                    verticalAlign:'bottom',
+                    y:10
+                },
+                tooltip: {
+                    enabled: false,
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: 'pointer',
+                        animation:false,
+                        dataLabels: {
+                            enabled: false,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '百分比',
+                    data: [{
+                        name : "已使用",
+                        color : "#006CCF",
+                        y : parseInt((Math.min(1,parseInt('{$host_info.memory_mb_used}')/parseInt('{$host_info.memory_mb}')))*100)
+                    }, {
+                        name : "剩余内存",
+                        color : "#ffffff",
+                        y : 100-parseInt((Math.min(1,parseInt('{$host_info.memory_mb_used}')/parseInt('{$host_info.memory_mb}')))*100)
+                    }]
+                }]
+            });
+
+            //磁盘饼图
+            $('.disk_pic').highcharts({
+                chart: {
+                    backgroundColor: '#91A9CF'
+                },
+                credits: {
+                    text: '',
+                    href: ''
+                },
+                title: {
+                    text: '磁盘分配'+parseInt((Math.min(1,parseInt('{$host_info.local_gb_used}')/parseInt('{$host_info.local_gb}')))*100)+'%',
+                    style:{color: "#ffffff",fontSize: "14px"},
+                    verticalAlign:'bottom',
+                    y:10
+                },
+                tooltip: {
+                    enabled: false,
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: false,
+                        cursor: 'pointer',
+                        animation:false,
+                        dataLabels: {
+                            enabled: false,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: '百分比',
+                    data: [{
+                        name : "已使用",
+                        color : "#006CCF",
+                        y : parseInt((Math.min(1,parseInt('{$host_info.local_gb_used}')/parseInt('{$host_info.local_gb}')))*100)
+                    }, {
+                        name : "剩余磁盘",
+                        color : "#ffffff",
+                        y : 100-parseInt((Math.min(1,parseInt('{$host_info.local_gb_used}')/parseInt('{$host_info.local_gb}')))*100)
+                    }]
+                }]
+            });
+            
+            //内存饼图
+//            $('.net_pic').highcharts({
+//                chart: {
+//                    backgroundColor: '#91A9CF'
+//                },
+//                credits: {
+//                    text: '',
+//                    href: ''
+//                },
+//                title: {
+//                    text: '网络带宽使用20%',
+//                    style:{color: "#ffffff",fontSize: "14px"},
+//                    verticalAlign:'bottom',
+//                    y:10
+//                },
+//                tooltip: {
+//                    enabled: false,
+//                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+//                },
+//                plotOptions: {
+//                    pie: {
+//                        allowPointSelect: false,
+//                        cursor: 'pointer',
+//                        animation:false,
+//                        dataLabels: {
+//                            enabled: false,
+//                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+//                        }
+//                    }
+//                },
+//                series: [{
+//                    type: 'pie',
+//                    name: '百分比',
+//                    data: [{
+//                        name : "已使用",
+//                        color : "#006CCF",
+//                        y : 20
+//                    }, {
+//                        name : "剩余点数",
+//                        color : "#ffffff",
+//                        y : 80
+//                    }]
+//                }]
+//            });
+
+        })
+
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container" style="min-height:798px";>
+    <div class="page_title">
+        总览
+    </div>
+    <div class="page_content">
+        <div class="left_table">
+            <div class="first_table">
+                <span style="font-size: 16px;position: absolute;left: 52px;top: 95px">用户</span>
+                <div>总用户：&nbsp;&nbsp;&nbsp;<a href="user_list.php" >{$user_list.total_num}</a></div>
+                <div>普通用户：<a href="user_list.php" >{$user_list.users_num}</a></div>
+                <div>管理员：&nbsp;&nbsp;&nbsp;<a href="admin_user_list.php">{$user_list.admin_num}</a></div>
+            </div>
+            <div class="second_table">
+                <span style="font-size: 16px;position: absolute;left: 40px;top: 95px">应用使用量</span>
+                <div>部署应用总量：<a href="app_manage.php">{$app_list.app_count}</a></div>
+                <div>已上架应用：&nbsp;&nbsp;&nbsp;<a href="app_manage.php">{$app_list.app_on}</a></div>
+                <div>未上架应用：&nbsp;&nbsp;&nbsp;<a href="app_manage.php">{$app_list.app_off}</a></div>
+                <div>应用总收藏量：<a href="app_manage.php">{$app_collect}</a></div>
+            </div>
+        </div>
+        <div class="right_table">
+            <div class="third_table">
+                <div class="third_top">
+                    <div style="float: left;font-size: 16px">资源使用情况</div>
+                    <div style="float: right"><a class="active">清单显示</a>|<a>图表显示</a></div>
+                </div>
+                <div class="third_center">
+                    <div><img style="position: absolute;left: -35px;top:5px" src="images/圆点.png"/><span>已分配云主机：{$user_list.host_num}</span><span>已创建云主机：<a href="rm_cloudhost.php">{$user_list.host_have}</a></span><span>剩余云主机：{$user_list.host_leave}</span></div>
+                    <div><span>CPU总量：{$host_info.vcpus}</span><span>CPU申请量：{$host_info.vcpus_used}</span></div>
+                    <div><span>内存总量：{$host_info.memory_mb}MB</span><span>内存申请量：{$host_info.memory_mb_used}MB</span></div>
+                    <div><span>磁盘总量：{$host_info.local_gb}GB</span><span>磁盘申请量：{$host_info.local_gb_used}GB</span><span>磁盘剩余量：{$host_info.free_disk_gb}GB</span></div>
+                    <!--<div style="border-bottom: 1px solid #879FC3;height: 35px;width: 85%;"><span>网络带宽总量：xx</span><span>网络带宽使用量：xx</span><span>网络带宽剩余量：xx</span></div>-->
+                    <div style="border-bottom: 1px solid #879FC3;height: 35px;width: 85%;"><img style="position: absolute;left: -35px;top:5px" src="images/圆点.png"/><span>总点数：{$user_list.point_total}</span><span>已分配点数：{$user_list.point_all}</span><span>使用点数：<a href="rm_license.php">{$user_list.point_have}</a></span><span style="width: 140px">剩余点数：{$user_list.max_can_give_point}</span></div>
+                    <div><img style="position: absolute;left: -35px;top:5px" src="images/圆点.png"/><span>产品总数：<a href="rm_product.php">{$goods_count}</a></span></div>
+                </div>
+                <div class="third_center2" style="display: none">
+                    <div class="point_pic view_pic"></div>
+                    <div class="cpu_pic view_pic"></div>
+                    <div class="mem_pic view_pic"></div>
+                    <div class="disk_pic view_pic"></div>
+                    <!--<div class="net_pic view_pic"></div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .view_pic{
+        float: left;
+        width: 140px;
+        height: 200px;
+        margin-right: 40px;
+    }
+</style>
+</body>
+</html>

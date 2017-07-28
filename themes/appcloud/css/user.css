@@ -1,0 +1,121 @@
+.user{
+	margin-top: 20px;
+	min-height: 630px;
+}
+
+.user .user-info, .user .resource-info{
+	border: 1px solid #dcdcdc;
+}
+
+.user .user-info .user-info-content{
+	padding: 20px;
+}
+
+.user .user-body .title{
+	font-size: 14px;
+	line-height: 35px;
+	height: 35px;
+	background-color: #f5f5f5;
+	padding-left: 5px;
+}
+
+.user-info-content .user-img img{
+	width: 90px;
+	height: 90px;
+}
+
+.info span{
+	font-size: 14px;
+}
+
+.info div:first-child{
+	margin-bottom: 20px;
+	margin-top: 30px;
+}
+
+.user .user-info .user-info-content .user-detail{
+	margin-left: 20px;
+	font-size: 14px;
+}
+
+.user .user-info .user-info-content .user-detail img{
+	margin-top: -4px;
+	margin-right: 20px;
+}
+
+.user-info .info-row, .resource-info .info-row{
+	height: 30px;
+	line-height: 30px;
+}
+
+.user-info .info-row a{
+	color: #009ad0;
+}
+
+.user-info .first, .resource-info .first{
+	margin-right: 10px;
+}
+
+.resource-info{
+	margin-top: 20px;
+}
+
+.resource-info-content{
+	padding: 20px;
+}
+
+.point-row{
+	border-bottom: 1px solid #f5f5f5;
+}
+
+.resource-info .resource-info-content .info-row{
+	padding-left: 130px;
+}
+
+.change-pwd, .edit-password{
+	width: 95px !important;
+	height: 36px !important;
+	font-size: 14px !important;
+	margin-left: 20px;
+}
+
+#change-password{
+	margin-left: -265px;
+}
+
+#change-password .change-info{
+	padding: 40px;
+	width: 310px;
+	margin: 0px auto;
+}
+
+#change-password .change-info input{
+	height: 25px;
+	width: 236px;
+	margin-bottom: 20px;
+}
+
+.change-info .first{
+	line-height: 35px;
+	width: 60px;
+	font-size: 14px;
+}
+
+.bgd{
+	background-color: #f5f5f5;
+}
+
+button.edit-password{	
+	margin-left: 60px;
+}
+
+.tip-title{
+	color: #999999;
+	margin-bottom: 30px;
+	font-size: 10px;
+}
+
+.view-pic{
+	width: 140px;
+	height: 120px;
+}

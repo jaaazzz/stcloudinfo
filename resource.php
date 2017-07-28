@@ -1,0 +1,26 @@
+<?php
+// +----------------------------------------------------------------------
+// | zdcyber
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011-2016
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: huangbin
+// +----------------------------------------------------------------------
+// | Desc: 资源中心统一入口
+// +----------------------------------------------------------------------
+
+define('IN_ECS', true);
+
+require(dirname(__FILE__) . '/includes/init.php');
+
+$res_url_arr = array('mapservice','docView','sdk','service','service_detail');
+
+$do = isset($_REQUEST['do']) ? trim($_REQUEST['do']) : 'mapservice';
+
+if (in_array($do, $res_url_arr)) {
+	//定义菜单栏处于激活状态
+    $smarty->assign('resource_active','active');
+	require(dirname(__FILE__) . '/resource_center/'.$do.'.php');
+}

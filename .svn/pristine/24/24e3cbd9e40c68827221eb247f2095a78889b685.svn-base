@@ -1,0 +1,776 @@
+//--------------------全局变量定义(start)----------------------------//
+var map = null; //地图容器
+var mapLayer = null; //地图数据图层
+var defaultView = {};
+var globe; //三维球定义
+
+
+//--------------------全局变量定义(end)----------------------------//
+//服务转发代理
+var proxyUrl = "proxy.php?";
+
+//初始化
+$(function () {
+    //初始化目录树
+    createBar();
+});
+
+//初始化目录树，动态创建用户特定的目录视图
+function createBar() {
+    map = new ol.Map({
+        target: "mapCon",
+        controls: []
+    });
+    addDefaultMap(); //初始时候默认加载天地图显示
+    //初始化目录树
+    initBar();
+    //初始化快捷工具条
+    initTool();
+}
+
+
+//加载在线地图
+function addMapService(mapType, mapName, token, mapSvrPort) {
+    clearMap(); //清除之前的地图
+    if (mapType == "G3D") {
+        $("#mapCon").hide();
+        $("#mapControl").show();
+        $("#toolBars").hide();
+    } else {
+        $("#mapCon").show();
+        $("#mapControl").hide();
+        $("#toolBars").show();
+    }
+    //根据地图的类型和名称，加载在线地图服务
+    switch (mapType) {
+        //二维矢量地图文档服务
+        case "MRMS_MAPX":
+            mapLayer = new Zondy.Map.Doc(mapName, mapName, {
+                ip: svrCfg.svrIp,
+                port: mapSvrPort,
+                token: token
+            });
+            //根据地图服务名称和类型动态获取地图的基本信息（主要是获取地图的显示范围和中心，用于前端展示）
+            var docCatalog = new Zondy.Service.Catalog.MapDoc({
+                ip: svrCfg.svrIp,
+                port: mapSvrPort,
+                token: token,
+                //设置地图文档的名称
+                docName: mapName,
+                //设置地图的索引号
+                mapIndex: 0,
+                //是否返回由DWS所返回的原始格式信息
+                returnFullStyle: false
+            });
+
+
+            //调用getMapInfo函数，获取地图相关信息，在回调函数中处理结果
+            docCatalog.getMapInfo(getMapInfoSuccess);
+            break;
+
+        //二维瓦片数据服务
+        case "MRMS_TDF":
+            mapLayer = new Zondy.Map.TileLayer(mapName, mapName, {
+                ip: svrCfg.svrIp,
+                port: mapSvrPort,
+                token: token
+            });
+            //根据地图服务名称和类型动态获取地图的基本信息（主要是获取地图的显示范围和中心，用于前端展示）
+            var tileCatalog = new Zondy.Service.Catalog.TileLayer({
+                ip: svrCfg.svrIp,
+                port: mapSvrPort,
+                token: token,
+                //设置地图文档的名称
+                tileName: mapName
+            });
+
+            //调用getMapInfo函数，获取地图相关信息，在回调函数中处理结果
+            tileCatalog.getTileInfo(getMapInfoSuccess);
+            break;
+
+        //二维基于矢量地图文档的ogc wms服务
+        case "docWms":
+            //根据地图服务名称和类型动态获取地图的基本信息（主要是获取地图的显示范围和中心，用于前端展示）
+            var docCatalog = new Zondy.Service.Catalog.MapDoc({
+                ip: svrCfg.svrIp,
+                port: mapSvrPort,
+                token: token,
+                //设置地图文档的名称
+                docName: mapName,
+
+                //设置地图的索引号
+                mapIndex: 0,
+                //是否返回由DWS所返回的原始格式信息
+                returnFullStyle: false
+            });
+
+            //调用getMapInfo函数，获取地图相关信息，在回调函数中处理结果
+            docCatalog.getMapInfo(getOgcMapInfoSuccess);
+            //基于地图文档的WMS访问基地址
+            var baseUrlDocWms = "http://" + svrCfg.svrIp + ":" + mapSvrPort + "/igs/rest/ogc/doc/" + mapName + "/WMSServer";
+            mapLayer = new ol.layer.Image({
+                title: mapName,
+                source: new ol.source.ImageWMS({
+                    //WMS服务地址
+                    url: baseUrlDocWms,
+                    //服务类型
+                    serverType: 'geoserver'
+                })
+            });
+            break;
+
+        //二维基于矢量地图文档的ogc wfs服务
+        case "docWfs":
+            var getWfsDocOgcCapabilitiesUrl = "http://" + svrCfg.svrIp + ":" + mapSvrPort + "/igs/rest/ogc/doc/" + mapName + "/WFSServer?service=WFS&REQUEST=GetCapabilities&version=1.0.0";
+            getCapabilities(getWfsDocOgcCapabilitiesUrl, getOgcWfsMapInfoSuccess);
+
+            var baseUrlDocWfs = "http://" + svrCfg.svrIp + ":" + mapSvrPort + "/igs/rest/ogc/doc/" + mapName + "/WFSServer";
+            mapLayer = new ol.layer.Vector({
+                source: new ol.source.Vector({
+                    url: baseUrlDocWfs,
+                    format: new ol.format.GML3(),
+                    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+                        maxZoom: 19
+                    }))
+                }),
+                style: new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: 'rgba(12, 25, 25, 0.1)'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: 'black',
+                        width: 2
+                    })
+                })
+            });
+            break;
+
+        //二维基于矢量地图文档的ogc wmts服务
+        case "TILE_OGC":
+            var getWmtsOgcCapabilitiesUrl = "http://" + svrCfg.svrIp + ":" + mapSvrPort + "/igs/rest/ogc/WMTSServer?service=WMTS&REQUEST=GetCapabilities&version=1.0.0";
+            getCapabilities(getWmtsOgcCapabilitiesUrl, getOgcWmtsMapInfoSuccess);
+
+            //基于矢量图层的WMS访问基地址
+            var baseUrlWmts = "http://" + svrCfg.svrIp + ":" + mapSvrPort + "/igs/rest/ogc/WMTSServer";
+            mapLayer = new ol.layer.Tile({
+                source: new ol.source.WMTS({
+                    layer: mapName,
+                    url: baseUrlWmts
+                })
+            });
+            break;
+
+        //三维地图文档显示
+        case "G3D":
+            checkNavVersion();//检测浏览器
+            remove3dMap();
+            globe = new Globe();
+            globe.load();
+            loadMap(globe, mapName);
+            break;
+        //默认显示天地图在线矢量服务
+        default:
+            break;
+    }
+
+}
+
+function loadMap(globe, mapName) {
+    //设置三维地图服务信息
+    var ip = svrCfg.svrIp;           //地图服务的IP地址
+    var port = mapSvrPort;              //地图服务的访问端口
+    var type = DocType.TypeG3D;     //设置为三维地图服务类型
+
+    //加载三维地图服务
+    var id = globe.addDoc(mapName, ip, port, type);
+    if (id == -1) {
+        alert("加载地图失败！");
+    }
+    else {
+        globe.reset();       //复位
+    }
+}
+//检查浏览器类型和三维插件是否存在
+function checkNavVersion() {
+    if (new Util().isIE) {
+        var ocx = document.getElementById('MapGIS_EarthControl');
+        if (!ocx || !ocx.object) {
+            // 动态创建一个弹出层进行信息提示
+            tipWinShow("未能获取到插件对象，请确保插件已安装或已启用!","downloadEarthOCX");
+            return;
+        }
+    }
+    else {
+        tipWinShow("抱歉，三维地球控件只支持IE浏览器!",null);
+        return;
+    }
+
+}
+
+
+//信息提示弹框（针对三维地图的显示，进行浏览器判断和插件判断）
+function tipWinShow(tipText,func) {
+    var tipWin = '<div class="tip-win">';
+    tipWin += '<img class="title-icon" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png" />';
+    tipWin += '<label class="boxTitle">友情提示</label>';
+    tipWin += '<img class="input_enter_icon closeBox" src="themes/appcloud/onlinesrc/images/onlinesrcImg/bg-icon.png" onclick="closeTipWin()"/>';
+    tipWin += '<hr class="horizonLine" />';
+    tipWin += '<p class="tip-info">' + tipText + '</p>';
+    if(func){
+        tipWin+='<input class="download-ocx-btn" type="button" value="下载插件" onclick="'+eval(func+'()')+'"/>';
+    }
+    tipWin += '</div>';
+    $(tipWin).appendTo($("body"));
+}
+//关闭信息提示窗口
+function closeTipWin() {
+    $(".tip-win").hide();
+}
+//下载三维插件
+function downloadEarthOCX() {
+    $(".tip-win").hide();
+    if (new Util().isIE)
+        window.open('themes/appcloud/onlinesrc/libs/MapGIS3D/Zondy Earth Professional_20170105.exe', '_blank');
+    else
+        alert("地球插件只支持IE浏览器!");
+}
+
+//获取地图信息成功后的回调函数
+function getMapInfoSuccess(result) {
+    if (result.length == 0) {
+        alert("没有获取到矢量地图文档信息！");
+        return;
+    }
+    else {
+        var x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+        //如果是矢量地图文档，则返回的结果信息按如下解析
+        if (result.range) {
+            x1 = parseFloat(result.range.split(",")[0]);
+            y1 = parseFloat(result.range.split(",")[1]);
+            x2 = parseFloat(result.range.split(",")[2]);
+            y2 = parseFloat(result.range.split(",")[3]);
+
+        }
+        //如果是瓦片数据，则返回的结果信息按如下解析
+        else if (result.TileInfo1 || result.TileInfo2) {
+            var mapInfos = result.TileInfo1 || result.TileInfo2;
+            x1 = mapInfos.fullExtent.xmin;
+            y1 = mapInfos.fullExtent.ymin;
+            x2 = mapInfos.fullExtent.xmax;
+            y2 = mapInfos.fullExtent.ymax;
+        }
+
+        var center = [(x1 + x2) / 2, (y1 + y2) / 2];
+        var mapBound = [x1, y1, x2, y2];
+        //设置地图坐标系
+        var proj = new ol.proj.Projection({
+            units: ol.proj.Units.DEGREES,
+            extent: mapBound,
+            code: "EPSG:4326"
+        });
+        //创建新的地图视图
+        var view = new ol.View({
+            projection: proj,
+            center: center,
+            zoom: 2
+        });
+        //显示地图
+        showMap(view, mapLayer);
+    }
+
+}
+
+//获取基于矢量地图文档的OGC地图信息
+function getOgcMapInfoSuccess(result) {
+    if (result.length == 0) {
+        alert("没有获取到矢量地图文档信息！");
+        return;
+    }
+    else {
+        var x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+        //如果是矢量地图文档，则返回的结果信息按如下解析
+        if (result.range) {
+            x1 = parseFloat(result.range.split(",")[0]);
+            y1 = parseFloat(result.range.split(",")[1]);
+            x2 = parseFloat(result.range.split(",")[2]);
+            y2 = parseFloat(result.range.split(",")[3]);
+        }
+
+        var center = [(x1 + x2) / 2, (y1 + y2) / 2];
+        //获取矢量地图文档中的图层列表
+        var layerArr = result.subLayerNames;
+        var layers = layerArr.join(",");
+        var params = {'LAYERS': layers, 'TILED': true};
+        //更新OGC显示参数
+        mapLayer.getSource().updateParams(params);
+        var mapBound = [x1, x2, y1, y2];
+        var proj;
+        var view;
+        //获取坐标系描述（如果projtrans为自定义的参照系,则获取坐标系的描述代码）
+        if (result.projtrans) {
+            proj = new ol.proj.Projection({
+                extent: mapBound,
+                code: result.projtrans
+            });
+            //创建新的地图视图
+            view = new ol.View({
+                maxResolution: (x2 - x1) / 256,
+                projection: proj,
+                center: center,
+                zoom: 2
+            });
+        }
+        else {
+            view = new ol.View({
+                maxResolution: (x2 - x1) / 256,
+                center: center,
+                zoom: 2
+            });
+        }
+        //显示地图
+        showMap(view, mapLayer);
+    }
+}
+
+//获取WMTS地图信息
+function getOgcWmtsMapInfoSuccess(result) {
+    if (result.length == 0) {
+        alert("没有获取到矢量地图文档信息！");
+        return;
+    }
+    else {
+        //从初始化对象中获取之前设置的wmts图层名
+        var layerNames = mapLayer.getSource().getLayer();
+        //根据要加载的地图的wmts服务名，获取地图的坐标系信息
+        var layerNode = $(result).find("Layer").find("ows\\:Title:contains('" + layerNames + "')");
+        var crsStrs = $(layerNode).parent().find("ows\\:BoundingBox").attr("crs").split(":");
+        //获取地图的坐标系
+        var matrixSet = crsStrs[crsStrs.length - 3] + ":" + crsStrs[crsStrs.length - 1];
+
+        //默认根据地图的数据范围计算地图的显示中心
+        var x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+        //如果是矢量地图文档，则返回的结果信息按如下解析
+        var boundsMin = $(layerNode).parent().find("ows\\:BoundingBox").find("ows\\:LowerCorner").text().split(" ");
+        var boundsMax = $(layerNode).parent().find("ows\\:BoundingBox").find("ows\\:UpperCorner").text().split(" ");
+        x1 = parseFloat(boundsMin[0]);
+        y1 = parseFloat(boundsMin[1]);
+        x2 = parseFloat(boundsMax[0]);
+        y2 = parseFloat(boundsMax[1]);
+        var center = [(x1 + x2) / 2, (y1 + y2) / 2];
+
+        var projection = ol.proj.get(matrixSet);
+        var projectionExtent = projection.getExtent();
+        var size = ol.extent.getWidth(projectionExtent) / 256;
+        var resolutions = new Array(14);
+        var matrixIds = new Array(14);
+        for (var z = 0; z < 14; ++z) {
+            // generate resolutions and matrixIds arrays for this WMTS
+            resolutions[z] = size / Math.pow(2, z);
+            matrixIds[z] = z;
+        }
+
+        //从初始化对象中获取之前设置的wmts图层的urls
+        var urls = mapLayer.getSource().getUrls();
+        //创建地图资源对象
+        var source = new ol.source.WMTS({
+            opacity: 1,
+            urls: urls,
+            matrixSet: matrixSet,
+            tileGrid: new ol.tilegrid.WMTS({
+                origin: ol.extent.getTopLeft(projectionExtent), //原点（左上角）
+                resolutions: resolutions, //分辨率数组
+                matrixIds: matrixIds  //矩阵标识列表，与地图级数保持一致
+            }),
+            format: 'image/png',
+            layer: layerNames,
+            projection: projection,
+            style: 'default'
+        });
+        //更新地图资源
+        mapLayer.setSource(source);
+        //创建新的地图视图
+        var view = new ol.View({
+            projection: projection,
+            center: center,
+            zoom: 2
+        });
+        //显示地图
+        showMap(view, mapLayer);
+
+    }
+}
+
+//获取WFS地图信息
+function getOgcWfsMapInfoSuccess(result) {
+    if (result.length == 0) {
+        alert("没有获取到矢量地图文档信息！");
+        return;
+    }
+    else {
+
+        //从初始化对象中获取之前设置的wfs的url
+        var sourceUrl = mapLayer.getSource().getUrl().split("?")[0];
+
+        var layerArr = [];
+        //获取矢量地图文档中的图层列表
+        $(result).find("FeatureType").each(function (i) {
+            var name = $(this).children('Name').text();
+            layerArr.push(name);
+        });
+        var mapName = layerArr[0].split(":")[0];
+        //获取地图类型
+        var mapType = sourceUrl.split("/")[6];
+        var wfsSvrIp = sourceUrl.split("/")[2].split(":")[0];
+        var wfsSvrPort = sourceUrl.split("/")[2].split(":")[1];
+        if (mapType == "doc") {
+            //通过catalog服务获取地图文档的信息
+            getMapInfoByCatalogService(mapName, sourceUrl, layerArr, wfsSvrIp, wfsSvrPort);
+        }
+    } //if (result.length == 0) {}else
+}
+
+//根据矢量地图文档名称，获取文档的范围信息，用于进行OGC WFS参数设置
+function getMapInfoByCatalogService(mapName, sourceUrl, layerArr, wfsSvrIp, wfsSvrPort) {
+    //根据地图服务名称和类型动态获取地图的基本信息（主要是获取地图的显示范围和中心，用于前端展示）
+    var docCatalog = new Zondy.Service.Catalog.MapDoc({
+        ip: wfsSvrIp,
+        port: wfsSvrPort,
+        //设置地图文档的名称
+        docName: mapName,
+        //设置地图的索引号
+        mapIndex: 0,
+        //是否返回由DWS所返回的原始格式信息
+        returnFullStyle: false
+    });
+
+    //调用getMapInfo函数，获取地图相关信息，在回调函数中处理结果
+    docCatalog.getMapInfo(function (data) {
+        if (data.length == 0) {
+            alert("没有获取到矢量地图文档信息！");
+            return;
+        }
+        else {
+            var x1 = 0, x2 = 0, y1 = 0, y2 = 0;
+            //如果是矢量地图文档，则返回的结果信息按如下解析
+            if (data.range) {
+                x1 = parseFloat(data.range.split(",")[0]);
+                y1 = parseFloat(data.range.split(",")[1]);
+                x2 = parseFloat(data.range.split(",")[2]);
+                y2 = parseFloat(data.range.split(",")[3]);
+            }
+
+            var center = [(x1 + x2) / 2, (y1 + y2) / 2];
+            var mapBound = [x1, y1, x2, y2];
+            //创建地图资源对象
+            var source = new ol.source.Vector({
+                format: new ol.format.GML3(),
+                url: function (extent) {
+                    var encodeUrl = encodeURIComponent(sourceUrl + '?service=WFS' +
+                        '&version=1.0.0&request=GetFeature&typename=' + layerArr +
+                        '&outputFormat=GML3&srsname=EPSG:4326' +
+                        '&bbox=' + mapBound.join(',') + ',EPSG:4326');
+                    return proxyUrl + "url=" + encodeURIComponent(sourceUrl + '?service=WFS' +
+                            '&version=1.0.0&request=GetFeature&typename=' + layerArr +
+                            '&outputFormat=GML3&srsname=EPSG:4326' +
+                            '&bbox=' + mapBound.join(',') + ',EPSG:4326');
+                },
+                strategy: ol.loadingstrategy.bbox
+            });
+
+            var proj = new ol.proj.Projection({
+                units: ol.proj.Units.DEGREES,
+                extent: mapBound,
+                code: "EPSG:4326"
+            });
+            //创建新的地图视图
+            var view = new ol.View({
+                projection: proj,
+                center: center,
+                zoom: 2
+            });
+
+            //更新地图资源
+            mapLayer.setSource(source);
+            //更新地图视图
+            showMap(view, mapLayer);
+        }
+    });  //回调结束
+}
+
+
+//获取OGC服务的Capabilities文档信息
+function getCapabilities(getOgcCapabilitiesUrl, callback) {
+    //使用getCapabilities方法获取地图范围信息，用于计算OGC显示的最大分辨率
+    getOgcCapabilitiesUrl = decodeURI(getOgcCapabilitiesUrl);
+    getOgcCapabilitiesUrl = encodeURI(getOgcCapabilitiesUrl);
+    $.ajax({
+        type: "GET",
+        url: proxyUrl,
+        data: "url=" + getOgcCapabilitiesUrl,
+        dataType: 'text',
+        success: function (result) {
+            //解析出图层名/范围等信息以进行地图加载
+            callback(result);
+        }
+    });
+}
+
+//清除之前的地图
+function clearMap() {
+    if (map != null && map.getLayers() != null) {
+        var layers = map.getLayers().getArray();
+        for (var i = layers.length - 1; i > -1; i--) {
+            map.removeLayer(layers[i]);
+        }
+    }
+}
+
+function remove3dMap() {
+    if (globe) {
+        globe.removeAllDoc();
+    }
+
+}
+//初始时候默认加载天地图显示
+function addDefaultMap() {
+    $("#mapControl").hide();
+    mapLayer = new Zondy.Map.TianDiTu({
+        layerType: Zondy.Enum.Map.TiandituType.VEC,
+        projection: ol.proj.get('EPSG:4326')
+    });
+    var view = new ol.View({
+        projection: ol.proj.get('EPSG:4326'),
+        center: [0, 0],
+        zoom: 2
+    });
+    //显示地图
+    showMap(view, mapLayer);
+}
+
+function showMap(view, mapLayer) {
+    //更新地图视图
+    map.setView(view);
+    map.addLayer(mapLayer); //添加图层到map容器进行显示
+    defaultView.center = view.getCenter();
+    defaultView.zoom = view.getZoom();
+    defaultView.rotation = view.getRotation();
+}
+
+//判断对象是否为{}
+function isEmptyObject(obj) {
+    for (var key in obj) {
+        return false;
+    }
+    return true;
+}
+
+function initTool() {
+    //按钮的tooltip
+    $("[data-toggle='tooltip']").tooltip();
+    //地图放大
+    $("#zoomIn").click(function () {
+        var view = map.getView();
+        var zoom = view.getZoom();
+        view.setZoom(zoom + 1);
+    });
+    //地图缩小
+    $("#zoomOut").click(function () {
+        var view = map.getView();
+        var zoom = view.getZoom();
+        view.setZoom(zoom - 1);
+    });
+    //地图复位
+    $("#restore").click(function () {
+        if (isEmptyObject(defaultView)) {
+            alert("请先加载地图，再进行地图基本操作！");
+            return;
+        }
+        var view = map.getView();
+        view.setZoom(defaultView.zoom);
+        view.setCenter(defaultView.center);
+        view.setRotation(defaultView.rotation);
+
+    });
+    //当前位置（根据用户访问的ip进行定位
+    $("#curPosition").click(function () {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    });
+
+    //点击快捷工具，显示与隐藏快捷工具相关设置弹框
+    $(".shortMenus img").each(function () {
+        $(this).click(function () {
+            if ($(this).parent().find(".shortBox").is(":hidden")) {
+                $(this).parent().find(".shortBox").show(100);
+                $(this).parent().parent().find("li").not($(this).parent()).find("ul").hide(300);
+
+                if ($(this).prop("className") == "measureA") {
+                    var type = $(this).parent().find(".boxTitle").text().replace(/[ ]/g, "").replace(/[\r\n]/g, "");
+                    type == "测量距离" ? measure('len') : measure("area");
+                }
+                else {
+                    clearMeasure();
+                }
+
+            } else {
+                $(this).parent().parent().find("li").find("ul").hide(300);
+            }
+        });
+    });
+
+    //点击显示框
+    $(".measure-unit-showbox").click(function () {
+        if ($(this).parent().find(".measure-unit-option").is(":visible")) {
+            $(this).parent().find(".measure-unit-option").hide();
+        }
+        else {
+            $(this).parent().find(".measure-unit-option").show();
+        }
+    });
+    var li_option = $(".measure-unit-option").find('li');
+    li_option.on('click', function () {
+        $(this).addClass('selected').siblings().removeClass('selected');
+        var value = $(this).text();
+        $(this).parent().parent().find(".measure-unit-txt").text(value);
+        $(this).parent().hide();
+    });
+    li_option.hover(function () {
+        $(this).addClass('hover').siblings().removeClass('hover');
+    }, function () {
+        li_option.removeClass('hover');
+    });
+
+    //快捷功能面板的关闭按钮
+    $(".closeBox").each(function () {
+        $(this).click(function () {
+            $(this).parent().parent().hide();
+            clearMeasure();
+        });
+    });
+
+    //清空
+    $("#clearAll").click(function () {
+        clearMeasure();
+    });
+}
+
+
+function showPosition(position) {
+    var lat = position.coords.latitude; //纬度
+    var lon = position.coords.longitude; //经度
+    if (isEmptyObject(defaultView)) {
+        alert("请先加载地图，再进行地图基本操作！");
+        return;
+    }
+    else {
+        map.getView().setZoom(5);
+        map.getView().setCenter([lon, lat]);
+    }
+}
+
+//初始化左侧的目录操作数
+function initBar() {
+    //初始化滚动条插件（兼容所有浏览器的自定义样式）
+    $.mCustomScrollbar.defaults.scrollButtons.enable = true; //enable scrolling buttons by default
+    $.mCustomScrollbar.defaults.axis = "yx"; //enable 2 axis scrollbars by default
+    $(".leftsidebar_box").mCustomScrollbar({theme: "my-theme", alwaysShowScrollbar: 0});
+
+    //隐藏除第一项外的所有二级菜单项
+    $("#firstList dd:not(:eq(0))").hide();
+    //设置一级菜单的图标
+    $("#firstList dt:eq(0)").find("img").attr("src", "themes/appcloud/onlinesrc/images/onlinesrcImg/arrow-show-icon.png");
+
+    //自动获取地图名称列表的长度并更新目录树
+    var leftsidebar_width_max = parseInt($(".leftsidebar_box").css("max-width").replace(/[^0-9]/ig, ""));
+    var leftsidebar_width_min = parseInt($(".leftsidebar_box").css("min-width").replace(/[^0-9]/ig, ""));
+    var max_width = leftsidebar_width_min;
+    $(".mapList").each(function () {
+        if (max_width) {
+            var curWidth = $(this).find("img").width() + $(this).find("a").width() + 50;
+            if (curWidth > max_width - 30) {
+                max_width = curWidth + 30;
+            }
+        }
+        else {
+            max_width = curWidth + 30;
+        }
+    });
+    $("#firstList,#firstList:parent,#firstList dd,#firstList dd ul").css("width", max_width + 2 + "px");
+    //如果超出预设的最大宽度，出现滚动条
+    if (leftsidebar_width_max < max_width) {
+        max_width = leftsidebar_width_max;
+    }
+    //如果小于预设的宽度，设置为最小宽度
+    if (max_width < leftsidebar_width_min) {
+        max_width = leftsidebar_width_min;
+    }
+    $(".leftsidebar_box").css("width", max_width + 2 + "px");//考虑边框
+    $("#toolBars").css("left", max_width + 2 + "px");
+    $(".iframe_wrapper").css("margin-left", max_width + 2 + "px");
+    $("#mapControl").css("left", max_width + 2 + "px");
+
+    //如果没有获取到数据
+    if ($("#firstList:has(dt)").length == 0) {
+
+        $("#firstList").text("地图服务列表空空如也，请确认是否已经连接上云端资源或者定制服务！");
+    }
+
+
+    //为第一个菜单添加展开样式
+    $(".categoryList:eq(0)").addClass("on-list-show");
+    /**一级菜单项单击事件**/
+    $(".categoryList").click(function () {
+
+        if ($(this).next("dd").is(":hidden")) {
+            //焦点一级菜单项背景颜色
+            $(this).next("dd").slideToggle(); //滑动展开显示
+            $(this).addClass("on-list-show");
+            $(this).find("img").attr("src", "themes/appcloud/onlinesrc/images/onlinesrcImg/arrow-show-icon.png");
+        }
+        else {
+            //焦点一级菜单项背景颜色
+            $(this).next("dd").slideUp(); //滑动隐藏显示
+            $(this).removeClass("hover").removeClass("on-list-show");
+            $(this).find("img").attr("src", "themes/appcloud/onlinesrc/images/onlinesrcImg/arrow-hide-icon.png");
+        }
+    });
+
+    /**二级菜单项鼠标经过事件**/
+    $(".mapList").bind({
+        mouseenter: function (e) {
+            $(this).css("background-color","#DCDCDC");
+            $(this).find("a").css("color","#4BB0E5");
+        },
+        mouseleave: function (e) {
+            $(this).css("background-color","#F8F8FF");
+            $(this).find("a").css("color","#000");
+        }
+    });
+
+    /**二级菜单项单击事件**/
+    $(".mapList").bind('click', function () {
+        $(".mapList").unbind('mouseenter');
+        $(".mapList").unbind('mouseleave');
+        //全局二级菜单项样式
+        $(".mapList").css("background-color","#F8F8FF");
+        $(".mapList").find("a").css("color","#000");
+        // 选中项二级菜单项背景颜色
+        $(this).find("a").css("color","#4BB0E5");
+
+        $(this).parent().parent().parent().find('li').not(this).bind({
+            mouseenter: function (e) {
+                $(this).css("background-color","#DCDCDC");
+                $(this).find("a").css("color","#4BB0E5");
+            },
+            mouseleave: function (e) {
+                $(this).css("background-color","#F8F8FF");
+                $(this).find("a").css("color","#000");
+            }
+        });
+
+    });
+
+}

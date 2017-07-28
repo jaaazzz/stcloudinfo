@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>浏览器支持</title>
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="browser.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+</head>
+<body>
+    <script type="text/javascript">
+    /*
+        wenbaolin 2015.04.02 modify
+        var browser = navigator.appName;
+        var b_version = navigator.appVersion;
+        var version = b_version.split(";");
+        var trim_Version = version[1].replace(/[ ]/g,"");
+        var current_url = window.location.href;
+        var host = 'http://'+window.location.host;
+        var referrer = document.referrer ? document.referrer : host;
+        var url = (current_url !== referrer) ? referrer: host;
+        if(browser=="Microsoft Internet Explorer") 
+        { 
+            if (trim_Version!=="MSIE6.0" && trim_Version!=='MSIE7.0' ) {
+                window.location.href = url;
+            }
+        } else {
+            window.location.href = url;
+        }
+    */
+    </script>
+    <div class="browser-page" id="page-compatable">
+        <!--<div class="topbar">-->
+          <!--<h1 class="logo"><a href="/" title="主页"><img src="images/new/logo_grey.png" width="140px"></a></h1>-->
+        <!--</div>-->
+        <div class="content">
+            <h2>你的浏览器太古老，该升级了~</h2>
+            <p class="upgrade_desc">
+                我们检测到你的浏览器正在使用8.0版本以下的 IE内核，它太古老了，既不安全，也不能完美的支持GIS工具超市上的各项功能，需要升级才能使用GIS工具超市。
+            </p>
+            <p class="upgrade_desc">
+                如果你使用的是360，搜狗，猎豹等双核浏览器，也可以开启高速浏览模式，不更换浏览器直接访问GIS工具超市。
+            </p>
+            <p class="upgrade_desc">
+                或者，升级到下面的浏览器，一劳永逸！
+            </p>
+            <p class="upgrade_desc">返回<a href="index.php">首页</a></p>
+            <ul class="browser-list">
+                <li>
+                    <a class="chrome" target="_blank" href="http://oss.aliyuncs.com/towerfiles/ChromeStandaloneSetup.exe">谷歌浏览器</a>
+                </li>
+                <li>
+                    <a class="flash-360" target="_blank" href="http://se.360.cn/v6/">360安全浏览器</a>
+                </li>
+            </ul>
+            <p class="supported">我们也支持 <a target="_blank" href="http://firefox.com.cn/">火狐</a><a target="_blank" href="http://windows.microsoft.com/zh-CN/internet-explorer/products/ie/home">最新的IE</a> 等其他浏览器（排序要分先后）</p>
+        </div>
+    </div>
+</body>
+</html>

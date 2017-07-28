@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>资源中心_入门指导_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/docView.css" rel="stylesheet" type="text/css" />
+        <link href="share.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js,share.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="doc-title">{$items.title}</div>
+            <div class="doc-other">
+                <div class="doc-other-share">
+                    <div id="socialShare"></div>
+                </div>
+                <div class="doc-other-download">
+                    <a href="{$items.link}">下载</a>
+                </div>
+            </div>
+            <div id="reader"></div>
+        </div>
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <script type="text/javascript" src="js/docView.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        var rlink = "{$items.rlink}";
+        var filename = "{$items.filename}";
+        var $div = $(".container #reader");
+        docView($div,rlink,filename);
+        $("#socialShare").socialShare({
+            content: '{$items.title}',
+            url:'',
+            title:'{$items.title}'
+        });
+    })
+</script>
+</html>

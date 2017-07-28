@@ -1,0 +1,96 @@
+.content
+{
+    width: 1024px;
+    margin: auto;
+    min-height: 600px;
+    background: #fff;
+}
+.app-name a
+{
+    color: #333;
+    font-weight: bold;
+}
+.app-info-nav
+{
+  height: 35px;
+  line-height: 35px;
+}
+.itme
+{
+  width: 100%;
+  line-height: 40px;
+  margin-top: 10px;
+  min-height: 40px;
+}
+.itme-title
+{
+   float: left;
+   width: 100px;
+   text-align:right;
+   line-height: 35px;
+   font-size: 14px;
+}
+.itme-info
+{
+  display: inline-block;
+  width: 700px;
+  text-align: left;
+  margin-left: 20px;
+  line-height: 35px;
+  float: left;
+}
+.itme .itme-info select
+{
+  padding-left:5px;
+  float:left;
+  margin-bottom:0;
+  height: 35px;
+  line-height: 35px;
+  width: 242px ! important;
+  border-radius: 5px;
+  outline: none;
+}
+.ke-statusbar {
+  position: relative;
+  background-color: #fff ! important;
+  border-top: 1px solid #fff ! important;
+}
+.click-btn {
+  background-color: #3DAC69;
+  width: 130px;
+  height: 35px;
+  text-align: center;
+  line-height: 35px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-family: 宋体;
+  margin-top: -5px;
+  font-size: 14px;
+}
+.click-btn:hover
+{
+  background-color: #3DAC69;
+}
+.business-license-logo {
+    position: relative;
+    z-index: 9;
+    margin-top: -10px;
+    border: 1px solid #cdcdcd;
+    width: 160px;
+    height: 128px;
+    margin-left: -160px;
+}
+.upload-select input.gs-upload-file {
+    position: relative;
+    width: 160px;
+    height: 128px;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+.create_cloud_host
+{
+  display: none;
+}

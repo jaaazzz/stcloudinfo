@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>我的Token_{$shop_name}</title>
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js'} -->
+    <!--[if IE 7]>
+    <link href="ie7.css" rel="stylesheet" type="text/css" />
+    {insert_scripts files='json2.js'}
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <![endif]-->
+    <style type="text/css">
+        .message-header{
+            width: 7%;
+            height: 80px;
+            line-height: 80px;
+        }
+        .message-header-not-reader{
+            background-color: #fff;
+            background-image: url("themes/appcloud/images/unreadmsg.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .message-header-reader{
+            background-color: #fff;
+            background-image: url("themes/appcloud/images/readmsg.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .message-container-option
+        {   
+            border-top: 1px solid #dcdcdc;
+            height: 44px;
+        }
+        .message-container{
+            width: 100%;
+            min-height: 44px;
+            color: #656565;
+        }
+        .message-container-content{
+            color: #656565;
+        }
+        .message-container-content p{
+            margin: 10px 0;
+        }
+        .message-footer{
+            margin-top: 12px;
+        }
+        .message-footer ul {
+            list-style: none;
+            text-align: right;
+        }
+        .message-footer ul li{
+            float: left;
+            text-align: left;
+        }
+        .message-not-exists-container{
+            width: 1169px;
+            min-height: 100px;
+            line-height: 100px;
+            font-size: 14px;
+            /*-webkit-box-shadow: 1px 1px 1px 1px #B5BBC3;*/
+            -moz-box-shadow: 1px 1px 1px 1px #B5BBC3;
+            /*box-shadow: 1px 1px 1px 1px #B5BBC3;*/
+        }
+        .message-not-exists-container p{
+            margin-left: 20px;
+        }
+        .message-not-exists-container ul li{
+            display: inline-block;
+        }
+        .changeposition{
+            position: relative;
+            top: 0;
+            width:1169px;
+        }
+        .select >a:hover{
+            text-decoration: underline;
+        }
+        .select a{
+            color: #6389de;
+            font-size: 14px;
+        }
+        .select{
+            width: 1170px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 25px;
+            margin-bottom: 5px;
+            height: 20px;
+            font-size: 0px;
+        }
+        .message-not-exists-container div ul li{
+            font-size: 14px;
+            color: #333;
+        }
+        .select div:hover{
+            cursor: pointer;
+        }
+        .page-area li{
+            display: inline-block;
+            border: 1px solid #dcdcdc;
+            border-right: 0px;
+            height: 32px;
+            text-align: center;
+            font-size: 14px;
+            vertical-align: center;
+        }
+        .page-area li div{
+            height: 33px;
+            line-height: 34px;
+        }
+        .page-area li div:hover{
+            background-color: #428bca;
+            color: #fff;
+            cursor: pointer;
+        }
+        .message-exists-container div ul li{
+            display: inline-block;
+        }
+        .delete_btn:hover{
+            cursor: pointer;
+        }
+        .message-footer ul li p:hover{
+            cursor: default;
+        }
+        .message-container-option div:hover{
+            background-color: #ececec;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+    <div class="select" style="margin-top:120px;">
+        { if $all_count > 0}
+            <a href="user.php?act=my_token" style="{if $smarty.request.status == null||$smarty.request.status == 1}text-decoration: underline;{/if}"><img src="themes/appcloud/images/allmsg.png" style="margin-right:8px;">全部Token</a>
+            
+            <a href="user.php?act=my_token&status=2" style="margin-left:20px;{if $smarty.request.status eq '2'}text-decoration: underline;{/if}"><img src="themes/appcloud/images/unreadmsg.png" style="margin-right:8px;">已通过</a>
+            <a href="user.php?act=my_token&status=3" style="margin-left:20px;{if $smarty.request.status eq '3'}text-decoration: underline;{/if}"><img src="themes/appcloud/images/readmsg.png" style="margin-right:8px;">未通过</a>
+        {/if}
+        
+    </div>
+
+    <div class="container" >
+        { if $token_count > 0}
+        <div class="message-exists-container" style="border-radius:3px;border:1px #dcdcdc solid;{ if $message_count > 0}box-shadow: 1px 1px 2px 0px #B5BBC3;{/if}">
+            <div >
+                <ul style="height:56px;line-height:56px;background-color:#eaedf1;">
+                    <li style="margin-left:40px;">序号</li>
+                    <li style="margin-left:80px;">Token</li>
+                    <li style="margin-left:300px;">到期时间</li>
+                    <li style="margin-left:300px;">服务</li>
+                    <li style="margin-left:205px;">状态</li>
+                </ul>    
+            </div >
+            <!-- <div >
+                 <ul>
+                    <li>{$item.msg_content}</li>
+                    <li>{$item.msg_update_date}</li>
+                    <li>{$item.msg_type}</li>
+                    <li>删除</li>
+                 </ul>     
+            </div>  -->
+            <ul>
+            {foreach from = $token item = item}
+            
+                <li class="message-container-option">
+                    <div class="l message-container" style="width:100%;">
+                    <!-- {if $item.msg_read eq 1}
+                    <div class="l message-header message-header-reader" style="height:44px;"></div>
+                    {else}
+                    <div class="l message-header message-header-not-reader" style="height:44px;width:16px;"></div>
+                    {/if}
+                        <div class="message-container-content" style="float:left;">
+                            <p {if $item.msg_read eq 1}onclick="change_read({$item.id})"{/if}>&nbsp;&nbsp;&nbsp;&nbsp;{$item.msg_content}磁盘空间不足</p>
+                        </div> -->
+                        <div class="message-footer">
+                            <ul>
+                                <!-- <li>消息状态：{$item.msg_read_text}</li> -->
+                                <!-- <li>消息来源：{$message_from[$item.msg_from]}</li> -->
+                                <input type="hidden" value="{$item.id}" name="msgid">
+                                <li style="margin-left:40px;width:107px;text-align:left;">{$item.id}<li>
+                                <li style="width:339px;text-align:left;">{$item.token}<li>
+                                <li style="width:352px;">{$item.expireDate}</li>
+                                <!-- <li style="width:352px;">{$item.expireDate}{if $item.renew}<a style="color:blue;cursor:pointer;margin-left:10px;" onclick="renew_token_modal({$item.id},'{$item.services}')">点击续期</a>{/if}</li> -->
+                                <li style="width:232px;">{if $item.services eq 0}全部{else}{$item.service}{/if}</li>
+                                <li style="width:60px">{if $item.status eq 1}审核中{elseif $item.status eq 2}审核通过{else}审核未通过{/if}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+            <div id="pageId">
+            </div>
+        </div>
+
+        { else }
+       
+
+        <div>
+        <div class="message-not-exists-container" style="border-radius:4px;border:1px #dcdcdc solid;" >
+            <div class="tip-content">
+            <div class="tip-content-text" style="left:270px;">
+                <div class="text-1">您还没有申请Token</div>
+            </div> 
+            <img src="themes/appcloud/images/no_product_img.png">
+            </div>
+        </div>
+        </div>
+        {/if}
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        
+        <div id="prompt_content_delelt_app" class="modal prompt_content_modal hide" style="width: 400px; min-height: 200px; margin-left: -200px; margin-top: -138px; background-color: rgb(255, 255, 255);  border: 1px solid #cdcdcd !important;">
+    <div class="modle-title" style="height: 45px;line-height: 45px;padding-left: 20px;font-size: 16px;font-weight: bold;border-bottom: 1px solid #cdcdcd;">
+      续期<div class="" style="float: right;width: 40px;text-align: center;cursor: pointer;font-size: 22px;color: #333;" onclick="close_modal()">×</div>
+    </div>
+    <div style="width: 300px;margin: auto;font-size: 14px;">
+        <div style="float:left;line-height:44px;">续期时间:</div>
+        <div style="text-indent:10px;">
+        <select id="time-limit" style="display:inline-block;width:60px;margin-top:8px;" onchange="select_time(this)">
+        <option value="1" selected="selected">永久</option>
+        <option value="2">限时</option>
+        </select>
+
+    <select name="time-num" class="time-num"  style="display:none;width:50px;margin-top:8px;">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+    </select>
+    <select name="time-unit" class="time-unit" style="display:none;width:50px;margin-top:8px;">
+        <option value="1">月</option>
+        <option value="12">年</option>
+    </select>
+    </div>
+    </div>
+    <div style="width: 300px;margin: auto;font-size: 14px;">
+    <div style="float:left;">选择类型:</div>
+    <div style="text-indent:10px;">
+    <table>
+        <thead>
+            <tr>
+                <td><input type="checkbox" id="checkall" onclick="checkall()"></td>
+                <td>服务类型</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="checkbox" class="checkone" value="地图服务"></td>
+                <td>地图服务</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="checkone" value="瓦片服务"></td>
+                <td>瓦片服务</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="checkone" value="矢量地图"></td>
+                <td>矢量地图</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" class="checkone" value="三维地图"></td>
+                <td>三维地图</td>
+            </tr>
+        </tbody> 
+    </table>
+    </div>
+    </div>
+    <div class="modle-foot" style="width:350px;height:65px;margin:auto;margin-top: 5px;">
+      <div class="ok-btn" id="delete-app-can-btn" style="width: 130px;height: 30px;line-height: 30px;border: 1px solid #3dac69;background-color: #3dac69;color: #ffffff;float: left;text-align: center;border-radius: 5px;cursor: pointer;margin-top: 10px;margin-left: 25px;font-size: 14px;">
+        申请
+      </div>
+      <div class="can-btn" style="width: 100px;height: 30px;line-height: 30px;float: left;text-align: center;cursor: pointer;margin-top: 10px;margin-left:5px;font-size: 14px;color: #3a85c6;"  onclick="close_modal()">
+        取消
+      </div>
+  </div>
+</div>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript">
+        $(function(){
+            /* 分页 begin */
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        // return "{$p_url}p="+n;
+                        return "user.php?act=my_token&status={$status}&p="+n;
+                    }
+                })            
+            }
+            /* 分页 end */
+        })
+        
+        function delete_batch()
+        {
+            $('#prompt_content_delelt_app').css("display","block");
+        }    
+        
+        function close_modal()
+        {
+            $('.prompt_content_modal').css("display","none");
+        }
+
+        function renew_token_modal(id,services){
+            var s = services.split(",");
+            $(".checkone").each(function(){
+                if(s.toString().indexOf($(this).val())>-1){
+                    $(this).prop("checked",true);
+                }
+            });
+            $('#prompt_content_delelt_app').css("display","block");
+            $('#delete-app-can-btn').attr("onclick","renew_token("+id+")");
+        }
+
+       
+        
+
+
+    </script>
+</body>
+</html>

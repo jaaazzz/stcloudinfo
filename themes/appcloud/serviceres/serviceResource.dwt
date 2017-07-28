@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>服务资源</title>
+    <title>地质云首页</title>
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--[if lt IE 8]>
+    <script type="text/javascript" src="js/iconfont-ie7.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <script type="text/javascript" src="js/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" style="background: url(../images/homeimage/logo.png)  no-repeat; margin:0;background-position: 0 20px;text-indent: 58px;font-size: 24px;padding-right: 30px;" >中国地质调查局</a>
+			</div>
+	
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="index.php">首页</a></li>
+					<li class="active"><a href="serviceResource.php">服务资源</a></li>
+					<li><a href="geoproduct.php">地质产品</a></li>
+					<li><a href="#">地质在线</a></li>
+					<li><a href="#">动态新闻</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">登录</a></li>
+					<li><a href="#">注册</a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	
+	<section class="jumbotron"  style="background: url(../images/服务资源/图层-33.png) 0% 100% /cover no-repeat;min-height: 200px;">
+		<div class="container">
+			<form id="searchCard" class="text-center search-card" action="">
+				<div class="search-card_content">
+					<input type="text" class="search-card_text"  maxlength="255" autocomplete="off">
+				</div>
+				<div class="search-card-submit">
+					<input type="submit" class="search-card_btn" value="搜索" class="btn">
+				</div>
+			</form>
+		</div>
+	</section>
+
+	<!-- 地质产品导航 -->
+	<section>
+		<div class="container">
+			<div class="row service-navbar">
+				<div class="col-md-4">
+					<div class="service-item text-center">
+						<div class="service-item_img">
+							<a href="">
+								<img src="../images/服务资源/服务类型.png" alt="">
+							</a>
+						</div>
+						<h4>服务类型</h4>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="service-item text-center">
+						<div class="service-item_img">
+							<a href="">
+								<img src="../images/服务资源/数据类型.png" alt="">
+							</a>
+						</div>
+						<h4>数据类型</h4>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="service-item text-center">
+						<div class="service-item_img">
+							<a href="">
+								<img src="../images/服务资源/专题服务.png" alt="">
+							</a>
+						</div>
+						<h4>专题服务</h4>
+					</div>
+				</div>
+			</div>	
+		</div>
+	</section>
+
+	<!-- 地质产品展示 -->
+	<section>
+		<div class="container">	
+			<div class="service-hr-box">
+				<div class="service-hr-box_img">
+					<img src="../images/服务资源/地质数据.png" alt="地质数据" height="230" width="270">
+				</div>
+				<div class="service-hr-box_content">
+					<h3>地质数据</h3>
+					<div class="service-hr-box_intro">
+						<p>数据类型：<span>矢量OGC服务</span></p>
+						<p>服务简介：<span>服务简介简介简介</span></p>
+						<p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+						<p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+					</div>
+					<a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+				</div>
+			</div>
+
+			<div class="service-hr-box">
+				<div class="service-hr-box_img">
+					<img src="../images/服务资源/地质数据1.png" alt="地质数据" height="230" width="270">
+				</div>
+				<div class="service-hr-box_content">
+					<h3>地质数据</h3>
+					<div class="service-hr-box_intro">
+						<p>数据类型：<span>矢量OGC服务</span></p>
+						<p>服务简介：<span>服务简介简介简介</span></p>
+						<p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+						<p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+					</div>
+					<a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+				</div>
+			</div>
+
+			<div class="service-hr-box">
+				<div class="service-hr-box_img">
+					<img src="../images/服务资源/地质数据2.png" alt="地质数据" height="230" width="270">
+				</div>
+				<div class="service-hr-box_content">
+					<h3>地质数据</h3>
+					<div class="service-hr-box_intro">
+						<p>数据类型：<span>矢量OGC服务</span></p>
+						<p>服务简介：<span>服务简介简介简介</span></p>
+						<p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+						<p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+					</div>
+					<a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+				</div>
+			</div>
+
+			<div class="service-hr-box">
+				<div class="service-hr-box_img">
+					<img src="../images/服务资源/地学科普1.png" alt="地质数据" height="230" width="270">
+				</div>
+				<div class="service-hr-box_content">
+					<h3>地质数据</h3>
+					<div class="service-hr-box_intro">
+						<p>数据类型：<span>矢量OGC服务</span></p>
+						<p>服务简介：<span>服务简介简介简介</span></p>
+						<p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+						<p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+					</div>
+					<a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 快速导航 -->
+	<section style="background-color: #162e42;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">关于我们</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">联系我们</a></li>
+							<li class="fastlink-link"><a href="">企业地址</a></li>
+							<li class="fastlink-link"><a href="">单位情况</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">专题服务</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">物化</a></li>
+							<li class="fastlink-link"><a href="">水资源</a></li>
+							<li class="fastlink-link"><a href="">矿产</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">数据服务</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">软件</a></li>
+							<li class="fastlink-link"><a href="">服务</a></li>
+							<!-- <li class="fastlink-link"><a href="">矿产</a></li> -->
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">互联信息</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">发展研究中心</a></li>
+							<li class="fastlink-link"><a href="">中国地质科学院</a></li>
+							<li class="fastlink-link"><a href="">物化探所</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- footer -->
+	<footer class="footernav">
+		<div class="container">
+			<p class="text-center">主办：中国地质调查局 &nbsp;&nbsp;技术支持：中国地质调查局发展研究中心</p>
+			<p class="text-center">北京市西城区阜外大街45号院&nbsp;&nbsp;100037</p>
+			<p class="text-center">京ICP备05036996号</p>
+		</div>
+	</footer>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>我的消息_{$shop_name}</title>
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js'} -->
+    <!--[if IE 7]>
+    <link href="ie7.css" rel="stylesheet" type="text/css" />
+    {insert_scripts files='json2.js'}
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <![endif]-->
+    <style type="text/css">
+        .message-header{
+            width: 7%;
+            height: 80px;
+            line-height: 80px;
+        }
+        .message-header-not-reader{
+            background-color: #fff;
+            background-image: url("themes/appcloud/images/unreadmsg.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .message-header-reader{
+            background-color: #fff;
+            background-image: url("themes/appcloud/images/readmsg.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+        .message-container-option
+        {   
+            border-top: 1px solid #dcdcdc;
+            height: 44px;
+        }
+        .message-container{
+            width: 100%;
+            min-height: 44px;
+            color: #656565;
+        }
+        .message-container-content{
+            color: #656565;
+        }
+        .message-container-content p{
+            margin: 10px 0;
+        }
+        .message-footer{
+            margin-top: 12px;
+        }
+        .message-footer ul {
+            list-style: none;
+            text-align: right;
+        }
+        .message-footer ul li{
+            float: left;
+            text-align: left;
+        }
+        .message-not-exists-container{
+            width: 1169px;
+            min-height: 100px;
+            line-height: 100px;
+            font-size: 14px;
+            /*margin-top: 100px;*/
+            /*-webkit-box-shadow: 1px 1px 1px 1px #B5BBC3;*/
+            -moz-box-shadow: 1px 1px 1px 1px #B5BBC3;
+            /*box-shadow: 1px 1px 1px 1px #B5BBC3;*/
+        }
+        .message-not-exists-container p{
+            margin-left: 20px;
+        }
+        .message-not-exists-container ul li{
+            display: inline-block;
+        }
+        .changeposition{
+            position: relative;
+            top: 0;
+            width:1169px;
+        }
+        .select >a:hover{
+            text-decoration: underline;
+        }
+        .select a{
+            color: #6389de;
+            font-size: 14px;
+        }
+        .select{
+            width: 1170px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 125px;
+            margin-bottom: 5px;
+            height: 20px;
+            font-size: 0px;
+        }
+        .message-not-exists-container div ul li{
+            font-size: 14px;
+            color: #333;
+        }
+        .select div:hover{
+            cursor: pointer;
+        }
+        .page-area li{
+            display: inline-block;
+            border: 1px solid #dcdcdc;
+            border-right: 0px;
+            height: 32px;
+            text-align: center;
+            font-size: 14px;
+            vertical-align: center;
+        }
+        .page-area li div{
+            height: 33px;
+            line-height: 34px;
+        }
+        .page-area li div:hover{
+            background-color: #428bca;
+            color: #fff;
+            cursor: pointer;
+        }
+        .message-exists-container div ul li{
+            display: inline-block;
+        }
+        .delete_btn:hover{
+            cursor: pointer;
+        }
+        .message-footer ul li p:hover{
+            cursor: default;
+        }
+        .message-container-option div:hover{
+            background-color: #ececec;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+    <div class="select">
+        { if $all_count > 0}
+            <a href="user.php?act=my_message&msg_read=2" style="{if $smarty.request.msg_read == null||$smarty.request.msg_read == 2}text-decoration: underline;{/if}"><img src="themes/appcloud/images/allmsg.png" style="margin-right:8px;">全部邮件</a>
+            
+            <a href="user.php?act=my_message&msg_read=0" style="margin-left:20px;{if $smarty.request.msg_read eq '0'}text-decoration: underline;{/if}"><img src="themes/appcloud/images/unreadmsg.png" style="margin-right:8px;">未读</a>
+            <a href="user.php?act=my_message&msg_read=1" style="margin-left:20px;{if $smarty.request.msg_read eq '1'}text-decoration: underline;{/if}"><img src="themes/appcloud/images/readmsg.png" style="margin-right:8px;">已读</a>
+            <div style="float:right;color:#6389de;font-size:14px;" class="create-btn-delete" onclick="delete_batch()" id="delect-btn">全部删除</div>
+            {/if}
+        
+    </div>
+
+    <div class="container" >
+        { if $message_count > 0}
+        <div class="message-exists-container" style="border-radius:3px;border:1px #dcdcdc solid;{ if $message_count > 0}box-shadow: 1px 1px 2px 0px #B5BBC3;{/if}">
+            <div >
+                <ul style="height:56px;line-height:56px;background-color:#eaedf1;">
+                    <li style="margin-left:40px;">消息内容</li>
+                    <li style="margin-left:550px;">时间</li>
+                    <li style="margin-left:200px;">类型</li>
+                    <li style="margin-left:180px;">操作</li>
+                </ul>    
+            </div >
+            <!-- <div >
+                 <ul>
+                    <li>{$item.msg_content}</li>
+                    <li>{$item.msg_update_date}</li>
+                    <li>{$item.msg_type}</li>
+                    <li>删除</li>
+                 </ul>     
+            </div>  -->
+            <ul>
+            {foreach from = $message item = item}
+            
+                <li class="message-container-option">
+                    <div class="l message-container" style="width:100%;">
+                    <!-- {if $item.msg_read eq 1}
+                    <div class="l message-header message-header-reader" style="height:44px;"></div>
+                    {else}
+                    <div class="l message-header message-header-not-reader" style="height:44px;width:16px;"></div>
+                    {/if}
+                        <div class="message-container-content" style="float:left;">
+                            <p {if $item.msg_read eq 1}onclick="change_read({$item.id})"{/if}>&nbsp;&nbsp;&nbsp;&nbsp;{$item.msg_content}磁盘空间不足</p>
+                        </div> -->
+                        <div class="message-footer">
+                            <ul>
+                                <!-- <li>消息状态：{$item.msg_read_text}</li> -->
+                                <!-- <li>消息来源：{$message_from[$item.msg_from]}</li> -->
+                                <input type="hidden" value="{$item.id}" name="msgid">
+                                <li style="margin-left:13px;width:627px;text-align:left;">
+                                    {if $item.msg_read eq 1}
+                                    <img src="themes/appcloud/images/readmsg.png" style="margin-bottom:2px;margin-right:7px;">
+                                    {else}
+                                    <img src="themes/appcloud/images/unreadmsg.png" style="margin-bottom:2px;margin-right:7px;">
+                                    {/if}
+                                    <p {if $item.msg_read == 0}onclick="change_read({$item.id})"{/if} style="{if $item.msg_read == 0}font-weight:bold;cursor:pointer;{/if}display:inline-block;">{$item.msg_content}</p><li>
+                                <li style="width:227px;">{$item.msg_update_time}</li>
+                                <li style="width:210px;">{$item.msg_type}</li>
+                                <li onclick="delete_msg({$item.id})" class="delete_btn">删除</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            {/foreach}
+            </ul>
+        </div>
+            <div id="pageId">
+            </div>
+        </div>
+        <!-- <div style="width:1170px;height:46px;margin-top:12px;margin-left:auto;margin-right:auto;">
+            <div style="margin-left:10px;width:300px;display:inline-block;">显示1-10条，共{$message_count}条记录
+                </div>
+                <ul style="display:inline-block;font-size:0px;float:right;" class="page-area" id="pageId">
+                    <li style="width:43px;" onclick="change_page({$msg_read},1)"><div>首页</div></li>
+                    <li style="width:68px;" onclick="previous_page({$msg_read},{$page})"><div>上一页</div></li>
+                    <li style="width:30px;" ><div>{$page}</div></li>
+                    <li style="width:68px;" onclick="next_page({$msg_read},{$page})"><div>下一页</div></li>
+                    <li style="width:43px;border-right:1px solid #dcdcdc;" onclick="change_page({$msg_read},{$page_count})"><div>末页</div></li>
+                </ul>
+        </div> -->
+        { else }
+       
+
+        <div>
+        <div class="message-not-exists-container" style="border-radius:4px;border:1px #dcdcdc solid;" >
+            <div class="tip-content">
+            <div class="tip-content-text" style="left:270px;">
+                <div class="text-1">您还没有邮件哦~</div>
+            </div> 
+            <img src="themes/appcloud/images/no_product_img.png">
+            </div>
+        </div>
+        </div>
+        {/if}
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        
+        <!--删除全部弹框-->
+<div id="prompt_content_delelt_app" class="modal prompt_content_modal hide" style="width: 450px;height:270px; margin-left: -200px; margin-top: -138px; background-color: rgb(255, 255, 255);  border: 1px solid #cdcdcd !important;">
+    <div class="modle-title" style="height: 45px;line-height: 45px;padding-left: 20px;font-size: 14px;border-bottom: 1px solid #cdcdcd;">
+      全部删除<div class="" style="float: right;width: 40px;text-align: center;cursor: pointer;font-size: 22px;color: #333;" onclick="close_modal()">×</div>
+    </div>
+    <div style="height:50px;"></div>
+    <div style="width: 350px;margin: auto;height: 40px;line-height: 40px;font-size: 14px;margin-top:45px;">
+        确定要删除全部消息吗？删除后将清空列表中的所有消息
+    </div>
+    <div class="modle-foot" style="margin-top: 5px;">
+      <div id="delete-all" class="ok-btn" style="width: 100px;height: 35px;line-height: 35px;border: 1px solid #169bd5;background-color: #169bd5;color: #ffffff;float: left;text-align: center;border-radius: 5px;cursor: pointer;margin-top: 10px;margin-left: 150px;font-size: 14px;" onclick="delete_all()">
+        确定
+      </div>
+      <div class="" id="" style="width: 40px;height: 35px;line-height: 35px;float: left;text-align: center;cursor: pointer;margin-top: 10px;margin-left:10px;font-size: 14px;" onclick="close_modal()">
+        取消
+      </div>
+    </div>
+</div>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript">
+        $(function(){
+            /* 分页 begin */
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        // return "{$p_url}p="+n;
+                        return "user.php?act=my_message&msg_read={$msg_read}&p="+n;
+                    }
+                })            
+            }
+            /* 分页 end */
+        })
+        
+        function delete_batch()
+        {
+            $('#prompt_content_delelt_app').css("display","block");
+        }    
+        
+        function close_modal()
+        {
+            $('.prompt_content_modal').css("display","none");
+        }
+
+        //删除所有消息
+        function delete_all(){
+            // var msg = [];
+            // var elements = document.getElementsByName('msgid');
+            // for(var i=0;i<elements.length;i++){
+            //     msg.push(elements[i].value);
+            // }
+            // var msg_id = msg.join(",");
+            var msg_id = "all";
+            var url = "ajax.php?act=delete_msg";
+            var data = {msg_id:msg_id};
+            $.ajax({
+                url:url,
+                type:'post',
+                data:data,
+                dataType:'json',
+                success:function(result){
+                    if(result.ret=="true"){
+                        location.reload();
+                    }else{
+                        alert(result.ret_msg);
+                    }
+                }
+            });
+            close_modal();
+        }
+
+        //删除单条消息
+        function delete_msg(msg_id){
+            var url = "ajax.php?act=delete_msg";
+            var data = {msg_id:msg_id};
+            $.ajax({
+                url:url,
+                type:'post',
+                data:data,
+                dataType:'json',
+                success:function(result){
+                    if(result.ret=="true"){
+                        location.reload();
+                    }else{
+                        alert(result.ret_msg);
+                    }
+                }
+            });
+        }
+        
+        //修改消息状态
+        function change_read(msg_id){
+            var url = "ajax.php?act=update_msg";
+            var data = {msg_id:msg_id};
+            $.ajax({
+                url:url,
+                type:'post',
+                data:data,
+                dataType:'json',
+                success:function(result){
+                    if(result.ret=="true"){
+                        location.reload();
+                    }else{
+                        alert(result.ret_msg);
+                    }
+                }
+            });
+        } 
+        
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>日志管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/97datepicker/WdatePicker.js"></script>
+    <style type="text/css">
+        .modal-body table tr td{
+            padding: 3px;
+        }
+        .table_search{
+            width: 100%;
+        }
+        .table_search input[type=text]{
+            width: 120px;
+        }
+        .btn_search a{
+            width: 50px;
+        }
+        .table_search div span{
+            margin-right: 0px;
+        }
+.page_container .page_content{
+    width: 100%;
+}
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            var url = '{$current_url}' + '?date=' + $("input[name='date']").val()+'&edate='+$("input[name='edate']").val()
+            +'&username=' + $("input[name='username']").val() + "&logmodle="
+            +$("input[name='logmodle']").val() + "&searchkey=" +$("input[name='searchkey']").val();
+            //初始化分页
+            var pObj=new pageObj({$total_page},{$page},url,{$size},{$count});
+            pObj.initPagination();
+
+            $(".tool_btn.add_user").click(function(){
+                $(".modal_background,.modal_box").show();
+            });
+
+            $('.btn_search').on('click',function(){
+                var bDate=new Date($(".bDate").val());
+                var eDate=new Date($(".eDate").val());
+                if(bDate>eDate){
+                    bDate=eDate;
+                    bDate=ChangeDateToString(bDate);
+                    eDate=ChangeDateToString(eDate);
+                    $("input[name='date']").val(bDate);
+                    $("input[name='edate']").val(eDate);
+                }
+                var search_url =  '{$current_url}' + '?date=' + $("input[name='date']").val()+'&edate='+$("input[name='edate']").val()
+                        +'&username=' + $("input[name='username']").val() + "&logmodle="
+                        +$("input[name='logmodle']").val() + "&searchkey=" +$("input[name='searchkey']").val();
+                window.location.href = search_url;
+            });
+        });
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container">
+    <div class="page_title">
+        日志管理
+    </div>
+    <div class="page_content">
+        <div class="table_search">
+            <!--<div class="search_title"></div>-->
+            <div><span>开始日期：</span><input type="text" style="width: 186px"  class="Wdate bDate" onfocus="WdatePicker({readOnly:true})" name="date" value="{$date}"/></div>
+            <div><span>结束日期：</span><input type="text" style="width: 186px"  class="Wdate eDate" onfocus="WdatePicker({readOnly:true})" name="edate" value="{$edate}"/></div>
+            <div><span>用户：</span><input type="text" name="username" value="{$username}"/></div>
+            <div><span>模块：</span><input type="text"  name="logmodle" value="{$logmodle}" /></div>
+            <div><span>关键字：</span><input type="text"  name="searchkey" value="{$searchkey}" /></div>
+            <div class="btn_search" style=""><a>查询</a></div>
+        </div>
+        <table class="app_table">
+            <thead>
+            <tr>
+                <th width="20%" style="padding-left:20px;">时间</th>
+                <th width="10%">用户</th>
+                <th width="20%">模块</th>
+                <th width="20%">IP地址</th>
+                <th width="30%">操作记录</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach from=$user_log item=log}
+            <tr>
+                <td style="padding-left:20px;">{$log.date}</td>
+                <td>{$log.user_name}</td>
+                <td>{$log.log_module}</td>
+                <td>{$log.ip_address}</td>
+                <td>{$log.log_info}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <!-- 分页列表 begin-->
+        <div class="page_statics"></div>
+        <div class="pagination pagination-centered">
+            <ul>
+                <li><a href="javascript:void(0);">上一页</a></li>
+                <li><a href="javascript:void(0);">下一页</a></li>
+            </ul>
+        </div>
+        <!-- 分页列表 end-->
+    </div>
+</div>
+
+
+</body>
+</html>

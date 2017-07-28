@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>用户管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/placeholder.js"></script>
+    <link href="js/sweetalert.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/sweetalert.min.js"></script>
+    <script type="text/javascript" src="js/jquery.form.js"></script>
+    <style type="text/css">
+        .modal-body table tr td{
+            padding: 3px;
+        }
+
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            var url = '{$current_url}' + '?app_name=' + $("input[name='app_name']").val()
+                    + "&app_status=" +$("select[name='app_status']").val() + "&cat_id=" +$("select[name='cat_id']").val();
+
+            //初始化分页
+            var pObj=new pageObj({$total_page},{$page},url,{$size},{$count});
+            pObj.initPagination();
+
+            $(".tool_btn.add_user").click(function(){
+                $(".modal_background,.modal_box").show();
+            });
+
+            $('.btn_search').on('click',function(){
+                var search_url =  '{$current_url}' + '?app_name=' + $("input[name='app_name']").val()
+                        + "&app_status=" +$("select[name='app_status']").val() + "&cat_id=" +$("select[name='cat_id']").val();
+                window.location.href = search_url;
+
+            });
+
+            //点击　确定　导入
+            $(".modal_btns .sure").click(function(){
+                $('#zip_form').ajaxSubmit({
+                    type:'POST',
+                    beforeSubmit:function(){
+//                        var fileExtension = $('.import_file').val().split('.').pop().toLowerCase();
+//                        var arr=['zip'];
+//                        if(arr.indexOf(fileExtension)<0){
+//                            swal({
+//                                title: '请上传zip文件',
+//                                text: "",
+//                                type: "error",
+//                                allowOutsideClick:true,
+//                                confirmButtonText: "关闭"
+//                            });
+//                            return false;
+//                        }
+                    },
+                    success:function(res){
+                        if(res=='ok'){
+                            swal({
+                                title: '导入成功',
+                                text: "",
+                                type: "success",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                            location.reload();
+                        }else{
+                            swal({
+                                title: res,
+                                text: "",
+                                type: "error",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                        }
+                        return true;
+                    }
+                });
+            });
+        });
+
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container">
+    <div class="page_title">
+        资源管理
+    </div>
+    <div class="page_content">
+        <div class="page_ul">
+            <ul>
+                <li><a href="rm_cloudhost.php">云主机</a></li>
+                <li class="active"><a>产品</a></li>
+                <li><a href="rm_license.php">许可</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="table_search">
+                <div class="search_title"></div>
+                <div><span>产品名称：</span><input  type="text" name="app_name" value="{$param.app_name}"/></div>
+                <div><span>分类</span>
+                    <select name="cat_id">
+                        <option {if $param.cat_id eq '0'}selected{/if} value="0">全部</option>
+                        <option {if $param.cat_id eq '2'}selected{/if} value="2">桌面产品</option>
+                        <option {if $param.cat_id eq '3'}selected{/if} value="3">Web产品</option>
+                    </select>
+                </div>
+                <div><span>状态</span>
+                    <select name="app_status">
+                        {foreach from=$param.status_list item=status key=key}
+                        <option {if $key eq $param.app_status}selected{/if} value="{$key}">{$status}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="btn_search" style=""><a>查询</a></div>
+            </div>
+            <div class="table_tools">
+                <a class="tool_btn add_user">导入</a>
+                <a class="tool_btn">下架</a>
+                <a class="tool_btn">上架</a>
+            </div>
+            <div style="clear: both;"></div>
+            <table class="app_table">
+                <thead>
+                <tr>
+                    <th width="20%"><input type="checkbox"  class="head_check"/>产品</th>
+                    <th width="10%">分类</th>
+                    <th width="20%">开发者</th>
+                    <th width="10%">版本</th>
+                    <th width="10%">点数</th>
+                    <th width="10%">下载量</th>
+                    <th width="10%">状态</th>
+                    <th width="10%">动作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach from=$goods_list item=app}
+                <tr>
+                    <td><input type="checkbox" />{$app.name}</td>
+                    <td>{$app.cartgroy}</td>
+                    <td>{$app.user_name}</td>
+                    <td>{$app.point}</td>
+                    <td>{$app.downcount}</td>
+                    <td>{$app.version}</td>
+                    <td>{$app.status_name}</td>
+                    <td></td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            <!-- 分页列表 begin-->
+            <div class="page_statics"></div>
+            <div class="pagination pagination-centered">
+                <ul>
+                    <li><a href="javascript:void(0);">上一页</a></li>
+                    <li><a href="javascript:void(0);">下一页</a></li>
+                </ul>
+            </div>
+            <!-- 分页列表 end-->
+        </div>
+
+    </div>
+</div>
+
+<div class="modal_background">
+
+    <div class="modal_box" style="width: 310px;height: 350px; ">
+        <div class="modal-header">
+            <span class="title-word">导入产品</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <form action="rm_product.php?act=import" id="zip_form" method="post" enctype="multipart/form-data">
+                <input type='hidden' name='MAX_FILE_SIZE' value='26211140000000' />
+                导入zip:<input type="file" class="import_file" name="file" style="display: inline-block;width: 200px"/>
+                <input type="submit" value="123" />
+            </form>
+            <div class="error_tip"></div>
+            <div class="modal_btns">
+
+                <a class="modal_btn sure">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<ul class="nav nav-pills account pull-right">
+<!--<li class="help-center"><a href="helper.php#/2">帮助中心</a></li>-->
+{if $user_info}
+<li class="user-action" style="border:none;">
+	<span class="user-action-name" style="padding-right: 18px;"><span>{$user_info.username}</span><i class="navi-arrow"></i></span>
+	<ul class="dropdown" style="min-width:71px;">
+	<li class="drop-loginout"><a href="javascript:void(0);" onclick="GucLogout()">注销</a></li>
+	</ul>
+</li>
+{else}
+<li style='border:none;'><a style="background:#22252a;width:44px;" class="user-reg" href="javascript:void(0);" onclick="GucRegister();">注册</a></li>
+<li style='border:none;'><a style="background:#22252a;width:44px;" class="user-login-name" href="javascript:void(0);" onclick="GucLogin()">登录</a></li>
+{/if}
+<!--<li class="help-center"><a href="{$cloud_disk_url}" target="_blank">数据云盘</a></li>-->
+</ul>
+
+

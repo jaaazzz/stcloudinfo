@@ -1,0 +1,173 @@
+<style type="text/css">
+  .one-invite-conent 
+  {
+    height: 90px;
+    float: left;
+    margin-top: 10px;
+    width: 197px;
+    padding-left: 12px;
+    margin-left: 5px;
+    border: 1px solid #cdcdcd;
+  }
+  .user_image_span {
+    line-height: 60px;
+    border: 1px solid #cccccc;
+    width: 60px;
+    height: 60px;
+    border-top-left-radius: 35px;
+    border-top-right-radius: 35px;
+    border-bottom-left-radius: 35px;
+    border-bottom-right-radius: 35px;
+  }
+  .email_span 
+  {
+    overflow: hidden;
+    width: 100px;
+    text-overflow: ellipsis;
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .dev-env-flow-step-detail 
+  {
+    height: 32px;
+    line-height: 32px;
+    width: 72px;
+  }
+  .all-invite-conent {
+    width: 450px;
+    height: 206px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-align: center;
+  }
+  .text_space
+  {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .add-user-name
+  {
+    width: 220px;
+    height: 28px;
+    line-height: 28px;
+  }
+  .add-user-email
+  {
+    width: 220px;
+    height: 28px;
+    line-height: 28px;
+  }
+  .add-user-btn
+  {
+    margin: auto;
+    width: 80px;
+    background: #3a85c6;
+  }
+</style>
+<!--模态窗体的建立-->
+<div id="user-find-modal" class="modal" role="dialog" style="margin:0px;margin-left:-265px;top:20%;border: 1px solid #ccc;width:450px;display: none;">
+    <div class="modal-dialog modal-width">
+        <div class="modal-content select-dev-env-modal" style="width:450px;">
+            <div class="modal-header" style="padding: 4px 9px;">
+                <button type="button" class="close" data-dismiss="modal" onclick="user_list_model_close()">×</button>
+                <h5 class="no-margin">查找用户<span class="workbench-title"></span></h5>
+            </div>
+            <div class="modal-body" style="height:265px;width:450px;overflow-y: hidden;overflow-x: hidden;">
+                <div class="choose-product-type" style=" height:45px;">
+                    <ul style="margin-left:20px;">
+                         <li >
+                            <div style="margin-top:10px;font-size:13px;">
+                              <span style="width:80px;display:inline-block;text-align: right;padding-right: 10px;" class="select_user_title">用户名:</span>
+                                <input class="depend_lib_public" type="text" id="select_user_text" style="width:200px;margin-bottom: 0px;" onkeyup="if(event.keyCode==13){select_user()}"/>
+                                <span>
+                                   <a class="btn btn-success btn-sm" id="select_user_bth" style="margin-left:5px;color:#fff;" onclick="select_user()" href="javascript:void(0)">
+                                   查找
+                                   </a>
+                                </span>
+                             </div>
+                         </li>   
+                    </ul>
+                </div>
+                <div style="height:1px; width:100%; background:#d2d2d2;"></div>
+                 <div class="all-invite-conent" id="select_userconent" style="font-size:14px;">
+                      <!-- 查找结果显示页面 -->
+                 </div>   
+            </div>
+        </div> 
+    </div>    
+</div>
+<script type="text/javascript">
+
+  function add_user_power(user_id,user_name)
+  {
+    var is_have=true;
+
+    $('.add_user_info').each(function(e)
+    {
+        if($(this).attr('userid')==user_id)
+        {
+            is_have=false;
+            return;
+        }    
+    });
+
+    if(is_have)
+    {
+      $('.add_user_list_con').append("<span class='add_user_info' style='color: #08c;display: inline-block;padding:8px;cursor: pointer;' userid="+user_id+" onclick='remove_this_user(event)' title='移除'>"+user_name+"</span>");
+    }else
+    {
+      alert(user_name+"用户已添加");
+    }
+
+    
+  }
+
+  function user_list_model_close()
+  {
+    $('#user-find-modal').css('display','none');
+  }
+  function select_user()
+  { 
+    var user_name =$('#select_user_text').val();
+    var data = {search:user_name};
+    var url  = 'ajax.php?act=get_user_list';
+      jQuery.ajax({
+          url:url,
+          type:'post',
+          data:data,
+          error: function(request)
+          {
+            $.DialogBySHF.Alert({ Width: 350, Height: 200, Title: "集成应用管理平台", Content: '系统出错'});
+          },
+          success: function(result) {
+            var result =JSON.parse(result);
+            if(result.status==403)
+            {
+                GucLogin();
+            }
+            else if(result.status==200)
+            {
+                var user_list  = result.content.list.list;
+                var str   ='';
+                $('#select_userconent').html("");
+                if(user_list.length==0)
+                {
+                  str="没有查到该用户";
+                }
+                for (var i = 0; i < user_list.length; i++) {
+                    str+="<div class='one-invite-conent'>"
+                          +"<div class='add-user-name'>用户名:&nbsp;"+user_list[i].userName+"</div>"
+                          +"<div class='add-user-email'>邮<span style='display: inline-block;width: 12px;'></span>箱:&nbsp;"+user_list[i].email+"</div>"
+                          +"<div class='add-user-btn btn btn-success btn-sm' onclick='add_user_power("+user_list[i].userId+",\""+user_list[i].userName+"\")'>添加</div>"
+                      +"</div>"
+                }
+                $('#select_userconent').html(str);
+            }else
+            {
+              $.DialogBySHF.Alert({ Width: 350, Height: 200, Title:result.tip , Content: result.content.text });
+            }
+          }
+      });
+  }
+</script>

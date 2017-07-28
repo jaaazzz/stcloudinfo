@@ -1,0 +1,112 @@
+.resource-content ul li:first-child{
+}
+
+.resource-content ul li{
+	border-bottom: 1px solid #dcdcdc;
+	background: #f9f9f9;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.resource-content ul li:hover{
+	box-shadow: 2px 2px 2px rgba(0, 24, 62, 0.45);
+	-moz-box-shadow: 2px 2px 2px rgba(0, 24, 62, 0.45);
+	-webkit-box-shadow: 2px 2px 2px rgba(0, 24, 62, 0.45);
+}
+
+.content-img{
+	width: 230px;
+	text-align: center;
+	line-height: 224px;
+}
+
+.resource-top .web-api .web-api-content-img img{
+	width: 200px;
+	height: 135px;
+}
+
+.resource-content ul li .content-img img{
+	width: 150px;
+	height: 150px;
+}
+
+.resource-content .content-body, .resource-top .web-api-content-body{
+	margin-left: 20px;
+	position: relative;
+}
+
+.resource-content .content-body .content-body-title, .resource-top .web-api .web-api-content-body .content-body-title{
+	font-weight: normal;
+	font-size: 16px;
+	color: #333333;
+	margin-top: 12px;
+	margin-bottom: 16px;
+}
+
+.resource-content .content-body .content-body-substance, .resource-top .web-api .web-api-content-body .content-body-substance{
+	font-size: 14px;
+	color: #666666;
+	width: 750px;
+	line-height: 30px;
+}
+
+.resource-top .web-api-content-body .web-api-content-body-btn{
+	width: 480px;
+	margin-top: 24px;
+}
+
+.resource-top .web-api-content-body .web-api-content-body-btn a{
+	width: 110px;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	background: #6389de;
+	color: #ffffff;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+
+.resource-content .content-body .content-body-btn{
+	margin-bottom: 30px;
+	margin-top: 24px;
+}
+
+.resource-content .content-body .content-body-btn .s-btn{
+	width: 80px;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	background: #64C886;
+	color: #ffffff;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+
+.resource-content .content-body .content-body-btn .d-btn{
+	font-size: 14px;
+	color: #6389de;
+	margin-left: 20px;
+}
+
+.spread_all{
+	font-size: 14px;
+	color: #6389de !important;
+	margin-top: 10px;
+}
+
+.resource-content .content-body .content-body-btn .d-btn img{
+	margin-right: 4px; 
+}
+
+.resource-exp{
+	width: 100%;
+	height: 44px;
+	font-size: 16px;
+	color: #333333;
+	background: #fafafa;
+	line-height: 44px;
+	margin-top: 15px;
+	margin-bottom: 20px;
+}

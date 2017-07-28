@@ -1,0 +1,530 @@
+var map;
+var wmtsDocLayer, wmtsDocCva, vectorMapdoc;
+var selectflag, cardflag = false;
+var editflag = true, boxflag = true, queryflag = true;
+var selectPointerMove, selectSingleClick, selectedFeatures, selectedFeature, selectwhere = -1;
+//当前marker选中的要素
+var picgeom, picwhere;
+//查询得到的图层类型
+var geomType;
+var sourceMarker, markerLayer, lonlat;
+var markerobj = {};
+//记载右上角上一个点击的对象
+var switchTex = "";
+
+//当浏览器窗口大小改变时，设置显示内容的高度
+window.onresize = function () {
+    changeDivHeight();
+}
+
+function changeDivHeight() {
+    //获取页面可见高度  
+    var hg = document.documentElement.clientHeight;
+    $("#left-panel").css("height", hg * 0.9);
+    $("#panel_main").css("height", hg * 0.7);
+}
+
+function typeSearch() {
+    //清空地图容器
+    // $("#mapCon").html("");
+    // var projection = ol.proj.get('EPSG:4326');
+    // var projectionExtent = projection.getExtent();
+    // var size = ol.extent.getWidth(projectionExtent) / 256;
+    // var resolutions = new Array(14);
+    // var matrixIds = new Array(14);
+    // //初始化地图容器
+    // map = new ol.Map({
+    //     //地图容器div的ID
+    //     target: "mapCon",
+    //     view: new ol.View({
+    //         //设置地图的初始化显示中心和级别
+    //         center: [114.3, 30.6],
+    //         projection: projection,
+    //         maxZoom: 20,
+    //         zoom: 12
+    //     }),
+    //     controls: [
+    //     new ol.control.MousePosition({
+    //         target: document.getElementById("mouse-position")
+    //     })
+    //     ]
+    // });
+
+    // //创建WMTS控件通过请求GetTile接口加载瓦片地图
+    // for (var z = 0; z < 14; ++z) {
+    //     //为这个WMTS图层生存分辨率和matrixIds数组
+    //     resolutions[z] = size / Math.pow(2, z);
+    //     matrixIds[z] = z;
+    // }
+    // wmtsDocLayer = new ol.layer.Tile({
+    //     //设置图层透明度
+    //     opacity: 1,
+    //     source: new ol.source.WMTS({
+    //         //设置WMTS访问基地址
+    //         url: "http://t0.tianditu.com/vec_c/wmts",
+    //         //设置访问的矢量地图
+    //         layer: "vec",
+    //         //瓦片模型呈现标识，设置瓦片地图参考系
+    //         matrixSet: "c",
+    //         //地图样式
+    //         style: "default",
+    //         //设置地图图像的格式
+    //         format: "tiles",
+    //         tileGrid: new ol.tilegrid.WMTS({
+    //             //原点（左上角）
+    //             origin: ol.extent.getTopLeft(projectionExtent),
+    //             //分辨率数组
+    //             resolutions: resolutions,
+    //             //矩阵标识列表，与地图级数保持一致
+    //             matrixIds: matrixIds
+    //         }),
+    //         //数据的投影坐标系
+    //         projection: projection,
+    //         wrapX: false
+    //     })
+    // });
+    // //添加底图到地图容器中
+    // map.addLayer(wmtsDocLayer);
+
+    // wmtsDocCva = new ol.layer.Tile({
+    //     //设置图层透明度
+    //     opacity: 1,
+    //     source: new ol.source.WMTS({
+    //         //设置WMTS访问基地址
+    //         url: "http://t0.tianditu.com/cva_c/wmts",
+    //         //设置访问的矢量地图
+    //         layer: "cva",
+    //         //瓦片模型呈现标识，设置瓦片地图参考系
+    //         matrixSet: "c",
+    //         //地图样式
+    //         style: "default",
+    //         //设置地图图像的格式
+    //         format: "tiles",
+    //         tileGrid: new ol.tilegrid.WMTS({
+    //             //原点（左上角）
+    //             origin: ol.extent.getTopLeft(projectionExtent),
+    //             //分辨率数组
+    //             resolutions: resolutions,
+    //             //矩阵标识列表，与地图级数保持一致
+    //             matrixIds: matrixIds
+    //         }),
+    //         //数据的投影坐标系
+    //         projection: projection,
+    //         wrapX: false
+    //     })
+    // });
+    // //添加底图到地图容器中
+    // map.addLayer(wmtsDocCva);
+
+    //初始化地图文档图层对象
+    vectorMapdoc = new Zondy.Map.Doc("武汉管理系统", "武汉管理系统", {
+        //矢量地图文档地图服务器ip
+        ip: location.hostname,
+         port: IGSS.igss_port || '6160'
+    });
+    //添加底图到地图容器中
+    map.addLayer(vectorMapdoc);
+
+    //创建一个矢量标注图层
+    sourceMarker = new ol.source.Vector({ wrapX: false });
+    markerLayer = new ol.layer.Vector({
+        source: sourceMarker
+    });
+    //将标注图层添加到地图容器中
+    map.addLayer(markerLayer);
+
+    //关联鼠标移上去选择控件与区要素的图层
+    selectPointerMove = new ol.interaction.Select({
+        layers: [markerLayer],
+        condition: ol.events.condition.pointerMove
+    });
+
+    //关联鼠标单击选择控件与区要素的图层
+    selectSingleClick = new ol.interaction.Select({
+        layers: [markerLayer]
+    });
+    //将选择控件添加到地图中
+    map.addInteraction(selectPointerMove);
+    //将选择控件添加到地图中
+    map.addInteraction(selectSingleClick);
+    selectPointerMove.on("select", function (evt) {
+        var geomStyle;
+        if (evt.selected.length > 0) {
+            picgeom = evt.selected[0];
+            picwhere = picgeom.values_.geomwhere;
+            geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + picwhere + ".png");
+        }
+        else
+            geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + picwhere + ".png");
+        if (picwhere != selectwhere) {
+            picgeom.setStyle(geomStyle);
+            $("#card-1").find(".card1main").find(".poilist").find("li").eq(picwhere).toggleClass("searchchange");
+        } else return;
+    });
+    selectSingleClick.on("select", function (evt) {
+        if (evt.selected.length > 0) {
+            selectedFeatures = selectSingleClick.getFeatures();
+            selectedFeature = selectedFeatures.array_[0];
+            selectwhere = selectedFeature.values_.geomwhere;
+            var geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + selectwhere + ".png");
+            selectedFeature.setStyle(geomStyle);
+            $("#cards-level1").toggle();
+            if ($("#cards-level0")[0].childNodes.length > 0) {
+                $("#cards-level0").html("");
+                $("#cards-level1").toggle();
+            }
+            var str = "<li id='card-0' class='card'><div class='cardpic'></div><div class='cardtex' style='display: block;'>返回“"
+                + $("#sole-input").val() + "”的搜索结果</div></li>";
+            $("#cards-level0").append(str);
+            //为card-0添加click事件
+            $("#card-0").click(card0click);
+        } else return;
+    });
+
+    //设置显示内容的高度
+    changeDivHeight();
+    //为搜索按钮绑定click事件
+    $("#search-button").click({ pageIndex: 0, selectfun: true,searchKey:"" }, serchClick);
+    $(".wuhan-item").on("click",{ pageIndex: 0, selectfun: true,searchKey:$(".wuhan-item").text() }, serchClick);
+    $(".daxue-item").on("click",{ pageIndex: 0, selectfun: true,searchKey:$(".daxue-item").text() }, serchClick);
+    //为地图容器添加click和move事件，来改变hover的样式
+    map.on("click", onMapClick);
+    map.on("moveend", onMapMove);
+    
+    $(".searchbox-content-button").on("click", function(){
+        $("#sole-input").val("");
+        $(".input-clear").hide();
+        clearLayer(markerLayer);
+        $("#cards-level0").html("");
+        $("#cards-level1").html("");
+        $("#cards-level2").html("");
+    });
+}
+
+function serchClick(option) {
+    if($.trim(option.data.searchKey) == ""){
+       var wherecon = $("#sole-input").val(); 
+   }else{
+        $("#sole-input").val($.trim(option.data.searchKey));
+        var wherecon = $.trim(option.data.searchKey); 
+   }
+    if (wherecon != "") {
+        selectflag = option.data.selectfun;
+        if ($(".searchbox-content .searchbox-content-button").hasClass("cancel-button")) {
+            $(".searchbox-content .searchbox-content-button").removeClass("cancel-button");
+            $(".searchbox-content .searchbox-content-button").attr("title", "加载");
+        } else {
+            $(".input-clear").hide();
+            $(".searchbox-content .searchbox-content-button").addClass("loading");
+            $(".searchbox-content .searchbox-content-button").attr("title", "加载");
+        }
+        //判断图层内是否有内容，有内容就将其清空
+        clearLayer(markerLayer);
+        if ($("#cards-level1")[0].childNodes.length > 0) {
+            $("#cards-level1").html("");
+            cardflag = false;
+        }
+
+        //初始化查询结构对象，设置查询结构包含几何信息
+        var queryStruct = new Zondy.Service.QueryFeatureStruct();
+        //是否包含几何图形信息
+        queryStruct.IncludeGeometry = true;
+        //是否包含属性信息
+        queryStruct.IncludeAttribute = true;
+        //是否包含图形显示参数
+        queryStruct.IncludeWebGraphic = false;
+
+        //实例化查询参数对象
+        var queryParam = new Zondy.Service.QueryParameter({
+            resultFormat: "json",
+            struct: queryStruct
+        });
+        //设置查询分页号
+        queryParam.pageIndex = option.data.pageIndex;
+        //设置查询要素数目
+        queryParam.recordNumber = 10;
+        //设置属性条件
+        queryParam.where = "大学名称 LIKE '%" + wherecon + "%'";
+        //实例化地图文档查询服务对象
+        var queryService = new Zondy.Service.QueryDocFeature(queryParam, "武汉管理系统", 1, {
+            ip: location.hostname,
+            port: IGSS.igss_port || '6160'
+        });
+        //执行查询操作，querySuccess为查询回调函数
+        queryService.query(querySuccess, queryError);
+    } else {
+        //判断图层内是否有内容，有内容就将其清空
+        clearLayer(markerLayer);
+        $("#cards-level0").html("");
+        $("#cards-level1").html("");
+        $("#cards-level2").html("");
+        cardflag = false;
+    };
+}
+
+//查询失败回调
+function queryError(e) {
+    return;
+}
+
+//查询成功回调
+function querySuccess(result) {
+    if (result != null) {
+        $(".searchbox-content .searchbox-content-button").addClass("cancel-button");
+        $(".searchbox-content .searchbox-content-button").attr("title", "清空");
+        var fGemo = result.SFEleArray[0].fGeom;
+        geomType = "";
+
+        fGemo.LinGeom.length > 0 && geomType == "" ? geomType = "LinGeom" : geomType = geomType;
+        fGemo.PntGeom.length > 0 && geomType == "" ? geomType = "PntGeom" : geomType = geomType;
+        fGemo.RegGeom.length > 0 && geomType == "" ? geomType = "RegGeom" : geomType = geomType;
+        if($('#card-1').length < 1)
+        {
+            var str = "<li id='card-1' class='card card1'><div class='cardtex'>共找到" + result.TotalCount + "个搜索结果</div>" +
+            "<div class='card1main'><ul class='poilist'>";
+            for (var i = 0; i < result.SFEleArray.length; i++) {
+                str += "<li class='search-item base-item'>" +
+                    "<div class='cf'>" +
+                    "<div class='col-l'>" +
+                    "<a href='javascript:void(0)' class='no-" + (i + 1) + "'>" +
+                    "</a>" +
+                    "</div>" +
+                    "<div class='col-r'>" +
+                    "<div class='mt_5 h_20'>" +
+                    "</div>" +
+                    "<div class='img-wrap'>" +
+                    "<a href='javascript:void(0)'>" +
+                    "<img src='http://webmap3.map.bdimg.com/maps/services/thumbnails?width=132&height=104&align=center,center&quality=100&src=http%3A%2F%2Fhiphotos.baidu.com%2Fmap%2Fpic%2Fitem%2Fb64543a98226cffc7659198cbc014a90f603ea99.jpg' class='hasIndoorPano' style='width: 71px; height: 58px;'/>" +
+                    "<span title='内部环境' class='indoor-pano'>" +
+                    "内部环境</span>" +
+                    "</a>" +
+                    "</div>" +
+                    "</div>" +
+                    "<div class='ml_30 mr_90'>" +
+                    "<div class='row'>" +
+                    "<span>" +
+                    "<a href='javascript:void(0);' class='n-blue'>" + result.SFEleArray[i].AttValue[1] +
+                    "</a>" +
+                    "</span>" +
+                    "<span>" +
+                    "</span>" +
+                    "</div>" +
+                    "<div class='row addr'>" +
+                    "<span class='n-grey' title='湖北省武汉市武昌区珞珈山路16号'>湖北省武汉市武昌区珞珈山路16号" +
+                    "</span>" +
+                    "</div><div class='row tel'>" +
+                    "电话:027-68755114" +
+                    "</div>" +
+                    "<div class='children-container row'>" +
+                    "</div>" +
+                    "</div>" +
+                    "</div>" +
+                    "</li>";
+            }
+            str += "</ul><div id='poi_page' class='poi-page'></div></div></li>";
+            $("#cards-level1").append(str);
+        }
+        
+        if (result.TotalCount > 10) {
+            var paging = new PageturnJQ({ pagesize: 4, totalpage: parseInt(result.TotalCount / 10) + 1, divCon: "poi_page", selectflag: selectflag });
+        }
+
+        //为card-1添加hover事件
+        $("#card-1").hover(card1InOut);
+        //为每个查询的list添加hover和click事件
+        $(".search-item.base-item").hover(function () {
+            $(this).toggleClass("searchchange");
+            var picsrc = $(this).index();
+            var layerStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + picsrc + ".png");
+            markerobj[picsrc].setStyle(layerStyle);
+            //redraw(markerLayer);
+        }, function () {
+            $(this).toggleClass("searchchange");
+            var picsrc = $(this).index();
+            if (picsrc != selectwhere) {
+                var layerStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + picsrc + ".png");
+                markerobj[picsrc].setStyle(layerStyle);
+                //redraw(markerLayer);
+            }
+        });
+        $(".search-item.base-item").click(itemClick);
+        //为每一个小图片添加相应的click事件
+        $("#card-1 .img-wrap").click(imgClick);
+
+        switch (geomType) {
+            case "PntGeom":
+                for (var i = 0; i < result.SFEleArray.length; i++) {
+                    lonlat = [result.SFEleArray[i].fGeom.PntGeom[0].Dot.x, result.SFEleArray[i].fGeom.PntGeom[0].Dot.y];
+                    //实例化Vector要素，通过矢量图层添加到地图容器中
+                    var iconFeature = new ol.Feature({
+                        geometry: new ol.geom.Point(lonlat),
+                        geomwhere: i
+                    });
+                    var layerStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + i + ".png");
+                    iconFeature.setStyle(layerStyle);
+                    sourceMarker.addFeature(iconFeature);
+                    markerobj[i] = iconFeature;
+                }
+                break;
+            case "LinGeom":
+                //for (var i = 0; i < result.SFEleArray.length; i++) {
+                //    var linepoint = result.SFEleArray[i].fGeom.LinGeom[0].Line.Arcs[0].Dots;
+                //    var lpointX, lpointY;
+                //    if (linepoint.length == 2) {
+                //        lpointX = (linepoint[0].x + linepoint[1].x) / 2;
+                //        lpointY = (linepoint[0].y + linepoint[1].y) / 2;
+                //    } else {
+                //        var lpointLen = Math.floor(linepoint.length / 2);
+                //        lpointX = linepoint[lpointLen].x;
+                //        lpointY = linepoint[lpointLen].y;
+                //    }
+                //    lonlat = new OpenLayers.LonLat(lpointX, lpointY);
+                //    var imgUrl = "img/markers/markers_" + i + ".png";
+                //    //创建一个地图标注
+                //    marker = new OpenLayers.Marker(lonlat, new OpenLayers.Icon(imgUrl, new OpenLayers.Size(18, 27), new OpenLayers.Pixel(-10, -25)));
+                //    markerobj[i] = marker;
+
+                //    var olAlpha = $(marker.events.element).find(".olAlphaImg");
+                //    //为每个标签添加title文字
+                //    olAlpha.attr("title", result.SFEleArray[i].AttValue[1]);
+
+                //    //给标注注册一个鼠标点击事件
+                //    marker.events.register('mouseover', marker, function (evt) {
+                //        var olAlphaImg = $(evt.element).find(".olAlphaImg");
+                //        var picsrc = olAlphaImg.attr("src").split("_")[1].split(".")[0];
+                //        olAlphaImg.attr("src", "img/markers/markers_new" + picsrc + ".png");
+                //        $("#card-1").find(".card1main").find(".poilist").find("li").eq(picsrc).toggleClass("searchchange");
+                //    });
+                //    marker.events.register('mouseout', marker, function (evt) {
+                //        var olAlphaImg = $(evt.element).find(".olAlphaImg");
+                //        var picsrc = olAlphaImg.attr("src").split("_")[1].split(".")[0].substr(3);
+                //        olAlphaImg.attr("src", "img/markers/markers_" + picsrc + ".png");
+                //        $("#card-1").find(".card1main").find(".poilist").find("li").eq(picsrc).toggleClass("searchchange");
+                //    });
+                //    marker.events.register('click', marker, itempicClick);
+                //}
+                break;
+            default:
+                break;
+        }
+    } else return;
+}
+
+//创建矢量标注样式函数,设置image为图标ol.style.Icon
+function createLabelStyle(srcurl) {
+    return new ol.style.Style({
+        /**{olx.style.IconOptions}类型*/
+        image: new ol.style.Icon(({
+            anchor: [0.5, 28],
+            anchorOrigin: "top-righ",
+            anchorXUnits: "fraction",
+            anchorYUnits: "pixels",
+            offsetOrigin: "top-right",
+            //透明度
+            opacity: 1,
+            //图标的url
+            src: srcurl
+        }))
+    });
+}
+
+function imgClick() {
+    alert("tt");
+}
+
+function itemClick() {
+    selectwhere = $(this).index();
+    var geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_new" + selectwhere + ".png");
+    markerobj[selectwhere].setStyle(geomStyle);
+    $("#cards-level1").toggle();
+    if ($("#cards-level0")[0].childNodes.length > 0) {
+        $("#cards-level0").html("");
+        $("#cards-level1").toggle();
+    }
+    var str = "<li id='card-0' class='card'><div class='cardpic'></div><div class='cardtex' style='display: block;'>返回“"
+            + $("#sole-input").val() + "”的搜索结果</div></li>";
+    $("#cards-level0").append(str);
+    //为card-0添加click事件
+    $("#card-0").click(card0click);
+}
+
+function itempicClick(evt) {
+    $("#cards-level1").toggle();
+    if ($("#cards-level0")[0].childNodes.length > 0) {
+        $("#cards-level0").html("");
+        $("#cards-level1").toggle();
+    }
+    var str = "<li id='card-0' class='card'><div class='cardpic'></div><div class='cardtex' style='display: block;'>返回“"
+            + $("#sole-input").val() + "”的搜索结果</div></li>";
+    $("#cards-level0").append(str);
+    //为card-0添加click事件
+    $("#card-0").click(card0click);
+}
+
+//为level1添加click事件
+function card0click() {
+    $("#cards-level1").toggle();
+    var geomStyle = createLabelStyle("themes/appcloud/onlinesrc/images/markers/markers_" + selectwhere + ".png");
+    markerobj[selectwhere].setStyle(geomStyle);
+    //$("#card-1").find(".card1main").find(".poilist").find("li").eq(selectwhere).toggleClass("searchchange");
+    selectwhere = -1;
+    $("#cards-level0").html("");
+}
+
+function onMapClick(object) {
+    if (!cardflag && $("#sole-input").val() != "") {
+        //滚动到0px处，最顶端
+        $("#card-1").scrollTop(0);
+        $(".cardlist .card1").toggleClass("cardfold");
+        $(".cardlist .card1 .card1main").toggleClass("mainfold");
+        $(".cardlist .card1 .cardtex").toggle();
+        cardflag = true;
+    } else return;
+}
+
+function onMapMove(object) {
+    if (!cardflag && $("#sole-input").val() != "") {
+        //滚动到0px处，最顶端
+        $("#card-1").scrollTop(0);
+        $(".cardlist .card1").toggleClass("cardfold");
+        $(".cardlist .card1 .card1main").toggleClass("mainfold");
+        $(".cardlist .card1 .cardtex").toggle();
+        cardflag = true;
+    } else return;
+}
+
+function card1InOut() {
+    if (cardflag) {
+        //滚动到0px处，最顶端
+        $("#card-1").scrollTop(0);
+        $(".cardlist .card1").toggleClass("cardfold");
+        $(".cardlist .card1 .card1main").toggleClass("mainfold");
+        $(".cardlist .card1 .cardtex").toggle();
+        cardflag = false;
+    } else return;
+}
+
+//清空图层
+function clearLayer(layerName) {
+    var mapFeatures = layerName.getSource().getFeatures();
+    if (mapFeatures.length > 0) {
+        //清除鼠标单击选中的要素
+        if (selectedFeatures != null && selectedFeatures.array_.length) {
+            selectedFeatures.clear();
+        }
+        sourceMarker = new ol.source.Vector({ wrapX: false });
+        //清空绘制图形
+        layerName.setSource(sourceMarker);
+    } else return;
+}
+
+//复位图层
+function redraw(layerName) {
+    var mapSource = layerName.getSource();
+    if (mapSource != null) {
+        //清空绘制图形
+        layerName.setSource(null);
+        //添加绘制层数据源
+        layerName.setSource(mapSource);
+    } else return;
+}

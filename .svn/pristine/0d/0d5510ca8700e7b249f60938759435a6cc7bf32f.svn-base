@@ -1,0 +1,197 @@
+<script type="text/javascript">
+		var browser=navigator.appName;
+	    var b_version=navigator.appVersion;
+	    var version=b_version.split(";"); 
+	    var trim_Version='';
+		if(version[1])
+			trim_Version= version[1].replace(/[ ]/g,"");
+	    var url = '/browser.php';
+	    //wenbaolin 2015.04.02 modify 修改判断IE的相关函数
+	    var bro=$.browser;
+        if((bro && bro.msie && bro.version < 8.0) || (!$.support.leadingWhitespace && !(!$.support.opacity && $.support.style && window.XMLHttpRequest != undefined)))
+	    {
+            //if(bro.version < 8.0)
+            //{
+            window.location.href = url;
+            //}
+	    }
+	    if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE6.0") 
+	    { 
+	        //window.location.href = url;
+	    } 
+	    else if(browser=="Microsoft Internet Explorer" && trim_Version=="MSIE7.0") 
+	    { 
+	        //window.location.href = url;
+	    }
+</script>
+<style>
+    /*=====三角形=====*/
+    .pos_rel{
+        position:absolute;
+        _line-height:0;
+        top: -20px;
+        left: 50px;
+        z-index: 100;
+    } 
+    .pos_rel .icon1{
+        display:block;
+        border-width:10px;
+        border-color:transparent transparent #dcdcdc transparent; 
+        border-style:solid;position:absolute;
+        left:0;
+        top:0;
+        width:0;
+        height:0;
+    } 
+    .pos_rel .icon2{
+        display:block;
+        border-width:10px;
+        border-color: transparent transparent #ebeaea transparent;
+        border-style:solid;
+        position:absolute;
+        left:-10px;
+        top:-8px;
+        width:0;
+        height:0; 
+    }
+    /*=====三角形=====*/
+    /*=====自定义CSS==*/
+    .buttom-mark-active{
+        background-color: #fff;
+        width: 80%;
+        height: 1px;
+        position: absolute;
+        left: 14px;
+    }
+    img.shop-logo{
+        width: 60px;
+        height: 60px;
+        margin-top: 5px;
+        vertical-align: top;
+    }
+    .nav-bar ul.nav-bar-options {
+        width:100%;
+        height:100%;
+        list-style:none;
+    }
+    .nav-bar ul.nav-bar-options li{
+        width:13%;
+        height: 100%;
+        display:inline-block;
+        text-align: center;
+        font-size: 18px;
+        position: relative;
+        line-height:70px;
+    }
+    .nav-bar ul.nav-bar-options li:hover{
+        cursor: pointer;
+    }
+    .nav-bar ul.nav-bar-options li a{
+        color: #fff;
+    }
+    .nav-bar ul.nav-bar-options li a:hover{
+        color: #fff;
+    }
+    .navbar-wrapper-active{
+        background:-webkit-linear-gradient(top,#150b57,#1b1160);
+        background:-ms-linear-gradient(top,#150b57,#1b1160);
+        background:-moz-linear-gradient(top,#150b57,#1b1160);
+        background:linear-gradient(top,#150b57,#1b1160);
+        }
+    /*=====自定义CSS==*/
+
+</style>
+<!-- background:url(themes/appcloud/images/banner/banner.png) 50% 0 no-repeat;background-color:#0041ad; -->
+<div class="navbar-wrapper navbar-wrapper-active" style="min-width:1170px;width:100%;position:relative;z-index:9999;height:70px;">
+    <div class="user-logo {if $user_info} user-logo-in {else} user-logo-out {/if}">
+        <div class="nav-operation-logo">
+            {insert name="member_info"}
+        </div>
+        <div class="clear"></div>
+    </div>
+	<div class="container" style="width: 88%;margin-left: 0;float:left;height:70px;">
+        <div class="header-title" style="width:240px;margin-left:24px;margin-right:5%;">
+            <a href="index.php" style="text-decoration:none;">
+                <img src="themes/appcloud/images/home/logo1.png"/>
+                <!-- <span>{$shop_title}</span> -->
+            </a>
+        </div>
+        <div class="header-menu" style="width:800px;">
+            <div class="nav-bar">
+                <ul class="nav-bar-options" style="text-align:center;">
+                    {foreach from=$menus item=menu}
+                        <li class="nav-bar-option {$menu.active}">
+                            <a href="{$menu.url}" style="font-size:16px;text-decoration:none;">{$menu.name}</a>
+                            <div class="buttom-mark buttom-mark-{$menu.active}" style="top:59px;height:3px;left:11%;"></div>
+                            <div class="buttom-mark buttom-mark-{$menu.active}" style="top:65px;left:11%;"></div>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div class="nav-operation">
+
+            </div>
+            <div class="clear"></div>
+        </div>
+	</div>
+	{if $url_nav == 'helper'}
+	<div class="row nav-line"></div>
+	{elseif $url_nav == 'user' && $left_nav != 'prepare_for_download'}
+	<div class="row nav-under">
+		<div class="container">
+			<span style="display:none;border-left: 1px solid #4d91cc;border-right: 1px solid #3270a7;height: 42px;float: left;"></span>
+            <ul class="nav nav-pills pull-left" id="navgation-list">
+				<li style='width:145px;text-align:center;border-left:1px solid #dcdcdc;' {if $left_nav == 'my_app'}class="active"{/if}><a style="width:145px; {if $left_nav == 'my_app'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=my_app"><div  style="width:48px;height:48px;{if $left_nav == 'my_app'}background:url(../images/myyy_hover.png)0 0 no-repeat;{/if}"></div>我的应用</a></li>
+
+				<li style='width:145px;text-align:center;' {if $left_nav == 'my_cloud_host'}class="active"{/if}><a style="width:145px;{if $left_nav == 'my_cloud_host'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=my_cloud_host"><div style="width:48px;height:48px;{if $left_nav == 'my_cloud_host'}background:url(../images/myyzj_hover.png)0 0 no-repeat;{/if}"></div>云主机</a></li>
+
+                <li style='width:145px;text-align:center;' {if $left_nav == 'order_list' || $left_nav == 'bill'}class="active"{/if}><a style="width:145px;{if $left_nav == 'order_list' || $left_nav == 'bill'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=order_list"><div style="width:48px;height:48px;{if $left_nav == 'order_list' || $left_nav == 'bill'}background:url(../images/myrj_hover.png)0 0 no-repeat;{/if}"></div>我的软件</a></li>
+
+                <li style='width:145px;text-align:center;' {if $left_nav == 'my_collection'}class="active"{/if}><a style="width:145px;{if $left_nav == 'my_collection'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=my_collection"><div style="width:48px;height:48px;{if $left_nav == 'my_collection'}background:url(../images/mysc_hover.png)0 0 no-repeat;{/if}"></div>我的收藏</a></li>
+
+                <li style='width:145px;text-align:center;' {if $left_nav == 'my_message'}class="active"{/if}><a style="width:145px;{if $left_nav == 'my_message'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=my_message"><div style="width:48px;height:48px;{if $left_nav == 'my_message'}background:url(../images/myms_hover.png)0 0 no-repeat;{/if}">{if $unread_count > 0}<img src="../images/msg_promot.png" style="margin-left:50px;">{/if}</div>我的消息</a></li>
+
+				<li style='width:145px;text-align:center;' {if $left_nav == 'user_info'}class="active"{/if}><a style="width:145px;{if $left_nav == 'user_info'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=user_info"><div style="width:48px;height:48px;{if $left_nav == 'user_info'}background:url(../images/grxx_hover.png)0 0 no-repeat;{/if}"></div>个人信息</a></li>
+
+                <li style='width:145px;text-align:center;' {if $left_nav == 'my_message'}class="active"{/if}><a style="width:145px;{if $left_nav == 'my_token'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=my_token"><div style="width:48px;height:48px;{if $left_nav == 'my_message'}background:url(../images/myms_hover.png)0 0 no-repeat;{/if}">{if $unread_count > 0}<img src="../images/msg_promot.png" style="margin-left:50px;">{/if}</div>我的许可</a></li>
+
+                <li style='width:145px;text-align:center;' {if $left_nav == 'my_cloud_disk'}class="active"{/if}><a style="width:145px;{if $left_nav == 'my_cloud_disk'}background:#4bb0e5;color:#fff;{/if}" href="user.php?act=my_cloud_disk"><div style="width:48px;height:48px;{if $left_nav == 'my_message'}background:url(../images/myms_hover.png)0 0 no-repeat;{/if}"></div>我的云盘</a></li>
+			</ul>
+			<span style="display: none;border-left: 1px solid #3270a7;border-right: 1px solid #4d91cc;height: 42px;float: right;"></span>
+		</div>
+	</div>
+	{/if}
+</div>
+
+<script>
+
+
+function search_check(){
+	var keyword = $('#keywords').val(); 
+	if(keyword == ''){
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+(function($){
+    $(function(){
+        $("li.nav-bar-option").mouseover(function(){
+            if(!$(this).hasClass("active"))
+            {
+                $(this).find("div.buttom-mark").addClass("buttom-mark-active");
+            }
+        }).mouseout(function(){
+            if(!$(this).hasClass("active"))
+            {
+                $(this).find("div.buttom-mark").removeClass("buttom-mark-active");
+            }
+        }).click(function(){
+            window.location.href = $(this).find('a').attr('href')
+        });
+    });
+
+})(jQuery)
+
+</script>

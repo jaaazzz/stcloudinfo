@@ -1,0 +1,132 @@
+<div class="row title">
+    <!-- {if $goods.goods_desc} -->
+    <span class="feature-title active">详情介绍</span>
+    <span class="comment-title" >评分评论</span>
+    <!--{else}-->
+    <span class="comment-title active" >评分评论</span>
+    <!--{/if}-->
+    <!-- {if $goods.has_file} -->
+    <span class="version-history-title">历史版本</span>
+    <!--{/if}-->
+</div>
+<div class="row content" style="margin-bottom:20px">
+    <!-- {if $goods.goodsDesc} -->
+    <div class="row feature active">
+        <div class="row content desc">{$goods.goodsDesc}</div>
+        {if $platform eq 'mobile'}
+        <script>
+            var detail_container = $(".content.desc");
+            var imgs = detail_container.find("img");
+            if (imgs.length) {
+                var imgs_container = $("<div class='imgs-container'><div class='arrow arrow-left'><span class='arrow-icon'></span></div><div class='imgs-wrap'><ul class='imgs-list'></ul></div><div class='arrow arrow-right'><span class='arrow-icon'></span></div></div>");
+                var imgs_list = imgs_container.find('ul');
+                imgs_container.appendTo(detail_container);
+
+
+
+
+                var index = 0;
+                for (; index < imgs.length; index++) {
+                    var _self = $(imgs[index]);
+                    var _self_clone = _self.clone();
+                    _self.removeAttr('style');
+                    $("<li class='imgs-item'></li>").append(_self_clone).appendTo(imgs_list);
+                    _self.remove();
+                }
+
+                imgs_list.width(imgs.length * 334 + 30 * index);
+                var img_index = 0;
+                $(".imgs-container").on("click",".arrow", function(e){
+                    var _self = $(e.target).closest('.arrow');
+                    if (_self.hasClass('arrow-left') && img_index > 0) {
+                        imgs_list.animate({"marginLeft": -(364 * --img_index) + "px"});
+                    } else if (_self.hasClass('arrow-right') && img_index < index - 2) {
+                        imgs_list.animate({"marginLeft": -(364 * ++img_index) + "px"});
+                    }
+                });
+            }
+        </script>
+        {/if}
+    </div>
+
+    <div class="row comment">
+    <!-- {else} -->
+    <div class="row comment active" >
+    <!-- {/if} -->
+        <div class="row comment-status">
+            <div class="pull-left all-users-star">
+                <span>用户评分</span>
+                <span class="comment-star">
+                    <span class="stars star_0">
+                        <span class="stars star_1">
+                            <span class="stars star_2">
+                                <span class="stars star_3">
+                                    <span class="stars star_4">
+                                        <span class="stars star_5">
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </span>
+                <span style="font-size:14px;color:#7c7c7c;"class="comment-star-grade"></span>
+                <span style="font-size:14px;color:#999;" class="comment-star-number"></span>
+            </div>
+            <div class="pull-right my-star">
+                <span>我要评分</span>
+                <span class="comment-star choose name-tip" data-toggle="tooltip" data-original-title="">
+                    <span class="stars star_0"  data-score=1>
+                        <span class="stars star_1" data-score=1>
+                            <span class="stars star_2" data-score=2>
+                                <span class="stars star_3" data-score=3>
+                                    <span class="stars star_4" data-score=4>
+                                        <span class="stars star_5" data-score=5>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                </span>
+                <span class="stars-text" style="font-size:14px;color:#999;">点星星即可评分</span>
+            </div>
+        </div>
+        <div class="row wanna-comment" >
+            <span class="users-comment">
+                用户评论<span class="comment-number"></span>
+            </span>
+            <span class="i-wanna-comment name-tip" data-toggle="tooltip" data-original-title="">
+                我要评论
+            </span>
+            <span class="pull-right">您还能输入：300个字</span>
+        </div>
+
+        <div class="row edit-comment">
+            <div class="arrow">
+                <em>◆</em>
+                <span>◆</span>
+            </div>
+            <textarea id="comment-content"></textarea>
+            <div class="row comment-operation">
+                <button class="btn-zondy comment-btn pull-right">提交</button>
+                <span class="comment-cancel pull-right">取消</span>
+            </div>
+        </div>
+        <ul class="row comment-list" id="go-comment">
+
+        </ul>
+        <span class="no-comment">暂无评论，快来坐沙发吧~</span>
+        <div class="pagination pagination-centered">
+             <ul>
+                <li class="pagination-arrow"><a href="javascript:void(0);">«</a></li>
+                <li class="pagination-arrow"><a href="javascript:void(0);">»</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row version-history">
+        <ul class="row version-list">
+        </ul>
+    </div>
+</div>

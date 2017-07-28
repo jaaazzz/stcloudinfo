@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>资源中心_地图服务_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="themes/appcloud/css/select2.min.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/mapservice.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <style>
+        .select2{
+            width: 290px;
+            !important;
+        }
+        .select2-container{
+            z-index:9999;
+        }
+
+        /*.changeposition{
+            position: fixed;
+            top:570px;
+            z-index:10012;
+        }
+        .changeposition2{
+            position: fixed;
+            top:25px;
+        }*/
+        .content-body{
+            /*border:1px solid #dcdcdc;*/
+            width:200px;
+            box-sizing:border-box;
+            text-align:center;
+        }
+        .content-head{
+            width:180px;
+            margin:5px 10px;
+            border-bottom:1px solid #dcdcdc;
+        }
+        .service-content:focus{outline:none;}
+        .service-type-list{
+            width:136px;
+            height:40px;
+            line-height:40px;
+            margin:0 auto;
+            font-size:14px;
+            color:#666;
+            margin-left:45px;
+        }
+        .service-type-name{display:inline-block;width:80px;height:20px;line-height:20px;color:#666;cursor:pointer;float: left;background:#f3f6fc;margin-top:10px;}
+        .service-x{margin-left:15px;cursor:pointer;display: none;float: left;padding:0;height:20px;width:20px;line-height:20px;font-size:16px;margin-top:10px;color:#666;}
+        #pageId ul{
+            float: right;
+            margin-bottom:20px;
+        }
+        .pagination ul>.active>a{
+            background:#0fa7ff;
+            border:1px solid #0fa7ff;
+            border-right:none;
+            color:#fff;
+        }
+        .pagination ul>.li-num>a:hover{
+            border:1px solid #0091ff;
+            background:#0091ff;
+            border-right:none;
+            color:#fff;
+        }
+        .pagination ul>.pre>a:hover{
+            border:1px solid #0091ff;
+            background:#0091ff;
+            border-right:none;
+            color:#fff;
+        }
+        .pagination ul>.next>a:hover{
+            border:1px solid #0091ff;
+            background:#0091ff;
+            border-left:none;
+            color:#fff;
+        }
+        .service-detail-list:hover{
+            -webkit-box-shadow: 0px 5px 20px rgba(75,176,229,0.3);
+            -moz-box-shadow: 0px 5px 20px rgba(75,176,229,0.3);
+            -ms-box-shadow: 0px 5px 20px rgba(75,176,229,0.3);
+            box-shadow: 0px 5px 20px rgba(75,176,229,0.3);  
+        }
+        
+        
+    }
+    </style>
+    <body>
+
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div style="width:100%;height:48px;"></div>
+        <div class="container">
+            <div class="hover" style="z-index: 100;left:0;top:0;background-color:#666;opacity:0.3; position: fixed; display: none;width:100%;height:100%;"></div>
+            <!-- <div class="resource-navigation clearfix">
+                <a href="resource.php?do=mapservice" class="col-sm">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/map_s.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            地图服务
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=sdk" class="col-sm sdk">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/sdk.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            SDK
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=service" class="col-sm  active">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/cat_27_active.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            服务资源
+                        </div>
+                    </div>
+                </a>
+                <div class="col-sm blank-div"></div>
+            </div> -->
+            
+            <div class="content-body" style="float:left" id="tabbox">
+               <!--  <div class="content-head">
+                    <div style="border-bottom:3px solid #6389de;width:35px;font-size:16px;font-weight:bold;">目录</div>
+                </div> -->
+            <div style="background:#f3f6fc;padding:16px;">
+                <div style="width:168px;border-bottom:1px solid #dcdcdc;">
+                    <div style="font-weight:bold;font-size:22px;color:#333;height:32px;line-height:32px;">服务类型</div>
+                </div>
+                <div style="width:168px;">
+                    <div class="service-type-list"><span class="service-type-name" value="WMS">WMS服务</span><span class="service-x">×</span></div>
+                    <div class="service-type-list"><span class="service-type-name" value="WFS">WFS服务</span><span class="service-x">×</span></div>
+                    <div class="service-type-list"><span class="service-type-name" value="WCS">WCS服务</span><span class="service-x">×</span></div>
+                    <div class="service-type-list"><span class="service-type-name" value="WMTS">WMTS服务</span><span class="service-x">×</span></div>
+                    <div class="service-type-list"><span class="service-type-name" value="WFS-G">WFS-G服务</span><span class="service-x">×</span></div>
+                </div>
+                <div style="width:168px;border-bottom:1px solid #dcdcdc;">
+                    <div style="font-weight:bold;font-size:22px;color:#333;height:32px;line-height:32px;">数据类型</div>
+                </div>
+                <div style="width:168px;border-bottom:1px solid #dcdcdc;">
+                    {foreach from=$gislist item=item}
+                    <div class="service-type-content" style="margin:0px auto;color:#6389de;width:100%;height:40px;"><span class="service-data-type" style="cursor:pointer;display:inline-block;float:left;height:20px;line-height:20px;margin-left:55px;margin-top:10px;font-size:14px;color:#666;" value="{$item.id}">{$item.name}</span><span class="service-data-type-x" style="display:none;margin-left:20px;float:left;cursor:pointer;margin-top:10px;font-size:14px;color:#666;">×</span><div style="clear:both;width:100%;height:2px;"></div></div>
+                    {/foreach}
+                </div>
+                <div style="width:168px;">
+                    <div style="font-weight:bold;font-size:22px;color:#333;height:32px;line-height:32px;">专题服务</div>
+                </div>
+                <div style="width:168px;margin-bottom:16px;">
+                    <select class="special-service" style="width:122px;color:#666;height:26px;margin:0 auto;padding:0;line-height:26px;font-size:14px;">
+                        <option value="">所有</option>
+                        {foreach from=$themelist item=item}
+                        <option value="{$item.id}" class="find-option">{$item.name}</option>
+                        {/foreach}
+                    </select>   
+                </div>
+                <!-- <div style="width:180px;margin:5px 10px;border-bottom:1px solid #dcdcdc;">
+                    <div style="margin-left:10px;font-weight:bold;">选择所有类型服务</div>
+                </div> -->
+                <div style="width:168px;border-top:1px solid #dcdcdc;padding-top:24px;padding-bottom:8px;">
+                    <div class="all-service-type" style="font-size:22px;color:#4bb0e5;cursor:pointer;">所有类型</div>
+                </div>
+            </div>
+                <div id="apply-btn" onclick="delete_batch_modal()" style="width:200px;height:30px;line-height:30px;color:#ffffff;text-align:center;border-radius:5px;cursor:pointer;margin-bottom:10px;padding-top:64px;background:url(../images/服务许可.png)50% 0 no-repeat;background-color:#4bb0e5;font-size:16px;margin-top:8px;">
+                申请全部服务许可
+                </div>
+            </div>
+            <div class="content-lists" style="float:right;width:935px;">
+                <div class="service-reseach" style="width:100%;border:1px solid #dcdcdc;height:36px;overflow:hidden;margin:0 auto;box-sizing:border-box;margin-bottom:24px;">
+                    <input class="service-content" type="text" style="border:none;height:34px;margin:0;box-shadow:0 0 0 #4bb0e5;padding:0 5px;width:860px;float:left;border-radius:0px;"><span class="service-reseach-btn" style="display:inline-block;height:34px;width:60px;text-align:center;line-height:34px;font-size:18px;color:#fff;background:#4bb0e5;margin:0;padding:0;float:right;cursor:pointer;">搜索</span>
+                </div>
+                <div>
+                <ul class="content-detail-lists">
+                    <!-- <li class="service-detail-list" style="border-bottom:2px solid #999;padding:0 0 14px 0;margin:0 0 14px 0;">
+                        <div class="detail-right">
+                            <h4>全国影像地图服务</h4>
+                            <ul style="">
+                                <li><span>服务类型：</span><span></span></li>
+                                <li><span>服务简介：</span><span></span></li>
+                                <li><span>服务地址：</span><span></span></li>
+                                <li><span>服务元数据：</span><span></span></li>
+                            </ul>
+                        </div>
+                        <div class="detail-left"><img src=""></div>
+                    </li> -->
+                    {foreach from=$service_list item=item}
+                        <li class="service-detail-list" style="border-bottom:1px solid #dcdcdc;margin:0 0 14px 0;height:210px;box-sizing:border-box;">
+                            <div class="detail-left" style="float:left;width:200px;height:160px;margin:5px 32px;overflow:hidden;"><img id="ServiceImg" src="{$service_img}" style="" onerror="javascript:this.src='themes/appcloud/resource/0F5B63DA-0062-41EA-8D44-185D57060137.png'" alt="暂未提供缩略图！"></div>
+                            <div class="detail-right" style="float:left;width:670px;margin-top:4px;">
+                                <a href="resource.php?do=service_detail&id={$item.id}"><span style="font-size:20px;font-weight:bolder;">{$item.name}</span></a>
+                                
+                                <ul style="margin-top:16px;">
+                                    <li><span>服务类型：</span><span>{$item.type}</span></li>
+                                    <li><span>服务简介：</span><span>{$item.introduction}</span></li>
+                                    <li><span style="float:left;">服务地址：</span>{foreach from=$item.serviceUrl item=it}<a href="{$it}" target="_Blank" style="display:inline-block;width:600px;"><span style="text-decoration: underline;color:blue;">{$it}</span></a><br>{/foreach}</li>
+                                    <li><span>服务元数据：</span><a href="{$item.metaUrl}" target="_Blank"><span style="text-decoration: underline;color:blue;">{$item.metaUrl}</span></a></li>
+                                    <li>{ if $item.requireToken eq '1'}<div style="width:100px;display:inline-block;height:30px;line-height:30px;background-color:#4bb0e5;text-align:center;color:#fff;cursor:pointer;margin-top:4px;" onclick="apply_this({$item.id});">申请服务许可</div>{/if}</li>
+                                </ul>
+                            </div>
+                            
+                        </li>
+                    {/foreach}
+                </ul>
+                </div>
+                <div id="pageId">
+                </div>
+                <div id="prompt_content_delelt_app" class="modal prompt_content_modal hide" style="width: 300px; min-height: 160px; margin:0;position:fixed;top:200px;left:39%; background-color: rgb(255, 255, 255);  border: 1px solid #cdcdcd !important;">
+                    <div class="modle-title" style="height: 45px;line-height: 45px;padding-left: 20px;font-size: 16px;font-weight: bold;border-bottom: 1px solid #cdcdcd;">
+                    申请服务许可
+                    <div class="" style="float: right;width: 40px;text-align: center;cursor: pointer;font-size: 22px;color: #333;" onclick="close_modal()">×</div>
+                    </div>
+                    <div style="width: 300px;margin: auto;font-size: 14px;">
+                        <div style="float:left;line-height:44px;margin-left: 25px;">申请期限:</div>
+                        <div style="text-indent:10px;">
+                        <select id="time-limit" style="display:inline-block;width:60px;margin-top:8px;" onchange="select_time(this)">
+                        <option value="1" selected="selected">永久</option>
+                        <option value="2">限时</option>
+                        </select>
+
+                    <select name="time-num" class="time-num"  style="display:none;width:50px;margin-top:8px;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                    <select name="time-unit" class="time-unit" style="display:none;width:50px;margin-top:8px;">
+                        <option value="1">月</option>
+                        <option value="12">年</option>
+                    </select>
+                    </div>
+                    </div>
+                    <div style="width: 300px;margin: auto;font-size: 14px;">
+                    <div style="float:left;display:none;">选择服务:</div>
+                    <div style="text-indent:10px;display:none;">
+                        <select class="services">
+                            <option value="0">全部</option>
+                            {foreach from=$service_list item=item}
+                            <option value="{$item.id}">{$item.name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                    </div>
+                    <div class="modle-foot" style="width:350px;height:65px;margin:auto;margin-top: 5px;">
+                      <div class="ok-btn" id="delete-app-can-btn" style="width: 130px;height: 30px;line-height: 30px;border: 1px solid #3dac69;background-color: #3dac69;color: #ffffff;float: left;text-align: center;border-radius: 5px;cursor: pointer;margin-top: 10px;margin-left: 25px;font-size: 14px;">
+                        申请
+                      </div>
+                      <div class="can-btn" style="width: 100px;height: 30px;line-height: 30px;float: left;text-align: center;cursor: pointer;margin-top: 10px;margin-left:5px;font-size: 14px;color: #3a85c6;"  onclick="close_modal()">
+                        取消
+                      </div>
+                  </div>
+                </div>
+
+                <div id="apply_token" class="modal prompt_content_modal hide" style="width: 400px; min-height: 200px; margin:0;position:fixed;top:200px;left:37%; background-color: rgb(255, 255, 255);  border: 1px solid #cdcdcd !important;">
+                    <div class="modle-title" style="height: 45px;line-height: 45px;padding-left: 20px;font-size: 16px;font-weight: bold;border-bottom: 1px solid #cdcdcd;">
+                    申请服务许可
+                    <div class="" style="float: right;width: 40px;text-align: center;cursor: pointer;font-size: 22px;color: #333;" onclick="close_modal()">×</div>
+                    </div>
+                    <div style="width: 300px;margin: 0px 30px;font-size: 14px;">
+                        <div style="float:left;line-height:44px;">申请期限:</div>
+                        <div style="text-indent:10px;">
+                        <select id="all_time" style="display:inline-block;width:60px;margin-top:8px;" onchange="select_time(this)">
+                        <option value="1" selected="selected">永久</option>
+                        <option value="2">限时</option>
+                        </select>
+
+                    <select name="time-num" class="time-num allnum"  style="display:none;width:50px;margin-top:8px;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                    </select>
+                    <select name="time-unit" class="time-unit allunit" style="display:none;width:50px;margin-top:8px;">
+                        <option value="1">月</option>
+                        <option value="12">年</option>
+                    </select>
+                    </div>
+                    </div>
+                    <div><input type="checkbox" class="isAll" onchange="isAll();" checked='checked' style="margin-left:100px;">全部</div>
+                    <div style="width: 340px;margin: 10px 30px;font-size: 14px;display:none;" class="show-services">
+                    <div style="float:left;">选择服务:</div>
+                    <div style="text-indent:10px;">
+                        <select id="select-services" class="services" style="z-index:9999;">
+                            
+                        </select>
+                    </div>
+                    </div>
+                    <div class="modle-foot" style="width:350px;height:65px;margin:auto;margin-top: 5px;">
+                      <div class="ok-btn" id="apply" style="width: 130px;height: 30px;line-height: 30px;border: 1px solid #3dac69;background-color: #3dac69;color: #ffffff;float: left;text-align: center;border-radius: 5px;cursor: pointer;margin-top: 10px;margin-left: 25px;font-size: 14px;">
+                        申请
+                      </div>
+                      <div class="can-btn" style="width: 100px;height: 30px;line-height: 30px;float: left;text-align: center;cursor: pointer;margin-top: 10px;margin-left:5px;font-size: 14px;color: #3a85c6;"  onclick="close_modal()">
+                        取消
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    
+
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/mapservice.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
+    <script type="text/javascript">
+        var data = '{$service_json}';
+        $("#select-services").select2({
+            data: JSON.parse(data),
+            placeholder:'请选择服务',
+            allowClear:true,
+            multiple: true,
+            formatSelection: format,
+            width:'270px'
+        })
+
+        function isAll(){
+            if(!$('.isAll').prop('checked')){
+                $('.show-services').css('display','block');
+            }else{
+                $('.show-services').css('display','none');
+            }
+        }
+
+        function format(item) { 
+            return item.tag; 
+        }
+
+        function apply(){
+            var time_limit = $("#all_time").val();
+            var time_num = $(".allnum").val();
+            var time_unit = $(".allunit").val();
+            var service_ids;
+            if($('.isAll').prop('checked')){
+                service_ids='all';
+            }else{
+                var reslist=$("#select-services").select2("data");
+                var ids = new Array();
+                for(var i =0;i<reslist.length;i++){
+                    ids.push(reslist[i].id);
+                }
+                // alert(ids.join(','));
+                service_ids=ids.join(',');
+            }
+            var data = {
+                "act" : "apply_service_token",
+                "time_limit" : time_limit,
+                "time_num" : time_num,
+                "time_unit" : time_unit,
+                "service_type" : service_ids
+            };
+            $.get('ajax.php',data,function(result){
+                    if(result.status==200){
+                        window.location="user.php?act=my_token";
+                    }else{
+                        if(result.msg == "not_login"){
+                            GucLogin();
+                        }else{
+                            alert(result.content.text);
+                        }
+                    }
+                },'JSON');
+        }
+
+        function delete_batch_modal(){
+            $('.hover').css("display","block");
+            $('.services').val(0);
+            $('#time-limit').val(1);
+            $('#apply_token').css("display","block");
+            $('#apply').attr("onclick","apply()");
+        }
+
+        function apply_this(id){
+            $('#time-limit').val(1);
+            $(".time-num").css("display","none");
+            $(".time-unit").css("display","none");
+            $('.hover').css("display","block");
+            $('.services').val(id);
+            $('#prompt_content_delelt_app').css("display","block");
+            $('#delete-app-can-btn').attr("onclick","apply_service_token()");
+        }
+
+        function close_modal(){
+            $('.hover').css("display","none");
+            $('.prompt_content_modal').css("display","none");
+        }
+        function select_time(n){
+            if(n.value==2)
+            {
+                $(".time-num").css("display","inline-block");
+                $(".time-unit").css("display","inline-block");
+            }else if(n.value==1)
+            {
+                $(".time-num").css("display","none");
+                $(".time-unit").css("display","none");
+            }
+        }
+
+        function checkall(){
+            if($("#checkall").is(":checked")){
+                $(".checkone").prop("checked",true);
+            }else{
+                $(".checkone").prop("checked",false);
+            }
+        }
+        
+
+        function apply_service_token(){
+            var time_limit = $("#time-limit").val();
+            var time_num = $(".time-num").val();
+            var time_unit = $(".time-unit").val();
+            var service_type = $(".services").val();
+            var data = {
+                "act" : "apply_service_token",
+                "time_limit" : time_limit,
+                "time_num" : time_num,
+                "time_unit" : time_unit,
+                "service_type" : service_type
+            };
+            $.get('ajax.php',data,function(result){
+                if(result.status==200){
+                    window.location="user.php?act=my_token";
+                }else{
+                    if(result.msg == "not_login"){
+                        GucLogin();
+                    }else{
+                        alert(result.content.text);
+                    }
+                }
+            },'JSON');
+        }
+
+        $(function(){
+            var st = "{$st}";
+            var gdt = "{$gdt}";
+            var tt = "{$tt}";
+            var sear = "{$search}";
+            var page_size = "{$page_size}";
+            var stt = st.split(',');
+            if(st != ""){
+                $('.service-type-name').each(function(){
+                    var stn = $(this).attr("value");
+                    for(var i = 0;i<stt.length;i++){
+                        if(stt[i] == stn){
+                            $(this).css({'background-color':'rgb(155, 155, 155)'});
+                            $(this).siblings('.service-x').css({'display':'block'});
+                        }   
+                    }
+                });
+            }
+            if(gdt != ""){
+                $('.service-data-type').each(function(){
+                    var sdt = $(this).attr("value");
+                    if(sdt==gdt){
+                        $(this).css({'background-color':'rgb(155, 155, 155)'});
+                        $(this).siblings('.service-data-type-x').css({'display':'block'});
+                        $(this).addClass('data-type-selected').parent().siblings('.service-type-content').children('.service-data-type').removeClass('data-type-selected');
+                    }
+                });
+            }
+            if(tt != ""){
+                $('.find-option').each(function(){
+                    var fo = $(this).attr("value");
+                    if(fo==tt){
+                        $(this).attr("selected","selected");
+                    }
+                });
+            }
+
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        // return "{$p_url}p="+n;
+                        //reseachService(n);
+                        //alert(1);
+                        return 'resource.php?do=service&service_type='+st+'&gis_data_type='+gdt+'&theme_type='+tt+'&search='+sear+'&p='+n+'&page_size='+page_size;
+                    }
+                })            
+            }
+
+
+            $(window).scroll(function(){
+                if($(document).scrollTop()>166){
+                // console.log("111");
+                $("#tabbox").addClass("changeposition2");
+                $("#apply-btn").addClass("changeposition");
+                }else{
+                $("#tabbox").removeClass("changeposition2");
+                $("#apply-btn").removeClass("changeposition");
+                }
+            })
+
+        })
+
+        $('.service-type-name').click(function(){
+            $(this).css({'background-color':'rgb(155, 155, 155)'});
+            $(this).siblings('.service-x').css({'display':'block'});
+            // var data = $(this).attr('value');
+            reseachService(1);
+        })
+        $('.service-x').click(function(){
+            $(this).css({'display':'none'});
+            $(this).siblings('.service-type-name').css({'background-color':'#f3f6fc'});
+            reseachService(1);
+        })
+        $('.service-data-type').click(function(){
+            $(this).addClass('data-type-selected').parent().siblings('.service-type-content').children('.service-data-type').removeClass('data-type-selected');
+            $(this).css({'background':'rgb(155, 155, 155)'});
+            $(this).parent().siblings('.service-type-content').children('.service-data-type').css({'background':'#f3f6fc'});
+            $('.service-data-type-x').css({'display':'none'});
+            $(this).siblings('.service-data-type-x').css({'display':'block'});
+            reseachService(1);
+        })
+        $('.service-data-type-x').click(function(){
+            $(this).css({'display':'none'});
+            $('.service-data-type').css({'background-color':'#f3f6fc'});
+            $(this).siblings('.service-data-type').removeClass('data-type-selected');
+            reseachService(1);
+        })
+       
+        $('.special-service').change(function(){
+            reseachService(1);
+        })
+
+        $('.all-service-type').click(function(){
+            $('.service-type-name').css({'background-color':'rgb(255, 255, 255)'});
+            $('.service-data-type').css({'background-color':'rgb(255, 255, 255)'});
+            $('.service-x').css({'display':'none'});
+            $('.service-data-type-x').css({'display':'none'});
+            $('.special-service option:first').prop('selected','selected');
+            $('.service-data-type').removeClass('data-type-selected');
+            reseachService(1);
+        })
+        $('.service-reseach-btn').click(function(){
+            reseachService(1);
+        })
+
+        $('.service-content').on('keypress',function(e){
+            if(e.keyCode == '13'){
+                reseachService(1);
+            }
+        })
+
+        function reseachService(page){
+            var service_type = [];
+           
+            for(var i = 0;i<$('.service-type-name').length;i++){
+                if($('.service-type-name')[i].style.backgroundColor == 'rgb(155, 155, 155)'){
+                    var mess = $('.service-type-name')[i].attributes.value.nodeValue;
+                    // data.service_type += $('.service-type-name')[i].attributes.value.nodeValue+',';
+                    //data.service_type.append(mess);
+                    service_type.push(mess);
+                }
+            }
+            var service_type = service_type;
+
+            if($('.data-type-selected') && $('.data-type-selected').length>0){
+                var gis_data_type = $('.data-type-selected').attr('value');
+            }else{
+                var gis_data_type = '';
+            }
+            
+            var theme_type = $('.special-service').val();
+            var search = $('.service-content').val();
+            // $.ajax({
+            //     url:'resource.php?do=service',
+            //     data:data,
+            //     type:'get',
+            //     success:function(res){
+                    
+            //     }
+            // })
+            window.location.href = 'resource.php?do=service&service_type='+service_type+'&gis_data_type='+gis_data_type+'&theme_type='+theme_type+'&search='+search+'&page='+page+'&pageSize=';
+        }
+    </script>
+</html>

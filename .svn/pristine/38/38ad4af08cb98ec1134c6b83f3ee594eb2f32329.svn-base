@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <node code="MENU" name="时空信息云平台门户菜单">
+        <Field index="1" active="index_active" url="index.php" is_user="false" status="true"><lable>首页</lable></Field>
+        <Field index="2" active="map_active" url="onlinemap.php" is_user="false" status="true"><lable>在线地图</lable></Field>
+        <!-- <Field index="3" active="news_active" url="news.php" is_user="false" status="true"><lable>新闻中心</lable></Field> -->
+        <Field index="3" active="resource_active" url="resource.php" is_user="false" status="true"><lable>服务资源</lable></Field>
+        <Field index="4" active="app_active" url="app.php" is_user="false" status="true"><lable>在线应用</lable></Field>
+        <Field index="5" active="sfw_active" url="sfw.php" is_user="false" status="true"><lable>软件中心</lable></Field>
+        <Field index="6" active="news_active" url="resource.php?do=sdk" is_user="false" status="true"><lable>开发中心</lable></Field>
+        <Field index="7" active="user_active" url="user.php?act=my_app" is_user="true" status="true"><lable>个人中心</lable></Field>
+    </node>
+</root>

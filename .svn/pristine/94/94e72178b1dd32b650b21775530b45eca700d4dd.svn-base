@@ -1,0 +1,48 @@
+[
+    {
+        "id": "1",
+        "lx": "1",
+        "layer": "武汉矢量",
+        "text": "INDEX2015G",
+        "default": "left",
+        "zoom": 0,
+        "centerx": 111.5771,
+        "centery": 26.45507,
+        "projection":"degree",
+        "maxZoom":0,
+        "minZoom":0
+    },
+    {
+        "id": "2",
+        "lx": "2",
+        "layer": "武汉影像",
+        "text": "DOM_H",
+        "default":"right",
+        "zoom": 0,
+        "centerx": 111.74,
+        "centery": 26.01,
+        "projection":"degree"
+    },
+    {
+        "id": "4",
+        "lx": "2",
+        "layer": "武汉矢量",
+        "text": "武汉矢量",
+        "default":"",
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "projection":"degree"
+    },
+    {
+        "id": "5",
+        "lx": "2",
+        "layer": "WORLDJW",
+        "text": "WORLDJW",
+        "default":"",
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "projection":"degree"
+    }
+]

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>应用部署</title>
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/base.css" rel="stylesheet" type="text/css" />  
+    <link href="DialogBySHF.css" rel="stylesheet" type="text/css" />
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js'} -->
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+          {insert_scripts files='json2.js'}
+        <![endif]-->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    <!-- {insert_scripts files='jquery.selectbox-0.2.min.js'} -->
+    <!-- {insert_scripts files='kindeditor/kindeditor-min.js,kindeditor/zh_CN.js'} -->
+    <!-- {insert_scripts files='DialogBySHF.js'} -->
+</head>
+<style type="text/css">
+.main-content
+{
+  text-align: center;
+  line-height: 400px;
+  font-size: 24px;
+}
+.no-product-con
+{
+  width: 1024px;
+  margin: auto;
+  margin-top: 30px;
+}
+.no-product-con-left
+{
+  width: 350px;
+  text-align: left;
+  float: left;
+  font-size: 18px;
+  padding-top: 150px;
+  line-height: 30px;
+  margin-left: 20px;
+}
+.no-product-con-right
+{
+  width: 550px;
+  text-align:right;
+  float: left;
+} 
+</style>
+<!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+<div class="main-content">
+  <div class="no-product-con">
+      <div class="no-product-con-right">
+          <img src="themes/appcloud/images/appcloud_empty.png">
+      </div>
+      <div class="no-product-con-left">
+          应用正在部署，<br>点击<a style="color: #3a85c6;" href="user.php?act=my_app">我的应用</a>查看详情<br>
+          <p style="color: #EA4614;font-size: 12px;line-height: 23px;">
+            提示：软件部署成功后需进入云主机打开应用完成初始化
+          </p>
+      </div>  
+      <div style="clear: both;"></div>
+  </div>    
+</div>
+<!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+</body>
+

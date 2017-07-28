@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN" xml:lang="zh-CN"   >
+    <head>
+        <meta charset="utf-8">
+        <title>已购软件_管理中心_{$shop_name}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/order_list.css" rel="stylesheet" type="text/css" />
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+      
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]--> 
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js,jquery.tmpl.min.js,jquery.selectbox-0.2.min.js'} -->
+        <style type="text/css">
+            .changeposition{
+                position: fixed;
+                top: 0;
+            }
+            .base-tab div{
+                height: 16px;
+                padding-left: 36px;
+                line-height: 16px;
+            }
+        </style>
+        </style>
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container" style=" min-height: 481px; ">
+            <div class="base-tab" style="width:164px;height:220px;margin-right:30px;margin-top:20px;background:#f5f5f5;border:0px;float:left;" id="tabbox">
+                <div style="margin-top:54px;">
+                    <img src="themes/appcloud/images/checkpass.png" style="vertical-align:text-top;">
+                <a href="user.php?act=order_list"  style="font-size:16px;{if !$status}color:#4bb0e5; {/if}">申请成功</a>
+                </div>
+
+                <div style="margin-top:32px;">
+                    <img src="themes/appcloud/images/check.png" style="vertical-align:text-top;">
+                <a href="user.php?act=bill&status=0" style="font-size:16px;{if $status && $status eq 0}color:#4bb0e5; {/if}">审核中...</a>
+                </div>
+
+                <div style="margin-top:32px;">
+                    <img src="themes/appcloud/images/checkfail.png" style="vertical-align:text-top;">
+                <a href="user.php?act=bill&status=2" style="font-size:16px;{if $status && $status eq 2}color:#4bb0e5; {/if}">申请失败</a>
+                </div>
+            </div>
+<!--             <div class="base-tab">
+              <a href="user.php?act=order_list" class="gis-inline-block {if !$status}active{/if}">申请成功</a>
+              <a href="user.php?act=bill&status=0" class="gis-inline-block {if $status && $status eq 0}active{/if}">审核中</a>
+              <a href="user.php?act=bill&status=2" class="gis-inline-block {if $status && $status eq 2}active{/if}">申请失1</a>
+            </div> -->
+            <div class='order-list clearfix' style="width:976px;float:right;">
+                <div class="purchased">
+                    <!-- {if $all_order neq [] } -->
+                    <div class="row tools">
+                        <ul class="row my-tools">
+                            <!-- {foreach from=$all_order item=tool } -->
+                            <!-- {if in_array($tool.cat_id,$cat_id_arr) && (($tool.type eq 'c' && $tool.addon_list) || tool.type neq 'c')} -->
+                            <li class="tool-list <!-- {if $tool.is_trial && !$tool.is_delete} --> is-trial <!-- {elseif $tool.is_delete} --> is-deleted <!-- {else} --> is-buy <!-- {/if} -->">
+                                <div class="row information">
+                                    <!-- {if $tool.is_trial} -->
+                                    <div class="try">
+                                        <span></span>
+                                    </div>
+                                    <!-- {/if} -->
+                                    <div class="span2 {if $tool.top_cat eq 'm'} mobile{/if}">
+                                        <!--{if $version_sign eq 'pre'}-->
+                                        <div class="app-beta"></div>
+                                        <!--{elseif $version_sign eq 'test'}-->
+                                        <div class="app-test"></div>
+                                        <!--{/if}-->
+                                        <!-- {if $tool.rest_time >= 0 and $tool.is_on_sale} -->
+                                        <a href="sfw.php?do=goods&id={$tool.id}&bac=order&order_sn={$tool.order_sn}">
+                                        <!-- {/if} -->
+                                        <img src="{if $tool.goods_img}{$tool.goods_img}{else}{if $tool.top_cat eq 'm'}./images/mobile-default.png{else}./images/app_01.png{/if}{/if}" />
+                                        <div class="app-background"></div>
+                                        <!-- {if $tool.type eq 'c'} -->
+                                        <div class="app-customize-icon"></div>
+                                        <!-- {elseif $tool.type eq 'i'} -->
+                                        <div class="app-no-customize-border"></div>
+                                        <!-- {/if} -->
+                                        <div class="app-category-icon 
+                                            {if $tool.top_cat eq 'd'}
+                                            desktop
+                                            {elseif $tool.top_cat eq 'w'}
+                                            web
+                                            {elseif $tool.top_cat eq 'm'}
+                                            android
+                                            {/if}">
+                                        </div>
+                                        <!-- {if $tool.rest_time >= 0 and $tool.is_on_sale} -->
+                                        </a>
+                                        <!-- {/if} -->
+                                    </div>
+                                    <!-- #BeginLibraryItem "/library/purchased_list.lbi" --><!-- #EndLibraryItem -->
+                                </div>
+                            </li>
+                            <!-- {/if} -->
+                            <!-- {/foreach} -->
+                        </ul>
+                    </div>
+                    <!-- {else} -->
+                    <div class="tip-content">
+                        <div class="tip-content-text" style="left:160px;">
+                            <div class="text-1">您还没有任何软件～</div>
+                            <div class="text-2">去<a href="sfw.php?do=category">软件中心</a>看看吧!</div>
+                        </div>
+                        <img src="themes/appcloud/images/no_product_img.png">
+                    </div>
+                    <!-- {/if} -->
+                </div>
+            </div>
+            <div id="pageId" class="col-sm" style="width: 1024px;">
+            </div>
+
+            <div id="renewals-tool" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="row renewals-title title">付款列表</div>
+                    <div class="row feedback-textarea" id="feedback-textarea">
+                        <div class="feedback-textarea-body">
+                            <div class="feedback-textarea-title">
+                                <span class="f1">软件名称</span>
+                                <span class="f1">购买期限</span>
+                                <span class="f1">到期时间</span>
+                                <span class="f2">消费点数</span>
+                            </div>
+                            <div class="tool-info">
+                                <span class="f1 tool-name">
+
+                                    <span id="tool-name">商品名称</span>
+                                </span>
+                                <span class="f1">
+                                    <!-- #BeginLibraryItem "/library/select.lbi" --><!-- #EndLibraryItem -->
+                                </span>
+                                <span class="f1 tool-date">2013-11-18</span>
+                                <span class="f2 tool-price">¥0</span>
+                            </div>
+
+                            <div class='trangle'>
+                                <em>&#9670;</em>
+                                <span>&#9670;</span>
+                            </div>
+                            <div id="plug-info-list">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <button class="btn-zondy renew-btn okey">确定</button>
+                        <a href="javascript:void(0);" data-dismiss="modal" aria-hidden="true" class="feedback-cancle">取消</a>
+                    </div>
+                </div>
+            </div>
+            <div id="goto-buy-page" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="row info">
+                        <div class="img-wrap">
+                            <img src=""/>
+                        </div>
+                        <div class="confirm-info re-customize">
+                            <div class="confirm-name"></div>
+                            <div class="confirm-date">购买期限：<span></span></div>
+                            <div class="confirm-deadline">到期时间：<span></span></div>
+                            <div class="confirm-price">价格：<span></span></div>
+                            <button id='goto-buy-page-btn' class="btn-zondy success">付&nbsp;&nbsp;&nbsp;款</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 2014年5月9日17:30:19 yingang edit
+                1.修改本段代码结构，用于处理多条绑定记录（废弃原来见上方注释掉模块）
+                2.对本段代码采用的css样式增加在页面头部<style>标签内
+            -->
+            <div id="binding-info-page" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="info">
+                        <div class='row binding-title title'>机器绑定信息</div>
+                        <div class="row">
+                            <div class="binding-table">
+                                <div class="binding-table-head">授权信息</div>
+                            </div>
+                        </div>
+                        <div class='row binding-content'></div>
+                        <div class='footer'>
+                            <a href="javascript:void(0);" id="binding-info-unbind"><button class="btn-zondy">解除授权</button></a>
+                            <a href="javascript:void(0);" data-dismiss="modal" aria-hidden="true" class="binding-cancel">取消</a>
+                            <span id="binding-info-error"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="check-deploy-tip" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="info">
+                        <div class='row check-deploy-title title'>提示</div>
+                        <div class='row check-deploy-content'>
+                            <div class="content-1">
+                                <span class="tip-content"></span>
+                            </div>
+                            <div class="content-2">
+                                为方便在多台主机上使用该软件，我们建议您重新购买！
+                                <a href="sfw.php">重新购买</a>
+                            </div>
+                        </div>
+                        <div class='footer'>
+
+                        </div>
+                    </div>
+                </div>                
+            </div>
+
+            <div id="payment" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="row info">请在新打开的页面完成支付</div>
+                    <div class="row operation"> 
+                        <button class="btn-zondy success" onclick="window.location.href='user.php?act=order_list';">完成付款</button>
+                        <button href="#" class="btn-zondy problem">付款遇到问题</button>
+                    </div>
+                </div>
+            </div>
+            <div id="offline-install" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <!--{if $version_sign eq 'release'}-->
+                    <a class="mapgis-running btn-zondy-fix" href="{$file_server}MapGIS10/OfflineRuntime/MapGIS%2010%20Runtime.exe" target="_blank">迁移MapGIS运行时<span class="install-cloud"></span></a>
+                    <!-- {else} -->
+                    <a class="mapgis-running btn-zondy-fix" href="{$file_server}MapGIS10Beta/OfflineRuntime/MapGIS%2010%20Runtime.exe" target="_blank">迁移MapGIS运行时<span class="install-cloud"></span></a>
+                    <!-- {/if} -->
+                    <a class="mapgis-setup btn-zondy-fix" href="" target="_blank">迁移<span class="install-name">MapGIS基础版</span>安装包<span class="install-cloud"></span></a>
+                    <p>说明：</p>
+                    <p>1.离线安装包适用场景：当需要在非本机上安装产品时，先迁移到本地，然后拷贝上述两个安装包到目标机器上安装即可；</p>
+                    <p>2.需离线安装多个产品时，共用一份MapGIS运行时包即可。</p>
+                    <p>3.在安装过程中需要用到相关离线授权问题，请在下载的MapGIS运行时文件包下的Program\Authorization目录下取得离线授权MapGIS.Authorization.exe文件，并查看说明文档完成安装。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        <script>
+        $(function(){
+            $(".row.information").on('mouseover',function(){
+                $(this).find('.i-want-comment,.binding-info,.i-want-delete,.i-want-recover').css('visibility','visible');
+            }).on('mouseout',function(){
+                $(this).find('.i-want-comment,.binding-info,.i-want-delete,.i-want-recover').css('visibility','hidden');
+            });
+
+            $(".is-deleted .renew_trial").hide();
+        })
+        </script>
+        <script>
+            $(function(){
+                var price_num = 1;
+                var price_unit = 1;//如果是月，则为1；如果是年，则为12.
+                var tool_name = "默认名称";
+                var order_count = 1;
+                var basePrice = 0;
+                var tool_info={};
+                var startdate=null;
+                var date = null;
+                var product_type = 'all';
+                var now_date = '{$now_date}';
+
+                var init = function(){
+                    $('.select').selectbox();
+                    $('.product-status-span select').on('change',function() {
+                        //changeProductShow($(this).val());
+                        //product_type = $(this).val();                        
+                        var base_url = "{$current_url}";
+                        base_url = base_url.replace(/(&s=)(\w+)/, "");
+                        window.location.href = base_url + "&s=" + $(this).val();
+                    })
+                    //changeProductListTop($(".product-status-span select").val());
+                    $('.i-want-delete').on('click', deleteProductInfo);
+                    $('.i-want-recover').on('click', recoverProductInfo);
+                    $('.disabled').attr('disabled','disabled');
+                    $(".edit-name-button").on("click",function(e){editName(e);});
+                    $(".edit-input *").on("click",function(e){stopPropagation(e);});
+                    $(".edit-input input:text").on("blur",function(e){commitEditName(e);})
+                                                .on("keydown",function(e){
+                                                    if(e.keyCode == 13){
+                                                        commitEditName(e);
+                                                        e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+                                                        }
+                                                    else inputDownName(e);
+                                                    })
+                                                .on("keyup",function(e){
+                                                        inputUpName(e);
+                                                });
+                    $(".edit-input-confirm-button").on("click",function(e){commitEditName(e);});
+                    $(".toggle").toggle(function(e){closeList(e);} ,function(e){openList(e);});
+
+                    // $("button.download").click(function(){
+                    //     window.open('user.php?act=prepare_for_download&sn=' + $(this).attr('data-sn'));
+                    // });     
+
+                    // $("button.deploy").click(function(){
+                    //     window.open('app.php?act=create&sn=' + $(this).attr('data-sn'));
+                    // }); 
+
+                    $("li.btn-proxy-install").click(function(){
+                        window.open('user.php?act=prepare_download_proxy&sn=' + $(this).attr('data-sn'));
+                    });               
+
+                    $('.qr-code-install').on('click', function(){
+                        $('#qrcode').modal('show');
+                    });
+
+                    $('.btn-download-apk').on('click', function(){
+                        var sn = $(this).closest('.btn-group').attr('data-sn');
+                        window.open('user.php?act=prepare_for_download&download=apk&sn=' + sn);
+                    });
+
+                    $('.btn-download-qr').on('click', function(){
+                        var sn = $(this).closest('.btn-group').attr('data-sn');
+                        window.open('user.php?act=down_mobile_author&sn=' + sn);
+                    });                            
+
+                    $(".toggle-include").toggle(function(){
+                        $(this).siblings('.span7').children('.include-name').show();
+                        $(this).siblings('.span7').children('.include-name-clone').hide();
+                        $(this).text("收起");
+                    },function(){
+                        $(this).siblings('.span7').children('.include-name').hide();
+                        $(this).siblings('.span7').children('.include-name-clone').show();
+                        $(this).text("更多");
+                    });
+
+
+
+                    $(".renewals").on("click", function(e){
+
+                        var modal = $("#renewals-tool");
+                        modal.css({'left':'','top':''});
+
+                        tool_info.name=$(this).parent('.span3').siblings('.span7').find('.the-name').html();
+                        getGoodsName(tool_info.name);
+
+                        basePrice=$(this).parent('.span3').siblings('.span7').attr('data-tool-price');
+
+                        $(".time-num").next('.sbHolder').children('.sbSelector').html("1");
+                        $(".time-unit").next('.sbHolder').children('.sbSelector').html("月");
+                        price_num = 1;
+                        price_unit = 1;
+                        order_count = parseInt($(this).parent('.span3').siblings('.span7').attr('data-order-count'));
+                        startdate=$(this).parent('.span3').siblings('.span7').attr('data-tool-date');
+                        rest_time=$(this).parent('.span3').siblings('.span7').attr('data-rest-time');
+                        is_rest_flag = false;
+                        if (rest_time < 0) {
+                            is_rest_flag = true;
+                        }
+                        updateDate();
+
+                        $(".btn-zondy.renew-btn").html('确定');
+                        $(".btn-zondy.renew-btn").removeClass('disabled').removeAttr('disabled');
+                        $("#feedback-textarea .plug-info").remove();
+
+                        tool_info.type=$(this).parent('.span3').siblings('.span7').attr('data-tool-type');
+                        tool_info.picsrc=$(this).parent('.span3').siblings('.span2').find("img").attr('src');
+                        tool_info.order_sn=$(this).parent('.span3').siblings('.span7').attr('data-order-sn');
+                        //add by zc 2016-02-25
+                        //增加已选归属工作室id，用于续费及重新选配的默认显示
+                        tool_info.workbench_id = $(this).parent('.span3').siblings('.span7').attr('data-workbench-id');
+                        if(tool_info.type=='c' || tool_info.type=='i'){
+                            var data;
+                            var length;
+                            var plug_info=new Array();
+                            var plug_price=new Array();
+                            var plug_info_tag=$(e.target).parent(".span3").siblings('.span7').find('.include-name .addon_name');
+                            length=plug_info_tag.length;
+
+                            $('#feedback-textarea .trangle').show();
+                            $('#plug-info-list').show();
+
+                            // if(length>5){
+                            //     $("#plug-info-list").css("height","209px");
+                            //     $("#plug-info-list").css("overflow-y","scroll");
+                            // }
+                            // else{
+                            //     $("#plug-info-list").css("height","auto");
+                            //     $("#plug-info-list").css("overflow-y","hidden");
+                            // }
+                            for(i=0;i<length;i++){
+                                plug_info.push($(plug_info_tag[i]).html());
+                                plug_price.push($(plug_info_tag[i]).attr('data-addon-final-price'));
+
+                            }
+
+                            for(i=0;i<plug_info.length;i++){
+                                data = {
+                                    "index": i,
+                                    "addon_name": plug_info[i],
+                                    "addon_price": parseFloat(plug_price[i])
+                                };
+                                basePrice = parseFloat(basePrice) + parseFloat(plug_price[i]);
+                                addPlugInfoNormal(data);
+                            }
+                            basePrice = Math.round(basePrice * 100) /100; //to deal with js 0.1 * 3 bug
+
+                        }
+
+                        else{
+                            $('#feedback-textarea .trangle').hide();
+                            $('#plug-info-list').hide();
+
+                        }
+                        
+                        var totalPrice = parseFloat(basePrice * order_count);
+                        $(".tool-price").html(totalPrice);
+                        $(".tool-date").html(date);
+
+                    });
+
+                    $(".btn-zondy.renew-btn").on("click",function(){
+                        $(".btn-zondy.renew-btn").html('提交中...');
+                        $(".btn-zondy.renew-btn").addClass('disabled').attr('disabled','disabled');
+                        renewalsPayData(tool_info.order_sn);
+                    })
+
+                    $(".time-num").on("change", function(){
+                        price_num = $(this).val();
+                        updatePrice();
+                        updateDate();
+                    });
+
+                    $(".time-unit").on("change",function(){
+                        price_unit = $(this).val();
+                        updatePrice();
+                        updateDate();
+                    });
+
+                    $("#goto-buy-page-btn").on("click",function(){
+                        window.open(tool_info.url);
+                        $("#goto-buy-page").modal('hide');
+                        $("#payment").modal('show');
+
+                    })
+
+                    $("#renewals-tool").on('show', function(){
+                        $("body").unbind("mousewheel DOMMouseScroll").bind("mousewheel DOMMouseScroll", function(e){
+                            e.preventDefault();
+                        });
+                        var scrollItem = $("#plug-info-list");
+                        var wrapHeight = scrollItem.height();
+                        var LIST_HEIGHT = 42;
+                        var clientHeight = scrollItem.find('.plug-info').length * LIST_HEIGHT - 1;
+                        if (wrapHeight >= 209) {
+                            scrollItem.scroll(0,0);
+                            scrollItem.unbind("mousewheel DOMMouseScroll").bind("mousewheel DOMMouseScroll", function(e){
+                                var delta = 0;
+                                var orgEvent = e.originalEvent;
+                                if (orgEvent.wheelDelta) { delta = orgEvent.wheelDelta; }
+                                if (orgEvent.detail)     { delta = orgEvent.detail * -1; }
+                                if (orgEvent.deltaY) { delta = orgEvent.deltaY * -1; }
+                                var scrollTopHeight = $(this).scrollTop();
+
+                                if (delta > 0) { // Up
+                                    if (scrollTopHeight > 0) {
+                                        e.preventDefault();
+                                        var listNum = Math.ceil(scrollTopHeight / LIST_HEIGHT) - 1;
+                                        $(this).scrollTop(listNum * LIST_HEIGHT);
+                                    }
+                                } else { // Down
+                                    if (wrapHeight + scrollTopHeight < clientHeight) {
+                                        e.preventDefault();
+                                        var listNum = Math.floor(scrollTopHeight / LIST_HEIGHT) + 1;
+                                        $(this).scrollTop(listNum * LIST_HEIGHT);
+                                    }
+                                }
+                            });
+                        }
+                        
+                    }).on('hide', function(){
+                        $("body").unbind("mousewheel DOMMouseScroll");
+                        $("#plug-info-list").unbind("mousewheel DOMMouseScroll");
+                    });
+
+                    $(".renew_trial").on("click", function(e){
+                        $("#renew-trial-page .confirm-name").html($(this).parent().siblings('.the-name').html());                        
+
+                        var newDate = DateAdd( "d ",15, new Date(parseDateNum(now_date)));
+
+                        var year = newDate.getFullYear();
+                        var month = newDate.getMonth()+1;
+                        var day = newDate.getDate();
+
+                        var hour = newDate.getHours();
+                        var minutes = newDate.getMinutes();
+
+                        if(month<10){
+                            month=String('0'+month);
+                        }
+                        if(day<10){
+                            day = String('0'+day);
+                        }
+                        hour = 0;minutes = 0;
+                        if(hour<10){
+                            hour = String('0'+hour);
+                        }
+                        if(minutes<10){
+                            minutes = String('0'+minutes);
+                        }
+
+                        $("#renew-trial-page .confirm-deadline span").html(String(year+'-'+month+'-'+day + " " + hour + ":" + minutes));
+
+                        $("#renew-trial-page .img-wrap > img").attr('src',$(this).parents('.span7').siblings('.span2').find("img").attr('src'));
+                        var order_id = $(this).parents('.span7').attr('data-order-sn');
+                        $("#renew-trial-page-btn").off().on("click", function(){
+                            var _btn = $(this);
+                            _btn.addClass('disabled').attr('disabled','disabled').html("处理中...");
+                            $.post("user.php?act=renew_trial",{
+                                order_id: order_id
+                            }, function(result){
+                                eval("var json = "+result);
+                                if(json.success) {
+                                    location.reload();
+                                } else {
+                                    alert(json.msg);
+                                    _btn.removeClass('disabled').removeAttr('disabled').html("确&nbsp;&nbsp;&nbsp;认");
+                                }
+                            }, "TEXT");
+                        });
+                    });
+
+                    $(".btn-offline-install").on("click", function(e){
+                        $("#offline-install .mapgis-setup").attr('href', 'user.php?act=prepare_for_download&sn=' + $(e.target).closest('li').attr('data-sn') + '&d_type=offline');
+                        $("#offline-install .install-name").text($(e.target).closest('.dropdown-menu').siblings('.btn-zondy').attr('data-goods-name'));
+                        $("#offline-install").modal("show");
+                    });           
+
+                    var includeArray = $('.include-name');
+                    var maxLenth = 60;
+                    for (var i = 0; i < includeArray.length; i++) {
+                        var listItem = $(includeArray[i]);
+                        var listItemClone = listItem.next('.include-name-clone');
+                        var includeLen = 0;
+                        var includeNameArray = listItem.find('.name-list a');
+                        for (var j = 0; j < includeNameArray.length; j++) {
+                            var item = $(includeNameArray[j]);
+                            if (item.attr('data-is-show') == 1) {
+                                var thisLen = getStringLen(item.text());
+                                includeLen += thisLen;
+                                if (includeLen < maxLenth) {
+                                    if (j != 0) {
+                                        listItemClone.html(listItemClone.html() + "、");
+                                    }
+                                    item.clone().appendTo(listItemClone);      
+                                } else{
+                                    listItemClone.html(listItemClone.html() + "、");
+                                    item.clone().text(util.chineseSubstr(item.text(),0,thisLen - includeLen + maxLenth -  j)).appendTo(listItemClone); 
+
+                                    listItemClone.html(listItemClone.html() + "...");
+                                    listItemClone.parent('.span7').siblings('.toggle-include').show();
+                                    break;
+                                }
+                            };
+                        }
+                    }
+
+                    updatePrice(); 
+                };
+                function changeProductShow(show_type) {
+                    changeProductListTop(show_type);
+                    changeShowTypeInfo(show_type);
+                }
+
+                function changeProductListTop(show_type) {
+                    var $all_product = $('.tool-list').not('.is-deleted');
+                    var $trial_product = $('.is-trial');
+                    var $buy_product = $('.is-buy');
+                    var $deleted_product = $('.is-deleted');
+                    $all_product.css('border-top','1px dashed #d5d5d5');
+                    $('.tool-list').hide();
+                    if (show_type === 'all') {
+                        $target = $all_product;
+                    } else if (show_type === 'buy') {
+                        $target = $buy_product;
+                    } else if (show_type === 'try') {
+                        $target = $trial_product;
+                    } else {
+                        //deleted
+                        $target = $deleted_product;
+                    }
+                    if($target.length == 0)
+                    {
+                        $(".no-order").show();
+                    }
+                    else
+                    {
+                        $(".no-order").hide();
+                    }
+                    $target.show().first().css('border-top','none');
+                }
+
+                function changeShowTypeInfo(type) {
+                    var show_type = {
+                        'all' : '全部',
+                        'buy' : '已购',
+                        'try' : '试用',
+                        'deleted': '已删除'
+                    };
+                    $('.product-show-type .inner-info').html(show_type[type]);
+                }
+
+                function deleteProductInfo(e) {
+                    var $product_li = $(e.target).parents('.tool-list');
+                    var id = $(e.target).attr('data-id');
+                    $product_li.find('.i-want-delete').html('删除中...');
+                    $.ajax({
+                        url : 'user.php?act=delete_trial_order',
+                        dataType : 'json',
+                        data : {
+                            order_id : id
+                        },
+                        success : function(result) {
+                            if (result.success) {
+                                /* 直接刷新页面 begin */
+
+                                window.location.reload();
+
+                                /* 直接刷新页面 end */
+                            } else {
+                                $(e.target).html('<span class="delete-error">删除失败</span>');
+                            }
+                        },
+                        error : function() {
+                            $(e.target).html('<span class="delete-error">删除失败</span>');
+                        }
+                    })
+                }
+
+                function recoverProductInfo(e) {
+                    var $product_li = $(e.target).parents('.tool-list');
+                    var id = $(e.target).attr('data-id');
+                    $product_li.find('.i-want-recover').html('恢复中...');
+                    $.ajax({
+                        url : 'user.php?act=recover_trial_order',
+                        dataType : 'json',
+                        data : {
+                            order_id : id
+                        },
+                        success : function(result) {
+                            if (result.success) {
+                                window.location.reload();
+                            } else {
+                                $(e.target).html('<span class="delete-error">恢复失败</span>');
+                            }
+                        },
+                        error : function() {
+                            $(e.target).html('<span class="delete-error">恢复失败</span>');
+                        }
+                    })
+                }
+
+                function getGoodsName(name){
+                    var maxLenth=24;
+                    var length=getStringLen(name);
+                        if(length>maxLenth){
+                            name=util.chineseSubstr(name, 0, 21);
+                            $("#tool-name").html(name+'...');
+                            }
+                        else $("#tool-name").html(name);
+                }
+
+                function renewalsPayData(order_sn){
+                    var period=price_num*price_unit;
+                    location.href = 'flow.php?step=finish_renew_order&period=' + period + '&order_id=' + order_sn;
+                };
+
+                function renewalsPayData_callback(result){
+                    eval("var json = "+result);
+                    var success=json.success;
+                    tool_info.url=json.result['url'];
+
+                    if (success) {
+                        $('goto-buy-page-btn').removeClass('disabled').removeAttr('disabled');
+                        $("#goto-buy-page .info img").attr("src",tool_info.picsrc);
+                        $("#goto-buy-page .info .confirm-name").html(tool_info.name);
+
+                        if (price_unit == 1) {
+                            $("#goto-buy-page .info .confirm-date").html("购买期限："+price_num + "个月");
+                        } else if (price_unit == 12) {
+                            $("#goto-buy-page .info .confirm-date").html("购买期限："+price_num + "年");
+                        }
+
+                        $("#goto-buy-page .info .confirm-deadline").html('到期时间：'+date);
+                        $("#goto-buy-page .info .confirm-price").html("价格：¥" + (basePrice * price_num * price_unit));
+
+                        $("#renewals-tool").modal('hide');
+                        $("#goto-buy-page").modal('show');
+                        $(".btn-zondy.renew-btn").html('确定');
+                        $(".btn-zondy.renew-btn").removeClass('disabled').removeAttr('disabled');
+
+                    }
+                    else{
+                        renewalsPayData_error(result);
+                    }
+
+                };
+
+                function renewalsPayData_error(result){
+                    alert(result.msg  ||  '购买发生了错误！');
+                    if(result.url != ''){
+                        window.location.href = result.url;
+                    }
+
+                };
+
+                function addPlugInfoFirst(data) {
+                    var plug_info = $("#include-plug_info_first").tmpl(data);
+                    $('#plug-info-list').append(plug_info);
+                };
+
+                function addPlugInfoNormal(data) {
+                    var plug_info = $("#include-plug_info_normal").tmpl(data);
+                    $('#plug-info-list').append(plug_info);
+                };
+
+                function editName(e) {
+                    var parent = $(e.target).closest('.name');
+                    var title = parent.find('.the-name');
+                    var editInput = parent.find('.edit-input');
+                    var editConfirmBtn = parent.find('.edit-name-confirm-button');
+                    var editBtn = parent.find('.edit-name-button');
+                    var label = parent.find('.label-placeholder');
+
+                    label.html(title.text());
+                    editInput.find('input:text').val('');
+                    editInput.show();
+                    title.hide();
+                    editBtn.hide();
+                    editConfirmBtn.show();
+                    editInput.find('input:text').focus();
+                    
+                    e.stopPropagation();
+                };
+
+                function inputDownName(e){
+                    $(e.target).closest('.name').find('.label-placeholder').text('');
+                };
+
+                function inputUpName(e){
+                    var parent = $(e.target).closest('.name');
+                    var title = parent.find('.the-name');
+                    var editInput = parent.find('.edit-input');
+                    var label = parent.find('.label-placeholder');
+
+
+                    var basicValue = title.text();
+                    var inputValue = editInput.find('input:text').val();
+                    var len = getStringLen(inputValue) ;
+
+                    if (inputValue == false){
+                        label.text(basicValue);
+                        eval(editInput.find('input:text').val(""));
+                    }
+
+                    if (len > 30) {
+                        eval(editInput.find('input:text').val(util.chineseSubstr(inputValue,0,30)));
+                    }
+
+                    
+                };
+
+                function commitEditName(e) {
+                    var parent = $(e.target).closest('.name');
+                    var title = parent.find('.the-name');
+                    var editInput = parent.find('.edit-input');
+                    var editConfirmBtn = parent.find('.edit-name-confirm-button');
+                    var editBtn = parent.find('.edit-name-button');
+
+                    var basicValue = title.text();
+                    var inputValue = editInput.find('input:text').val();
+                    var orderSn = $(e.target).closest('.span7').attr("data-order-sn");
+
+                    if (inputValue != '') {
+                        title.text(editInput.find('input:text').val());
+                        $.post('user.php?act=package_rename',{
+                            new_name: inputValue,
+                            order_sn:orderSn
+                        },function(result){
+                            eval("var json = "+result); 
+                            if (!json.success) {
+                                title.text(basicValue);
+                            }
+                        },"TEXT");
+                    }
+                    
+                    title.show();
+                    editInput.hide();
+                    editBtn.show();
+                    editConfirmBtn.hide();
+                };
+
+                function stopPropagation(e) {
+                    e.cancelBubble = true;
+                    e.stopPropagation();
+                };
+
+                function openList(e){
+                    var parent = $(e.target).closest('li');
+                    parent.css("margin-bottom", "0px").children(".include-list, .arrow").show();
+                };
+
+                function closeList(e){
+                    var parent = $(e.target).closest('li');
+                    parent.css("margin-bottom", "-1px").children(".include-list, .arrow").hide();
+                };
+
+                function getStringLen(string){
+                    return string.match(/[^ -~]/g) == null ? string.length : string.length + string.match(/[^ -~]/g).length ;
+                };
+
+                function updatePrice(){
+                    price = basePrice * price_num * price_unit * order_count;
+                    price = Math.round(price * 100) / 100; //to deal with js 0.1 * 3 bug
+                    $(".tool-price").html(price);
+                };
+
+                function DateAdd(interval,number,date){
+            　　/*
+            　　* 功能:实现VBScript的DateAdd功能.
+            　　* 参数:interval,字符串表达式，表示要添加的时间间隔.
+            　　* 参数:number,数值表达式，表示要添加的时间间隔的个数.
+            　　* 参数:date,时间对象.
+            　　* 返回:新的时间对象.
+            　　* var now = new Date();
+            　　* var newDate = DateAdd( "d ",5,now);
+            　　*--------------- DateAdd(interval,number,date) -----------------
+            　　*/
+            　　switch(interval)
+            　　{
+            　　　　case "y " : 
+            　　　　　　date.setFullYear(date.getFullYear()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "q " : 
+            　　　　　　date.setMonth(date.getMonth()+number*3);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "m " : 
+            　　　　　　date.setMonth(date.getMonth()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "w " : 
+            　　　　　　date.setDate(date.getDate()+number*7);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "d " : 
+            　　　　　　date.setDate(date.getDate()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "h " : 
+            　　　　　　date.setHours(date.getHours()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "m " : 
+            　　　　　　date.setMinutes(date.getMinutes()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　case "s " :
+            　　　　　　date.setSeconds(date.getSeconds()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　　　default : 
+            　　　　　　date.setDate(d.getDate()+number);
+            　　　　　　return date;
+            　　　　　　break;
+            　　}
+            }
+
+            function parseDateNum(dateStringInRange) {
+               var isoExp = /^\s*(\d{4})-(\d\d)-(\d\d)\s*(\d\d)\:(\d\d)$/,
+                    date = new Date(NaN), month,
+                    parts = isoExp.exec(dateStringInRange);
+
+               if(parts) {
+                    month = +parts[2];
+                    date.setFullYear(parts[1], month - 1, parts[3]);
+                    date.setHours(parts[4]);
+                    date.setMinutes(parts[5]);
+
+                    if(month != date.getMonth() + 1) {
+                        date.setTime(NaN);
+                    }
+               }
+               return date;
+             }
+
+            function updateDate(){
+                date = startdate;
+                if (is_rest_flag) {
+                    date = now_date;
+                    var number = price_num * price_unit * 30 + 1;
+                }
+                else{
+                    var number = price_num * price_unit * 30;
+                }
+                var newDate = new Date(parseDateNum(date));
+                /* 修改续费时间不对的问题,一个月按31天算 */
+                //var number = price_num * price_unit * 31 + 1;
+                newDate = DateAdd( "d ",number,newDate );
+
+                var year = newDate.getFullYear();
+                var month = newDate.getMonth()+1;
+                var day = newDate.getDate();
+
+                var hour = newDate.getHours();
+                var minutes = newDate.getMinutes();
+
+                if(month<10){
+                    month=String('0'+month);
+                }
+                if(day<10){
+                    day = String('0'+day);
+                }
+                if(hour<10){
+                    hour = String('0'+hour);
+                }
+                if(minutes<10){
+                    minutes = String('0'+minutes);
+                }
+                if (is_rest_flag) {
+                    hour = String('00');
+                    minutes = String('00');
+                }
+                date = String(year+'-'+month+'-'+day + " " + hour + ":" + minutes);
+
+                $(".tool-date").html(date);
+            }
+
+
+            /*2014年5月9日17:26:29 yin edit
+                1.将原本click的handler方法废弃（注释掉，见该方法下）
+                2.新handler中处理多条绑定记录（原来只处理一条）
+                3.增加解除绑定的手机验证功能
+            */
+            var timer;
+            var ltime = 90;
+            var identify_code_url = "sms.php";
+            $("a.binding-info").click(function(){
+
+                var modal = $("#binding-info-page");
+                modal.css({'left':'','top':''});
+
+                var order_id = $(this).parent('.span3').siblings('.span7').attr('data-order-sn');
+                var $parent = $("#binding-info-page").data('order-sn',order_id);
+                var $bindContent = $parent.find(".binding-content");
+                var $bindTip = $parent.find(".binding-tip");
+
+                var loading = function(){
+                    $bindTip.hide();
+                    $parent.find("#binding-info-unbind").hide();
+                    $parent.find("#binding-info-error").empty();
+                    $parent.find("#bingding-info-phno-in").val("");
+                    //$parent.find("#bingding-info-phno-in").data("binding-info-valId","");
+                    //$parent.find("#binding-info-phno-sh").val("");
+                    $bindContent.empty().removeClass("binding-content-max").addClass("binding-content-min").html("获取中...");
+                }
+
+                var fail = function(){
+                    $bindContent.empty().html("获取绑定信息失败");
+                }
+
+
+                var initPhoneCheck = function(){
+
+                    $parent.find('#binding-info-phno-btn').unbind("click").click(function(){
+
+                        // var phone = $parent.find("#binding-info-phno-sh").val();
+                        // if(phone.length !=11){
+                        //     $parent.find('#binding-info-error').html("手机号码不正确");
+                        //     return;
+                        // }
+                        // $parent.find('#binding-info-error').empty();
+
+                        // onTimer();
+
+                        // timer = window.setInterval("onTimer()", 1000);
+
+                        var send_url = identify_code_url + "?action=send";
+
+                        $.get(
+
+                            send_url,
+
+                            function(data,status){
+                                data = eval("("+data+")");
+                                // window.console.info(data.msg);
+                                // window.console.info(data.result);
+                                //wenbaolin 2014.06.09 modify
+                                //获取掩码成功，不用提示；不成功，则必须提示
+                                if(data.success){
+                                    $parent.find('#binding-info-error').empty();
+                                    onTimer();
+                                    timer = window.setInterval("onTimer()", 1000);
+                                    $parent.find('#bingding-info-phno-in').data("binding-info-valId",data.result);
+                                }else{
+                                    errInfo = $parent.find("#binding-info-error");
+                                    errInfo.html(data.msg);
+                                }
+
+                            }
+                        );
+                    });
+
+                    onTimer = function(){
+                        var btn = $parent.find('#binding-info-phno-btn');
+                        if(ltime < 1){
+                            btn.removeAttr("disabled");
+                            btn.html("获取验证码");
+                            window.clearTimeout(timer);
+                            ltime = 90;
+                            return;
+                        }
+                        
+                        btn.html(ltime + "秒后可重新获取验证码").attr('disabled',"true");
+
+                        ltime--;
+                    }
+                }
+
+                loading();
+
+                $.ajax({
+                    url:"ajax.php",
+                    dataType:"json",
+                    cache:false,
+                    data:{ 
+                        'act'      : "bindOperated",
+                        'type'     : "get",
+                        'order_sn' : order_id
+                    },
+                    success:function(e){
+                        if(e.success){
+                            var conts = $("<ul>",{"class":"binding-table"}).appendTo($bindContent.empty().removeClass("binding-content-min").addClass("binding-content-max"));
+                            if(!(e.result)){
+                                fail();
+                                return false;
+                            }
+                            var datas = e.result,
+                                unbindSum = 0,
+                                canUnbind = false,
+                                unbindLi = $("<li>",{"class":"binding-table-xl"}).appendTo(conts);
+                            for (var ii = 0; ii < datas.length; ii++) {
+                               var tdata = datas[ii],
+                                    mac = tdata.BingdingMac && "" != tdata.BingdingMac && null != tdata.BingdingMac,
+                                    lst = tdata.LastTime && "" != tdata.LastTime && null != tdata.LastTime,
+                                    ins = tdata.valid_install_time && "" != tdata.valid_install_time && null != tdata.valid_install_time;
+                                    client_info = tdata.ClientInfo ? tdata.ClientInfo : "暂未获取";
+                                if(mac){
+                                    canUnbind = true;
+                                }
+                                if(mac && lst){
+                                    var client_info_area = $("<span>",{"class":"binding-table-l","html":client_info,"data-goggle":"tooltip","data-placement":"top","title":client_info});
+                                        client_info_area.tooltip();
+                                    $("<li>").appendTo(conts)
+                                      .append($("<input>",{"type":"checkbox","class":"binding-item-checked col-sm","checked":true}))
+                                      .data("data-unbind-id",tdata.AuthorizeId)
+                                      .attr("data-goggle","tooltip")
+                                      .attr("data-placement","bottom")
+                                      .attr("title",tdata.AuthorizeId)
+                                      .append(client_info_area)
+                                      .append($("<span>",{"class":"binding-table-l","html":"已授权"}))
+                                      .append($("<span>",{"class":"binding-table-l","html":"-"}));
+                                }else{
+                                    unbindSum++;
+                                }
+                            };
+                            if(unbindSum==0 && datas.length == 0){
+                               unbindLi.html(order_count + "个尚未绑定机器，可以自由安装");
+                               
+                            }else{
+                                unbindLi.remove();
+                            }
+                            if(canUnbind){
+                                $parent.find("#binding-info-unbind").show();
+                            }
+                        }else{
+                            fail();
+                        }
+                    },
+                    error:function(){fail();}
+                }); 
+            });
+
+            $("#binding-info-page #binding-info-unbind").click(function(){
+                //判断是否选择要解绑的记录并获取多个sn
+                var $parent = $("#binding-info-page"),
+                    order_id = $parent.data('order-sn'),
+                    errorCont = $parent.find("#binding-info-error").empty(),
+                    sn = "",
+                    targets = $("#binding-info-page .binding-table").find("input.binding-item-checked:checked");
+                if(targets.length<=0){
+                    errorCont.html("请选择需要解绑的记录");
+                    return false;
+                }
+                for (var i = 0; i < targets.length; i++) {
+                    sn += ($(targets[i]).parent()).data("data-unbind-id") + ",";
+                };
+                sn = sn.slice(0,sn.length-1);
+
+                //判断是否验证码是否填写正确
+                var identify_code = ($parent.find("#bingding-info-phno-in")).val();
+                var identify_valId = ($parent.find("#bingding-info-phno-in")).data("binding-info-valId");
+
+                // if ("" == identify_code || null == identify_code || ""==identify_valId || null==identify_valId) {
+                //     errorCont.html("验证码错误");
+                //     return false;
+                // };
+
+                //清空错误消息并confirm是否解除绑定
+                errorCont.empty();
+                if(confirm("确定要解除现有绑定吗？")){
+                    $.ajax({
+                        url:"ajax.php",
+                        dataType:"json",
+                        cache:false,
+                        data:{ 
+                            'act'      : "bindOperated",
+                            'type'     : "unbind",
+                            'order_sn' : order_id,
+                            'sn'       : sn,
+                            "identify_code":identify_code,
+                            "guid":identify_valId
+                        },
+                        success:function(e){
+                            if(e.success){
+                                alert("解除绑定成功!");
+                                $(".binding-cancel").trigger('click');
+                            }else{
+                                errorCont.html(e.msg);
+                            }
+
+                        },
+                        error:function(){ alert("解除绑定失败!");}
+                    });              
+                }                
+            });
+
+            $("#binding-info-page *[data-dismiss='modal']").click(function(){
+                $("#binding-info-page").modal('hide');
+            });
+            //RollToBill();          
+            init();
+                /* 分页 begin */
+                {if $page_count && $page}
+                var max_page = {$page_count};
+                var current_page = {$page};
+                initPageHtml(max_page,current_page);
+                {/if}
+                //初始化分页
+                function initPageHtml(maxPage,current_page){
+                    zdPage.creatPageHtml({
+                        current_pno : current_page,
+                        pagerId : 'pageId',
+                        total : maxPage,
+                        mode : 'link',
+                        getLink : function(n){
+                            return "{$current_url}&p="+n;
+                        }
+                    })            
+                }
+                /* 分页 end */
+            });  
+        </script>
+
+        <script type="text/javascript">
+            !function (e) {
+                e.fn.tinyDraggable = function (n) {
+                    var t = e.extend({handle: 0, exclude: 0}, n);
+                    return this.each(function () {
+                        var n, o, u = e(this), a = t.handle ? e(t.handle, u) : u;
+                        a.on({
+                            mousedown: function (a) {
+                                if (!t.exclude || !~e.inArray(a.target, e(t.exclude, u))) {
+                                    a.preventDefault();
+                                    var f = u.offset();
+                                    n = a.pageX - f.left, o = a.pageY - f.top, e(document).on("mousemove.drag", function (e) {
+                                        u.offset({top: e.pageY - o, left: e.pageX - n})
+                                    })
+                                }
+                            }, mouseup: function () {
+                                e(document).off("mousemove.drag")
+                            }
+                        })
+                    })
+                }
+            }(jQuery);
+            $('.modal').tinyDraggable({exclude:'input,select,button,a'});
+
+            $(function(){
+            $(window).scroll(function(){
+                if($(document).scrollTop()>172){
+                // console.log("111");
+                $("#tabbox").addClass("changeposition")
+                }else{
+                $("#tabbox").removeClass("changeposition")
+                }
+            })
+        })
+            
+        </script>
+
+        <script id="include-plug_info_first" type="text/x-jquery-tmpl">
+        <div class='plug-info plug-first'>
+            <span class='f1'>${addon_name}</span>
+            <span class='f2'>${addon_price}</span>
+        </div>
+        </script>
+        <script id="include-plug_info_normal" type="text/x-jquery-tmpl">
+        <div class='plug-info {literal}{{{/literal}if index == 0{literal}}}{/literal}plug-first{literal}{{{/literal}/if{literal}}}{/literal} {literal}{{{/literal}if index%2 != 0{literal}}}{/literal}plug-o{literal}{{{/literal}/if{literal}}}{/literal}'>
+            <span class='f1'>${addon_name}</span>
+            <span class='f2'>${addon_price}</span>
+        </div>
+        </script>
+        
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript" src="js/order_list.js"></script>
+</html>
+
+

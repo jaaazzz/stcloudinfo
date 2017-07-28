@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地质产品_主页面</title>
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--[if lt IE 8]>
+    <script type="text/javascript" src="js/iconfont-ie7.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <script type="text/javascript" src="js/html5.js"></script>
+    <![endif]-->
+
+</head>
+<style type="text/css">
+	.content-con
+	{
+		width: 1170px;
+		margin: auto;
+		min-height: 700px;
+		margin-top: 30px;
+	}
+</style>
+<body>
+<div class="space-time-cloud-home">
+<!-- 引入Header开始 -->
+    <!-- #BeginLibraryItem "/library/header_new.lbi" --><!-- #EndLibraryItem -->
+<!-- 引入Header结束 -->
+<style type="text/css">
+	.main-container{
+		width: 1170px;
+		height: 100%;
+		padding-top: 20px;
+		font-family: "Microsoft Yahei", Arial;
+	}
+	.main-container .top-part .left-part{
+		float: left;
+		width: 579px;
+	}
+	.main-container .top-part .right-part{
+		float: right;
+		width: 558px;
+	}
+	.main-container .top-part .title{
+		height: 40px;
+		line-height: 40px;
+		border-bottom: 1px solid #2B6264;
+		font-size: 18px;
+		color: #666666;
+	}
+	.main-container .top-part .title .icon-realtime{
+		background: url(themes/appcloud/images/geoimgs/realtime_progress.png);
+		height: 24px;
+		width: 24px;
+		display: inline-block;
+		margin-right: 8px;
+		vertical-align: middle;
+	}
+	.main-container .top-part .title .icon-search{
+		background: url(themes/appcloud/images/geoimgs/search_icon.png);
+		height: 24px;
+		width: 24px;
+		display: inline-block;
+		margin-right: 8px;
+		vertical-align: middle;
+	}
+	.main-container .top-part .left-part .news-logo{
+		margin-top: 16px;
+		height: 144px;
+		width: 579px;
+	}
+	.main-container .top-part .left-part .news-logo img{
+		height: 144px;
+		width: 579px;
+	}
+	.main-container .top-part .left-part .news-logo .news-title{
+		position: absolute;
+		margin-top: -21px;
+	    margin-left: 10px;
+	    color: white;
+	    font-size: 12px;
+	}
+	.main-container .top-part .right-part .search-items{
+		margin-top: 16px;
+	}
+	.main-container .top-part .right-part .search-items .item{
+		height: 32px;
+		line-height: 32px;
+		margin-bottom: 16px;
+	}
+	.main-container .top-part .right-part .search-items .item .title{
+		width: 210px;
+		display: inline-block;
+		padding-right: 15px;
+		text-align: right;
+		font-size: 16px;
+		color: #333333;
+		border-bottom: none;
+	}
+	.main-container .top-part .right-part .search-items .item .search-input{
+		height: 30px;
+		width: 280px;
+		padding: 0 5px;
+		font-size: 14px;
+		color: #666666;
+		/*border-radius: 4px;*/
+	}
+	.main-container .top-part .right-part .search-items .search-div{
+		text-align: center;
+	}
+	.main-container .top-part .right-part .search-items .search-div span{
+		width: 120px;
+		height: 36px;
+		line-height: 36px;
+		font-size: 14px;
+		color: white;
+		background: #71A100;
+		cursor: pointer;
+		border-radius: 4px;
+		display: inline-block;
+	}
+
+	.bottom-part .bottom-header{
+		height: 50px;
+		line-height: 50px;
+		background-color: #F1F1FD;
+	}
+	.bottom-part .bottom-header i.icon-geo-select{
+		background: url(themes/appcloud/images/geoimgs/select_geo_icon.png);
+		width: 24px;
+		height: 24px;
+		display: inline-block;
+		margin-right: 8px;
+		vertical-align: sub;
+		margin-left: 5px;
+	}
+	.bottom-part{
+		margin-top: 30px;
+	}
+	.bottom-part .bottom-header .title{
+		font-size: 18px;
+		color: #666666;
+	}
+	.bottom-part .bottom-header select#mapSelect{
+		float: right;
+		width: 380px;
+		height: 40px;
+		margin-top: 5px;
+		margin-right: 5px;
+		color: #333333;
+		font-size: 16px;
+	}
+	.bottom-part .map-show{
+		width: 1170px;
+		/*height: 684px;*/
+		height: 100%;
+		margin-top: 4px;
+		margin-bottom: 4px;
+	}
+	.bottom-part .map-show img{
+		width: 1170px;
+		height: 684px;
+	}
+	.clear{
+		clear: both;
+	}
+
+	.main-container .top-part .left-part .news-items{
+		margin-top: 20px;
+		width: 579px;
+		overflow:hidden;
+		max-height:222px;
+	}
+	.main-container .top-part .left-part .news-items .news-item{
+		margin-bottom: 16px;
+		font-size: 16px;
+		line-height: 1;
+		color: #333333;
+	}
+	.main-container .top-part .left-part .news-items .news-item .news-time{
+		display: inline-block;
+		width: 76px;
+		background: #E1E1F8;
+		text-align: center;
+		margin-right: 3px;
+		font-size: 12px;
+		padding: 4px 0;
+		color: #666666;
+	}
+	.main-container .top-part .left-part .news-items .news-item .news-content{
+		font-size: 16px;
+		color: #333333;
+		display: inline-block;
+		max-width: 490px;
+		overflow: hidden;
+    	white-space: nowrap;
+    	text-overflow: ellipsis; 
+	}
+</style>
+<div class="content-con">
+	<div class="main-container">
+		<div class="top-part">
+			<div class="left-part">
+				<div class="title"><i class="icon-realtime"></i><span>实时重要调查进展</span></div>
+				<div class="news-logo">
+					<img src="themes/appcloud/images/geoimgs/news.png">
+					<span class="news-title">南海神狐海域天然气水合物试采成功新闻发布会在京举行</span>
+				</div>
+				<div class="news-items">
+					<div class="news-item">
+						<span class="news-time">2017-07-07</span>
+						<span class="news-content" title="央视：湖北宜昌 我国页岩气调查取得重大突破 获得目前全球最古老页岩气藏">央视：湖北宜昌 我国页岩气调查取得重大突破 获得目前全球最古老页岩气藏</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-07</span>
+						<span class="news-content" title="国土资源部四个工作组驰援湘黔桂赣">国土资源部四个工作组驰援湘黔桂赣</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-06</span>
+						<span class="news-content" title="王昆与山东省国土资源厅副厅长刘鲁一行举行会谈">王昆与山东省国土资源厅副厅长刘鲁一行举行会谈</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-05</span>
+						<span class="news-content" title="进一步做好山洪和地质灾害防御">进一步做好山洪和地质灾害防御</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-05</span>
+						<span class="news-content" title="可燃冰开发可以控制在安全范围内">可燃冰开发可以控制在安全范围内</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-04</span>
+						<span class="news-content" title="推动新型城镇化的地质解决方案">推动新型城镇化的地质解决方案</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-03</span>
+						<span class="news-content" title="新华社：雄安新区开展地质调查工作">新华社：雄安新区开展地质调查工作</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-03</span>
+						<span class="news-content" title="国土资源卫星助力湖南抗洪抢险">国土资源卫星助力湖南抗洪抢险</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-03</span>
+						<span class="news-content" title="国务院办公厅关于印发全国深化简政放权放管结合优化服务改革电视电话会议重点任务分工方案的通知">国务院办公厅关于印发全国深化简政放权放管结合优化服务改革电视电话会议重点任务分工方案的通知</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-07-03</span>
+						<span class="news-content" title="应急技术指导中心紧急成立四个工作组 应对南方暴雨引发的地质灾害">应急技术指导中心紧急成立四个工作组 应对南方暴雨引发的地质灾害</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-06-30</span>
+						<span class="news-content" title="钟自然会见河南省国土资源厅厅长朱长青一行">钟自然会见河南省国土资源厅厅长朱长青一行</span>
+					</div>
+					<div class="news-item">
+						<span class="news-time">2017-06-30</span>
+						<span class="news-content" title="“海洋地质十号”下水意味着什么？">“海洋地质十号”下水意味着什么？</span>
+					</div>
+
+				</div>
+			</div>
+			<div class="right-part">
+				<div class="title"><i class="icon-search"></i><span>综合查询</span></div>
+				<div class="search-items">
+					<div class="item">
+						<span class="title">关键词：</span>
+						<input class="search-input" type="text" name="keyword">
+					</div>
+					<div class="item">
+						<span class="title">按地理位置查询：</span>
+						<input class="search-input" type="text" name="byPosition">
+					</div>
+					<div class="item">
+						<span class="title">按单位查询：</span>
+						<input class="search-input" type="text" name="byUnit">
+					</div>
+					<div class="item">
+						<span class="title">地学文献查询：</span>
+						<input class="search-input" type="text" name="byGeoDocument">
+					</div>
+					<div class="item">
+						<span class="title">钻孔查询：</span>
+						<input class="search-input" type="text" name="byZK">
+					</div>
+					<div class="item">
+						<span class="title">卫星XX查询：</span>
+						<input class="search-input" type="text" name="byGeo">
+					</div>
+					<div class="item">
+						<span class="title">时间：</span>
+						<input class="datePicker search-input" type="text" name="byTime">
+					</div>
+					<div class="search-div"><span>查询</span></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div class="bottom-part">
+			<div class="bottom-header">
+				<i class="icon-geo-select"></i>
+				<span class="title">地质图选择</span>
+				<select id="mapSelect" onchange="changeMap();">
+					<option value="geo1">全国1:20万区调资料分布图</option>
+					<option value="geo2">全国1:20万化探资料分布图</option>
+					<option value="geo3">全国1:20万水文资料分布图</option>
+					<option value="geo4">全国1:25万区调资料分布图</option>
+					<option value="geo5">全国1:25万航磁资料分布图</option>
+					<option value="geo6">全国1:5万区域地质调查数据资料分布图</option>
+					<option value="geo7">全国1:5万区域矿产调查数据资料分布图</option>
+				</select>
+				<div class="clear"></div>
+			</div>
+			<div class="map-show">
+				<img src="themes/appcloud/images/geoimgs/geo1.png">
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		setInterval(newsChange,1000);
+		// $('.datePicker').date_input();
+	})
+	function changeMap(){
+		var select_val = $('#mapSelect option:selected').val();
+		$('.map-show img').attr('src','themes/appcloud/images/geoimgs/'+select_val+".png");
+	}
+	function newsChange(){
+		// $('.news-items');
+		var firstNews = $('.news-items .news-item').get(0);
+		$(firstNews).animate({marginTop:'-37px'},500,'linear',function(){
+			$('.news-items').append("<div class='news-item'>"+firstNews.innerHTML+"</div>");
+			$(this).css('margin-top',0).remove();
+		});
+		
+
+	}
+</script>
+<!-- 引入Footer开始 -->
+    <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+<!-- 引入Footer结束 -->
+</div>
+
+
+</body>
+</html>

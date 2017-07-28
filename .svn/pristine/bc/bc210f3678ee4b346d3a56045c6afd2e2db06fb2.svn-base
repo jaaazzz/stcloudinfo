@@ -1,0 +1,52 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" >
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>
+Created by FontForge 20120731 at Wed Dec 14 09:43:38 2016
+ By admin
+</metadata>
+<defs>
+<font id="iconfont" horiz-adv-x="1024" >
+  <font-face 
+    font-family="iconfont"
+    font-weight="500"
+    font-stretch="normal"
+    units-per-em="1024"
+    panose-1="2 0 6 3 0 0 0 0 0 0"
+    ascent="896"
+    descent="-128"
+    x-height="792"
+    bbox="44 -64 959 830"
+    underline-thickness="0"
+    underline-position="0"
+    unicode-range="U+0078-E6AE"
+  />
+<missing-glyph 
+ />
+    <glyph glyph-name=".notdef" 
+ />
+    <glyph glyph-name=".notdef" 
+ />
+    <glyph glyph-name=".null" horiz-adv-x="0" 
+ />
+    <glyph glyph-name="nonmarkingreturn" horiz-adv-x="341" 
+ />
+    <glyph glyph-name="x" unicode="x" horiz-adv-x="1001" 
+d="M281 543q-27 -1 -53 -1h-83q-18 0 -36.5 -6t-32.5 -18.5t-23 -32t-9 -45.5v-76h912v41q0 16 -0.5 30t-0.5 18q0 13 -5 29t-17 29.5t-31.5 22.5t-49.5 9h-133v-97h-438v97zM955 310v-52q0 -23 0.5 -52t0.5 -58t-10.5 -47.5t-26 -30t-33 -16t-31.5 -4.5q-14 -1 -29.5 -0.5
+t-29.5 0.5h-32l-45 128h-439l-44 -128h-29h-34q-20 0 -45 1q-25 0 -41 9.5t-25.5 23t-13.5 29.5t-4 30v167h911zM163 247q-12 0 -21 -8.5t-9 -21.5t9 -21.5t21 -8.5q13 0 22 8.5t9 21.5t-9 21.5t-22 8.5zM316 123q-8 -26 -14 -48q-5 -19 -10.5 -37t-7.5 -25t-3 -15t1 -14.5
+t9.5 -10.5t21.5 -4h37h67h81h80h64h36q23 0 34 12t2 38q-5 13 -9.5 30.5t-9.5 34.5q-5 19 -11 39h-368zM336 498v228q0 11 2.5 23t10 21.5t20.5 15.5t34 6h188q31 0 51.5 -14.5t20.5 -52.5v-227h-327z" />
+    <glyph glyph-name="sousuo" unicode="&#xe6ae;" 
+d="M826 30l-125 125q56 79 56 177q0 129 -91 219.5t-219.5 90.5t-219.5 -90.5t-91 -219.5t91 -219.5t220 -90.5q98 0 177 55l125 -125q16 -16 38.5 -16t38.5 16t16 39t-16 39v0zM246 332q0 83 59 142t142 59t142 -59t59 -142t-59 -142t-142 -59t-142 59t-59 142z" />
+    <glyph glyph-name="narrow" unicode="&#xe630;" 
+d="M192 396h640v-192h-640v192z" />
+    <glyph glyph-name="fangda" unicode="&#xe60c;" 
+d="M583 455v282h-142v-282h-282v-142h282v-282h142v282h282v142h-282z" />
+    <glyph glyph-name="delete" unicode="&#xe635;" 
+d="M512 767q-99 0 -183.5 -49t-133.5 -133t-49 -183.5t49 -183.5t133.5 -133t183.5 -49t183.5 49t133 133t48.5 183.5t-48.5 183.5t-133 133t-183.5 49v0zM689 269l-45 -44l-132 133l-133 -133l-44 44l133 133l-133 132l44 44l133 -132l132 132l45 -44l-133 -132zM689 269z
+" />
+    <glyph glyph-name="wodeweizhi" unicode="&#xe651;" 
+d="M689 402h87q-6 98 -76 168t-169 77v-89q0 -8 -5.5 -13t-13 -5t-12.5 5t-5 13v89q-99 -7 -169 -77t-77 -168h1h92q7 0 12.5 -5.5t5.5 -13t-5.5 -13t-12.5 -5.5h-92h-1q7 -98 77 -168.5t169 -76.5v90q0 8 5 13t12.5 5t13 -5t5.5 -13v-90q99 6 169 76.5t76 168.5h-87
+q-7 0 -12.5 5.5t-5.5 13t5.5 13t12.5 5.5zM513 331q-22 0 -37.5 15.5t-15.5 37t15.5 37t37.5 15.5t37.5 -15.5t15.5 -37t-15.5 -37t-37.5 -15.5zM824 830h-624q-56 0 -95.5 -39.5t-39.5 -95.5v-622q0 -56 39.5 -95.5t95.5 -39.5h624q56 0 95.5 39.5t39.5 95.5v622
+q0 56 -39.5 95.5t-95.5 39.5zM512 89q-122 0 -208.5 86.5t-86.5 208.5t86.5 208.5t208.5 86.5t208.5 -86.5t86.5 -208.5t-86.5 -208.5t-208.5 -86.5z" />
+  </font>
+</defs></svg>

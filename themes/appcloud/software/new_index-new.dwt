@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地质云首页</title>
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--[if lt IE 8]>
+    <script type="text/javascript" src="js/iconfont-ie7.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <script type="text/javascript" src="js/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+	<!-- 引入Header开始 -->
+	    <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+	<!-- 引入Header结束 -->
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" style="background: url(../images/homeimage/logo.png)  no-repeat; margin:0;background-position: 0 20px;text-indent: 58px;font-size: 24px;padding-right: 30px;" >中国地质调查局</a>
+			</div>
+	
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="index.php">首页</a></li>
+					<li><a href="serviceResource.php">服务资源</a></li>
+					<!-- <li><a href="themes/appcloud/software/serviceResource.html">服务资源</a></li> -->
+					<li><a href="geoproduct.php">地质产品</a></li>
+					<!-- <li><a href="themes/appcloud/software/geoproduct.html">地质产品</a></li> -->
+					<li><a href="#">地质在线</a></li>
+					<li><a href="#">动态新闻</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">登录</a></li>
+					<li><a href="#">注册</a></li>
+				</ul>
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	
+	<section>
+		<div class="jumbotron"  style="background: url(../images/homeimage/banner.png) 0% 100% /cover no-repeat;min-height: 298px;">
+		</div>
+	</section>
+	
+	<!-- 地质产品 -->
+	<section>
+		<div class="container-fluid">
+			<div class="row geo-product">
+				<div class="midnav midnav-white">
+					<h1 class="text-center">地质产品</h1>
+				</div>
+				<div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg product-card">
+					<div class="product-card_image">
+						<img src="themes/appcloud/images/homeimage/图层-9.png" alt="暂无图片" height="170" width="100%">
+					</div>
+					<div class="product-card_content">
+						<h3>地质数据</h3>
+						<p>国家国土资源调查规划承担的主要地质工作过程中形成的专业性数据</p>
+					</div>
+					<div class="product-card_bottom">
+						<p><a href="geoproduct.php?" class="btn btn-success btn-more" role="button">更多 ></a></p>
+					</div>
+				</div>
+
+				<div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg product-card">
+					<div class="product-card_image">
+						<img src="themes/appcloud/images/homeimage/图层-10.png" alt="暂无图片" height="170" width="100%">
+					</div>
+					<div class="product-card_content">
+						<h3>科普产品</h3>
+						<p>为促进、普及地学科学知识的科普图书、多媒体、科普模型产品，以及一些其他形式的科普产品</p>
+					</div>
+					<div class="product-card_bottom">
+						<p><a href="geoproduct.php?do=geoscience" class="btn btn-success btn-more" role="button">更多 ></a></p>
+					</div>
+				</div>
+
+				<div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg product-card">
+					<div class="product-card_image">
+						<img src="themes/appcloud/images/homeimage/图层-12.png" alt="暂无图片" height="170" width="100%">
+					</div>
+					<div class="product-card_content">
+						<h3>研究报告</h3>
+						<p>随着时代的发展，地调工作被赋予了更多的内容。对提出了勘探领域和合作方向持...</p>
+					</div>
+					<div class="product-card_bottom">
+						<p><a href="geoproduct.php?do=technolgy" class="btn btn-success btn-more" role="button">更多 ></a></p>
+					</div>
+				</div>
+
+				<div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg product-card">
+					<div class="product-card_image">
+						<img src="themes/appcloud/images/homeimage/图层-13.png" alt="暂无图片" height="170" width="100%">
+					</div>
+					<div class="product-card_content">
+						<h3>出版物</h3>
+						<p>展现地质调查重大成果及进展的地质类专著，专业论文，科技/专业报告</p>
+					</div>
+					<div class="product-card_bottom">
+						<p><a href="geoproduct.php?do=publication" class="btn btn-success btn-more" role="button">更多 ></a></p>
+					</div>
+				</div>
+
+				<div class="col-20-per-xs col-20-per-xm col-20-per-md col-20-per-lg product-card">
+					<div class="product-card_image">
+						<img src="themes/appcloud/images/homeimage/图层-17.png" alt="暂无图片" height="170" width="100%">
+					</div>
+					<div class="product-card_content">
+						<h3>地质图</h3>
+						<p>各类地质调查所形成的基础性图件</p>
+					</div>
+					<div class="product-card_bottom">
+						<p><a href="geoproduct.php?do=geomap" class="btn btn-success btn-more" role="button">更多 ></a></p>
+					</div>
+				</div>
+
+			</div>		
+		</div>
+	</section>
+
+	<!-- 专题服务 -->
+	<section style="background-color: #162f43;padding-bottom: 10px;">
+		<div class="container-fluid">
+			<div class="midnav midnav-default">
+				<h1 class="text-center">专题服务</h1>
+			</div>
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/区域与基础地质.png" alt="区域与基础地质" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">区域与基础地质</a></h3>
+							<p class=""><a href="">提供全国多比例尺地质图空间数据库</a></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/矿产地质.png" alt="矿产地质" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">矿产地质</a></h3>
+							<p class=""><a href="">可查询全国矿产地及矿产资源信息</a></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/物化瑶.png" alt="物化遥" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">物化遥</a></h3>
+							<p class=""><a href="">提供物探、化探与遥感影像数据库</a></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/水工环地址.png" alt="水工环地质" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">水工环地质</a></h3>
+							<p class=""><a href="">共享1:20万和1:50万水文地质信息</a></p>
+						</div>
+					</div>
+				</div>
+
+			</div>	
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/海洋地质.png" alt="海洋地质" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">海洋地质</a></h3>
+							<p class=""><a href="">提供区域海洋地质数据查询服务</a></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/钻孔.png" alt="钻孔" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">钻孔</a></h3>
+							<p class=""><a href="">了解全国重要地质钻孔数据</a></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/能源矿产.png" alt="能源矿产" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">能源矿产</a></h3>
+							<p class=""><a href="">提供全国尤其资源地质调查数据库</a></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="service-box">
+						<div class="service-box_img">
+							<a href="#">
+								<img src="themes/appcloud/images/homeimage/文献与资料.png" alt="文献与资料" width="80" height="80">
+							</a>
+						</div>
+						<div class="service-box_body">
+							<h3 class="service-box_h3"><a href="">文献与资料</a></h3>
+							<p class=""><a href="">共享全国地质相关图文资料</a></p>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</section>
+
+	<!-- 数据共享 -->
+	<section>
+		<div class="midnav midnav-white">
+			<h1 class="text-center">数据共享</h1>
+		</div>
+		<div style="background: url(../images/homeimage/banner2.png) 0% 100% /cover no-repeat; min-height: 300px;">
+			<!-- <img src="img/Singapore.jpg" alt="" style="height: 200px;"> -->
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-3 col-sm-6 col-xs-6">
+					<div class="infoCaption">
+				        <h4 class="infoTitle"><strong>原始数据</strong></h4>
+				        <p>提供最全面最新的第一手原始地质数据查询、浏览、下载服务</p>
+				        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+					</div>
+		        </div>
+		        <div class="col-md-3 col-sm-6 col-xs-6">
+					<div class="infoCaption">
+				        <h4 class="infoTitle"><strong>成果资料</strong></h4>
+				        <p>提供经过专业分析与处理，权威有料的地质成果资料</p>
+				        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+					</div>
+		        </div>
+		        <div class="col-md-3 col-sm-6 col-xs-6">
+					<div class="infoCaption">
+				        <h4 class="infoTitle"><strong>专题报告</strong></h4>
+				        <p>根据专题分类，可查询相关方面研究报告方面研究报方面研究报</p>
+				        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+					</div>
+		        </div>
+		        <div class="col-md-3 col-sm-6 col-xs-6">
+					<div class="infoCaption">
+				        <h4 class="infoTitle"><strong>专题图件</strong></h4>
+				        <p>提供全国及各区域多比例尺地质专题图件数据</p>
+				        <p class="moreInfo"><a class="btn btn-success btn-more" href="#" role="button">更多 ></a></p>
+					</div>
+		        </div>	
+			</div>
+	        
+	
+		</div>
+		
+	</section>
+
+	<!-- 地质工具 -->
+	<section style="background: #323232;">
+		<div class="midnav midnav-dark">
+			<h1 class="text-center">地质工具</h1>
+		</div>
+
+		<div class="row infobox">
+			<div class="col-lg-5 col-md-5 col-sm-6 col-xs-6">
+				<div class="tooltext">
+					<div class="infoCaption">
+						<h3 class="text-right infoTitle_h3">地学软件</h3>
+				        <p class="text-right info-tips">专业桌面处理软件</p>
+				        <!-- <p class="text-right info-tips">软件共享|软件在线使用|软件资源下载</p> -->
+				        <ul class="list-inline text-right">
+				          <li><a href="#">软件共享</a></li>
+				          <li><a href="#">软件在线使用</a></li>
+				          <li><a href="#">软件资源下载</a></li>
+				        </ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+				<div class="toolimage" style="text-align: center;">
+					<img src="themes/appcloud/images/homeimage/1.png" alt="暂无图片">
+				</div>
+			</div>
+		</div>
+
+		<div class="row infobox">
+			<div class="col-lg-5 col-md-5 col-sm-6 col-xs-6">
+				<div class="tooltext">
+					<div class="infoCaption">
+						<h3 class="text-right infoTitle_h3">地质在线</h3>
+				        <p class="text-right info-tips">在线地图呈现各类专题服务</p>
+				        <ul class="list-inline text-right">
+				          <li><a href="#">在线地图呈现各类专题服务</a></li>
+				          <li><a href="#">在线地图呈现各类专题服务</a></li>
+				        </ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+				<div class="toolimage" style="text-align: center;">
+					<img src="themes/appcloud/images/homeimage/2.png" alt="暂无图片">
+				</div>
+			</div>
+		</div>
+
+		<div class="row infobox">
+			<div class="col-lg-5 col-md-5 col-sm-6 col-xs-6">
+				<div class="tooltext">
+					<div class="infoCaption">
+						<h3 class="text-right infoTitle_h3">数据分析</h3>
+				        <p class="text-right info-tips">专业数据统计分析系统</p>
+				        <ul class="list-inline text-right">
+				          <li><a href="#">专业数据统计分析系统</a></li>
+				          <li><a href="#">专业数据统计分析系统</a></li>
+				        </ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-7 col-md-7 col-sm-6 col-xs-6">
+				<div class="toolimage" style="text-align: center;">
+					<img src="themes/appcloud/images/homeimage/1.png" alt="暂无图片">
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 快速导航 -->
+	<section style="background-color: #162e42;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">关于我们</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">联系我们</a></li>
+							<li class="fastlink-link"><a href="">企业地址</a></li>
+							<li class="fastlink-link"><a href="">单位情况</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">专题服务</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">物化</a></li>
+							<li class="fastlink-link"><a href="">水资源</a></li>
+							<li class="fastlink-link"><a href="">矿产</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">数据服务</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">软件</a></li>
+							<li class="fastlink-link"><a href="">服务</a></li>
+							<!-- <li class="fastlink-link"><a href="">矿产</a></li> -->
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+					<div class="fastlink">
+						<h4 class="fastlink-title">互联信息</h4>
+						<ul>
+							<li class="fastlink-link"><a href="">发展研究中心</a></li>
+							<li class="fastlink-link"><a href="">中国地质科学院</a></li>
+							<li class="fastlink-link"><a href="">物化探所</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- footer -->
+	<footer class="footernav">
+		<div class="container">
+			<p class="text-center">主办：中国地质调查局 &nbsp;&nbsp;技术支持：中国地质调查局发展研究中心</p>
+			<p class="text-center">北京市西城区阜外大街45号院&nbsp;&nbsp;100037</p>
+			<p class="text-center">京ICP备05036996号</p>
+		</div>
+	</footer>
+	
+</body>
+</html>

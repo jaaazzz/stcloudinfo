@@ -1,0 +1,288 @@
+/**
+* Bubble类,带气泡的标注对象
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var Bubble = function() {
+    /**
+    * 标注中的文本
+    * @type {String}
+    */
+    this.text = "";
+    /**
+    * 标注所处位置的x值
+    * @type {Double}
+    */
+    this.x = 0;
+    /**
+    * 标注所处位置的y值
+    * @type {Double}
+    */
+    this.y = 0;
+    /**
+    * 标注所处位置的z值
+    * @type {Double}
+    */
+    this.z = 0;
+    /**
+    * 标注对应的高程模式 0为绝对高程、1为贴近于地形、2为相对于地表
+    * @type {0|1|2}
+    */
+    this.sElevation = 0;
+    /**
+    * 标注中的文本的字体
+    * @type {String}
+    */
+    this.fontname = "宋体";
+    /**
+    * 标注中的文本的字体大小
+    * @type {Double}
+    */
+    this.fontsize = 10;
+    /**
+    * 标注中的文本的字体颜色
+    * @type {Unit}
+    */
+    this.fontcolor = 0xFF00FFFF;
+    /**
+    * 标注显示的的透明度值
+    * @type {0-1}
+    */
+    this.opacity = 1;
+    /**
+    * 标注区域的背景颜色bgColor
+    * @type {Unit}
+    */
+    this.bgColor = 1677786880;
+    /**
+    * 标注区域的背景颜色bdColor
+    * @type {Unit}
+    */
+    this.bdColor = 0xFF00FFFF;
+    /**
+    * 标注区域的宽
+    * @type {Int}
+    */
+    this.width = 24;
+    /**
+    * 标注区域的高
+    * @type {Int}
+    */
+    this.height = 30;
+    /**
+    * 缩放比例scale
+    * @type {Double}
+    */
+    this.scale = 1;
+    /**
+    * 标注提供的attribute字段
+    * @type {String}
+    */
+    this.attribute = "AppendBubble";
+};
+
+/**
+* Label类，普通标注对象
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var Label = function() {
+    /**
+    * 标注中的文本
+    * @type {String}
+    */
+    this.text = "";
+    /**
+    * 标注所处位置的x值
+    * @type {Double}
+    */
+    this.x = 0;
+    /**
+    * 标注所处位置的y值
+    * @type {Double}
+    */
+    this.y = 0;
+    /**
+    * 标注所处位置的z值
+    * @type {Double}
+    */
+    this.z = 0;
+    /**
+    * 标注对应的高程模式 0为绝对高程、1为贴近于地形、2为相对于地表
+    * @type {0|1|2}
+    */
+    this.sElevation = 0;
+    /**
+    * 标注中的文本的字体
+    * @type {String}
+    */
+    this.fontname = "隶书";
+    /**
+    * 标注中的文本的字体大小
+    * @type {Double}
+    */
+    this.fontsize = 10;
+    /**
+    * 标注中的文本的字体颜色
+    * @type {Unit}
+    */
+    this.fontcolor = 0xFF00FFFF;
+    /**
+    * 标注对应图标的缩放比例scale
+    * @type {Double}
+    */
+    this.iconScale = 1;
+    /**
+    * 标注的最远可见距离
+    * @type {Double}
+    */
+    this.farDist = 1e10;
+    /**
+    * 标注的最近可见距离
+    * @type {Double}
+    */
+    this.nearDist = 1.0;
+    /**
+    * 标注提供的attribute字段
+    * @type {String}
+    */
+    this.attribute = "AppendLabel";
+};
+
+/**
+* LabelIcon类，带图标的标注对象
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var LabelIcon = function(){
+    /**
+    * 标注中的文本
+    * @type {String}
+    */
+    this.text = "";
+    /**
+    * 标注所处位置的x值
+    * @type {Double}
+    */
+    this.x = 0;
+    /**
+    * 标注所处位置的y值
+    * @type {Double}
+    */
+    this.y = 0;
+    /**
+    * 标注所处位置的z值
+    * @type {Double}
+    */
+    this.z = 0;
+    /**
+    * 标注对应的高程模式 0为绝对高程、1为贴近于地形、2为相对于地表
+    * @type {0|1|2}
+    */
+    this.sElevation = 0;
+    /**
+    * 标注中的文本的字体
+    * @type {String}
+    */
+    this.fontname = "隶书";
+    /**
+    * 标注中的文本的字体大小
+    * @type {Double}
+    */
+    this.fontsize = 10;
+    /**
+    * 标注中的文本的字体颜色
+    * @type {Unit}
+    */
+    this.fontcolor = 0xFF00FFFF;
+    /**
+    * 图标标注图片的地址，可以是本地图片路径，也可以是网络图片的地址。
+    *                         如果是网络地址的话图片会缓存到ocxPath + "webcache\\LabelIcon\\"目录下面
+    * @type {String}
+    */
+    this.iconUrl = "";
+    /**
+    * 标注对应图标的缩放比例scale:X方向
+    * @type {Double}
+    */
+    this.iconXScale = 1;
+    /**
+    * 标注对应图标的缩放比例scale:Y方向
+    * @type {Double}
+    */
+    this.iconYScale = 1;
+    /**
+    * 图标标注的最远可见距离，当摄像机离标注的距离大于该参数时标注不会显示
+    * @type {Double}
+    */
+    this.farDist = 1e10;
+    /**
+    * 图标标注的最近可见距离，当相机离标注距离小于该参数时标注不会显示，一般设置
+    * @type {Double}
+    */
+    this.nearDist = 1.0;
+    /**
+    * 图标标注当中文字相对于图片的显示位置，
+    *                        从左上角、正上角、右上角、正左、正中、正右、左下角、正下角、右下角分别对应-8的枚举值。
+    * @type {Double}
+    */
+    this.txtPos = 1;
+    /**
+    * 其他的属性信息，为字符串类型。当用户调用PickLabel拾取标注时可以得到该属性值
+    * @type {String}
+    */
+    this.attribute= "AppendLabel";
+};
+
+/**
+* ToolTip类，使用ToolTip的标注对象
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var ToolTip = function(){
+    /**
+    * 标注中的文本
+    * @type {String}
+    */
+    this.text = "";
+    /**
+    * 标注所处位置的x值
+    * @type {Double}
+    */
+    this.x = 0;
+    /**
+    * 标注所处位置的y值
+    * @type {Double}
+    */
+    this.y = 0;
+    /**
+    * 标注所处位置的z值
+    * @type {Double}
+    */
+    this.z = 0;
+    /**
+    * 标注对应的高程模式 0为绝对高程、1为贴近于地形、2为相对于地表
+    * @type {0|1|2}
+    */
+    this.sElevation = 0;
+    /**
+    * 标注区域的背景颜色bgColor
+    * @type {Unit}
+    */
+    this.bdColor = 0xFF00FFFF;
+    /**
+    * 标注区域的宽
+    * @type {Int}
+    */
+    this.width = 24;
+    /**
+    * 标注区域的高
+    * @type {Int}
+    */
+    this.height = 30;
+    /**
+    * 标注提供的attribute字段
+    * @type {String}
+    */
+    this.attribute = "AppendToolTip";
+};

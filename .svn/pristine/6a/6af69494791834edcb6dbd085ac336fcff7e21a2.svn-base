@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>新闻中心_{$shop_name}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="Keywords" content="{$keywords}" />
+		<meta name="Description" content="{$description}" />
+		<link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+		<link href="css/bill.css" rel="stylesheet" type="text/css" />
+		<link href="bootstrap.css" rel="stylesheet" type="text/css" />
+		<link href="css/base.css" rel="stylesheet" type="text/css" />
+		<link href="css/order_list.css" rel="stylesheet" type="text/css" />
+		<!--[if IE 7]>
+		<link href="ie7.css" rel="stylesheet" type="text/css" />
+		<![endif]-->
+
+		<!--[if lt IE 9]>
+		  {insert_scripts files='html5shiv.js'}
+		<![endif]-->
+		<!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js'} -->
+		<style type="text/css">
+		 	.newsContainer{
+		 		width:80%;
+		 		margin:20px auto;
+		 		/*background:blue;*/
+		 		height:500px;
+		 	}
+		</style>
+	</head>
+	<body>
+		<!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+		<div class="newsContainer">
+			{if $news_arr && count($news_arr) > 0}
+                <div class="newsList">
+                    <ul>
+                        {foreach from=$news_arr item=item key=key name=news_arr}
+                        <a href="news_detail.php?id={$item.id}"><li class="newsLists" style="margin:8px 0;"><span class="newsTitle" style="display:inline-block;width:100%;height:36px;line-height:36px;font-size:30px;font-weight:800;">{$item.title}</span><span class="newsAuthor" style="display:inline-block;padding:2px 20px 2px 2px;font-size:14px;">{$item.author}</span><span class="newsTime" style="padding:2px;font-size:12px;">{$item.creatTime}</span><div class="newsContent" style="width:100%;height:50px;overflow:hidden;">{$item.content}</div></li></a>
+                        {/foreach}
+                    </ul>
+                </div>
+            {else}
+	            <div class="space-time-cloud-home-options-null">
+	                <p>暂无任何应用～</p>
+	            </div>
+            {/if}
+		</div>
+	</body>
+</html>

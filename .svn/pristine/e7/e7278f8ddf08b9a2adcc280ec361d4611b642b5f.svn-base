@@ -1,0 +1,478 @@
+/**
+ * Created by PhpStorm.
+ * User: sdd
+ * Date: 16-3-28
+ * Time: 下午8:01
+ */
+/* --------------------- 头部开始 -----------------*/
+.header{
+    background: #fafafa none repeat scroll 0 0;
+    box-shadow: 0 0 5px #888;
+    height: 75px;
+    /*width: 100%;*/
+    /*padding-left: 115px;*/
+    color: black;
+    border-bottom: 1px solid #DCDCDC;
+    position: absolute;
+    right: 0;
+    left: 115px;
+    min-width: 1160px;
+}
+.header-title{
+    float: left;
+    font-size: 24px;
+    line-height: 32px;
+    margin-left: 15px;
+    margin-top: 25px;
+}
+.header-user-info{
+    float: right;
+    position: relative;
+    margin-top: 25px;
+    margin-right: 50px;
+    z-index: 9999;
+}
+.navi-arrow {
+    background-image: url("../images/top-arrow-down.png");
+    top: 0px;
+}
+.dropdown{
+    background-color: #ffffff;
+    margin-top: 15px;
+    padding: 0;
+    width: 60px;
+    display: none;
+}
+.dropdown li{
+    margin: 5px 0 5px 3px;
+    width: 100%;
+    cursor: pointer;
+}
+.dropdown li a{
+    width: 100%;
+    display: block;
+}
+.dropdown li a:hover{
+    background-color: #3d8acb;
+    color: #fff;
+}
+.navi-arrow.mouseout {
+    animation: 0.3s ease 0s normal none 1 running arrow_rotate_mouseout;
+    transform: rotate(0deg);
+}
+.navi-arrow.mousein {
+    animation: 0.3s ease 0s normal none 1 running arrow_rotate_mousein;
+    transform: rotate(180deg);
+}
+.header-user-name{
+    float: right;margin-right: 20px
+}
+/* --------------------- 头部结束 -----------------*/
+
+/* --------------------- 左侧开始 -----------------*/
+.left{
+    width: 115px;
+    background-color: #3A85C6;
+    /*height: 100%;*/
+    position: absolute;
+/*    min-height: 1075px;*/
+    left: 0;
+    bottom: 0;
+    top: 0px;
+}
+.module_box{
+    width: 115px;
+    height: 110px;
+    /*background: url(../images/default_title.png) no-repeat center 5px ;*/
+    /*margin: 50px 30px 30px 30px;*/
+    position: relative;
+    cursor: pointer;
+}
+.module_box.active{
+    background-color: #1D639F;
+}
+.module_title{
+    position: absolute;
+    text-align: center;
+    bottom: 25px;
+    width: 100%;
+    color: white;
+    font-size: 14px;
+}
+.module_img{
+    bottom: 60px;
+    left: 45px;
+    position: absolute;
+}
+/* --------------------- 左侧结束 -----------------*/
+
+/* --------------------- 右侧开始 -----------------*/
+.page_container{
+    background-color: #fafafa;
+    bottom: 0;
+/*    position: absolute;*/
+    right: 0;
+/*    top: 75px;
+    left: 115px;*/
+    min-height: 850px;
+    overflow: auto;
+    padding-left:50px;
+    padding-top: 75px;
+    min-width: 1160px;
+    margin-left: 100px;
+
+}
+.page_container .page_title{
+    /*width: 95%;*/
+    padding: 15px 0 5px 0;
+    margin: 0 30px 0 auto;
+    font-size: 20px;
+    color: #3E84BF;
+    border-bottom: 1px solid #DCDCDC;
+}
+.page_container .page_content{
+    /*width: 95%;*/
+    padding: 20px 0 0 0;
+    /*background-color: #ffffff;*/
+    /*margin: 0px auto;*/
+    /*width: 98.3%;*/
+    /*margin-top: 10px;*/
+    /*min-height:400px;*/
+}
+/* --------------------- 右侧结束 -----------------*/
+
+/* --------------------- 公用表格 -----------------*/
+.app_table{
+    width: 98.3%;
+    /*margin-top: 15px;*/
+    border-bottom: 1px solid #dcdcdc;
+}
+.app_table input[type=checkbox]{
+    margin: 0 10px 0 10px;
+    vertical-align: middle;
+}
+.app_table a{
+    /*width: 60px;*/
+    /*background-color: #ffffff;*/
+    /*border: 1px solid #000000;*/
+    /*border-radius: 4px;*/
+    /*display: inline-block;*/
+    /*text-align: center;*/
+    /*font-size: 13px;*/
+    color: #1D639F;
+}
+.app_table tr th{
+    /*width: 100px;*/
+}
+.app_table tr{
+    height: 50px;
+    border: 1px solid #dcdcdc;
+    min-height: 50px;
+}
+.app_table thead tr{
+    background-color: #F2F5FA;
+}
+.app_table tbody tr{
+    border-bottom: none;
+    border-top: none;
+}
+.app_table tbody tr:nth-child(2n){
+    background-color: #F5F5F5;
+}
+.tool_btn{
+    width: 100px;
+    height: 30px;
+    color: white;
+    /*border: 1px solid #797979;*/
+    text-align:center;
+    margin: 5px;
+    float: right;
+    line-height: 31px;
+    background-color: #3A85C6;
+    font-size: 13px;
+    border-radius: 3px;
+}
+.tool_btn.disalbe{
+    background-color: #E0E0E0;
+    color: #B4B4B4;
+    cursor: default;
+}
+.tool_btn:hover{
+    color: white;
+}
+.tool_btn.disalbe:hover{
+    color: #B4B4B4;
+}
+.table_tools .disalbe{
+    opacity: 0.5;
+}
+.table_tools{
+    height: 40px;
+    width: 98.3%;
+}
+.table_search select{
+    border: 1px solid #dcdcdc;
+    width: 100px;
+    border-radius: 3px;
+}
+/* --------------------- 公用表格 -----------------*/
+
+/* --------------------- 分页样式 -----------------*/
+.pagination {
+    float: right;
+    margin: 25px 100px 0;
+}
+.pagination ul {
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    display: inline-block;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+
+.pagination ul > li {
+    display: inline;
+}
+
+.pagination ul > li:first-child > a, .pagination ul > li:first-child > span {
+    border-bottom-left-radius: 4px;
+    border-left-width: 1px;
+    border-top-left-radius: 4px;
+}
+.pagination ul > .disabled > span, .pagination ul > .disabled > a, .pagination ul > .disabled > a:hover {
+    background-color: transparent;
+    color: #999;
+    cursor: default;
+}
+.pagination ul > li > a, .pagination ul > li > span {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background-color: #fff;
+    border-color: #ddd;
+    border-image: none;
+    border-style: solid;
+    border-width: 1px 1px 1px 0;
+    float: left;
+    line-height: 20px;
+    padding: 0 12px;
+    text-decoration: none;
+}
+.page_statics{
+    margin: 25px 0;
+    float: left;
+}
+/* --------------------- 分页样式 -----------------*/
+
+/* --------------------- 弹窗样式 -----------------*/
+
+.modal_background {
+    background: rgba(10, 10, 10, 0.7) none repeat scroll 0 0;
+    bottom: 0;
+    display: none;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 10000;
+}
+
+.modal_box {
+    /*border: 1px solid #dcdcdc;*/
+    border-radius: 3px;
+    display: none;
+    height: 400px;
+    font-size: 14px;
+    color: #666666;
+    position: absolute;
+    width: 300px;
+    background-color: #ffffff;
+
+}
+.modal-body {
+    padding: 10px 20px !important;
+    position: relative;
+}
+.modal_box table{
+    width: 100%;
+    margin-left: 35px;
+}
+.modal_box table tr td{
+    padding: 10px 0;
+}
+.modal_box table tr td:nth-child(2n+1){
+    width: 90px;
+}
+.modal-header{
+    border-bottom: 1px solid #dcdcdc;
+    height: 56px;
+    /*padding: 3px 0 3px 15px;*/
+    background-color: white;
+    position: relative;
+}
+.title-word {
+    color: #333333;
+    font-size: 17px;
+}
+.modal-header .close{
+    background: rgba(0, 0, 0, 0) url(../images/close.png) no-repeat scroll 0 0;
+    display: inline-block;
+    filter: none;
+    height: 20px;
+    opacity: 1;
+    position: absolute;
+    right: 7px;
+    top: 18px;
+    width: 20px;
+}
+input[type=text],input[type=password]{
+    border: 1px solid #dcdcdc;
+    height: 30px;
+    width: 250px;
+    border-radius: 3px;
+}
+input[type=text]:focus,input[type=password]:focus{
+    border-color: rgba(82, 168, 236, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+    outline: 0 none;
+}
+.modal_box select{
+    border: 1px solid #dcdcdc;
+    height: 30px;
+    width: 250px;
+    border-radius: 3px;
+}
+.modal_box .error_tip{
+    color: #ff0000;
+    font-size: 10px;
+    height: 10px;
+}
+.modal_box .modal_btns{
+    height: 40px;
+    padding-right: 18px;
+    text-align: right;
+    margin-top: 20px;
+}
+.modal_btns .modal_btn{
+    display: inline-block;
+    /*height: 25px;*/
+    /*width: 60px;*/
+    /*border: 1px solid #797979;*/
+    /*text-align: center;*/
+    /*border-radius: 3px;*/
+    /*line-height: 25px;*/
+    /*margin-right: 5px;*/
+}
+.modal_btn.sure,.modal_btn.admin_sure,.modal_btn.app_sure{
+    background-color: #52B678;
+    color: white;
+    height: 35px;
+    width: 125px;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 31px;
+    float: left;
+    margin-left: 35px;
+}
+.modal_btn.cancel{
+    color: #3a85c6;
+    float: left;
+    line-height: 31px;
+    margin-left: 15px;
+}
+/* --------------------- 弹窗样式 -----------------*/
+
+/* --------------------- tab切换 -----------------*/
+.page_ul{
+    background-color: #3a85c6;
+    height: 42px;
+    margin-top: 10px;
+    padding: 10px 0 10px 20px;
+    width: 98.3%;
+}
+.page_ul ul{
+    padding-left: 0;
+}
+.page_ul ul li{
+    float: left;
+    padding:0px;
+    margin-right:40px;
+    font-size: 14px;
+    line-height: 25px;
+    height: 32px;
+}
+.page_ul ul li.active{
+    /*position: absolute;*/
+    /*font-size: 17px;*/
+    /*font-weight: bold;*/
+    background: url(../images/select_arrow.png) no-repeat center bottom;
+}
+.page_ul ul li a{
+    font-size:15px;
+    color:white;
+    display:block;
+    height:42px;
+}
+/* --------------------- tab切换 -----------------*/
+/* --------------------- 条件筛选 -----------------*/
+.table_search{
+    height: 40px;
+    float: left;
+}
+
+.table_search div{
+    float:left;
+    height: 23px;
+    margin-right:10px;
+}
+.table_search div span{
+    margin-right: 5px;
+}
+.table_search .btn_search{
+    /*padding:5px 10px;*/
+    /*border:1px solid black;*/
+    /*border-radius: 5px;*/
+    /*line-height: 14px;*/
+}
+.table_search .search_title{
+    line-height: 23px;
+}
+.table_search input[type=text]{
+    height: 30px;
+    width: 150px;
+}
+.btn_search a{
+    background-color: #52B678;
+    display: block;
+    width: 65px;
+    height: 30px;
+    color: white;
+    text-align: center;
+    border-radius: 3px;
+    line-height: 30px;
+}
+.user_search{
+    background-color: #52B678;
+    color: white;
+    text-align: center;
+    border-radius: 3px;
+    padding: 7px 21px;
+}
+a.user_search:hover{
+    color: white;
+}
+.table_span_info{
+    margin-top:10px;
+    height: 30px;
+    float: left;
+}
+.table_span_info div{
+    color:#EA4614;
+    font-size: 13px;
+    float:left;
+    height: 23px;
+    margin-right:10px;
+}
+
+/* --------------------- 条件筛选 -----------------*/

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+
+    <title>帮助中心</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <link href="css/helper.css" rel="stylesheet" type="text/css" />
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js,jquery-color.js'} -->
+
+    <!--[if IE 7]>
+    <link href="ie7.css" rel="stylesheet" type="text/css" />
+    <![endif]-->
+
+        <!--[if lt IE 9]>
+    {insert_scripts  files='html5shiv.js'}
+    <![endif]-->
+    </head>
+    <body>
+    <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+    <div class="help-content container">
+    <div class="help-sidebar c">
+        <!-- {foreach from=$article_cat_list item=article_cat} -->
+    <li  class = "first" style ="list-style-type:none;" >
+    <a class="first-a  {if $article_cat.cat_id == 14}open{/if}" style="display:block;" href="#/{$article_cat.cat_id}" data-id="{$article_cat.cat_id}">
+    <i class="icon icon15"></i>
+    <span class="first-title">{$article_cat.cat_name}</span>
+    </a>
+    {if count($article_cat["articles_list"])>1}
+    <ul class = "second" style="{if $article_cat.cat_id == 14}display:block;{else}display:none;{/if}">
+        <!-- {foreach from=$article_cat["articles_list"] item=article_item} -->
+    <li class="dropdown-li">
+
+    <a href="javascript:void(0);" class="tag-title2 {if $article_for == $article_item.id}active{/if}" data-id="{$article_item.id}">
+    <i class="icon-title2"></i>
+    <span class="span-title2">{$article_item.title}</span>
+    </a>
+    </li>
+        <!-- {/foreach} -->
+    </ul>
+    {/if}
+    </li>
+        <!-- {/foreach} -->
+    </div>
+    <div class="help-content-inner">
+        <!-- {foreach from=$article_cat_list item=article_cat} -->
+        <!-- {foreach from=$article_cat["articles_list"] item=article} -->
+    <div id="{$article.id}" data-id="{$article_cat.cat_id}" class="help-article" style="{if $article_for == $article.id}display:block;{else}display:none;{/if}">{$article.content}</div>
+        <!-- {/foreach} -->
+        <!-- {/foreach} -->
+    </div>
+    </div>
+    <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js,jquery.tmpl.min.js'} -->
+    <script type="text/javascript">
+    //url location
+    $(function () {
+        var urlLoc = window.location.href;
+
+        var urlId = urlLoc.slice(urlLoc.length-1,urlLoc.length);
+        var cat_list = $('.help-sidebar .first');
+        var article_list = $('.help-article');
+        var arcId;
+        if(urlLoc.indexOf('article_id')>0){
+            arcId={$article_for};
+        }
+
+        $('.help-article').css('display','none');
+        // $('.second a').removeClass('active');
+
+        for (var i = 0; i < cat_list.length; i++) {
+            if ($(cat_list[i]).find(".first-a").attr('data-id')==urlId) {
+                $(cat_list[i]).find(".first-a").addClass('open');
+                if ($(cat_list[i]).find('.second')) {
+                    $(cat_list[i]).find('.second').slideDown();};
+
+                for (var i = 0; i < article_list.length; i++) {
+                    var article_id = $(article_list[i]).attr('id');
+                    var article_dataId = $(article_list[i]).attr('data-id');
+                    if(!arcId){
+                        if (urlId == article_dataId) {
+                            $('#'+article_id).css('display','block');
+                            break;
+                        };
+                    }else{
+                        if(article_id==arcId){
+                            $('#'+article_id).css('display','block');
+                            break;
+                        }
+                    }
+
+                };
+            };
+        };
+
+        for (var i = 0; i < cat_list.length; i++) {
+            if ($(cat_list[i]).find(".first-a").attr('data-id')!=urlId && $(cat_list[i]).find(".first-a").hasClass('open')) {
+                $(cat_list[i]).find(".first-a").removeClass('open');
+                $(cat_list[i]).find('.second').css('display','none');
+                break;
+            };
+        };
+    });
+
+    //click first catagory
+    $('.help-sidebar .first .first-a').on('click',function(e){
+        $('.help-article').css('display','none');
+        $('.second a').removeClass('active');
+
+        var parent = $(e.target).closest('.first');
+        var is_open = parent.find(".first-a").hasClass('open');
+        if (is_open&&parent.find('.second').css("display")!="none") {
+            parent.find(".first-a").removeClass('open');
+            parent.find('.second').slideUp("fast");
+            return;
+        };
+
+        var cat_list = $('.help-sidebar .first');
+        for (var i = 0; i < cat_list.length; i++) {
+            if ($(cat_list[i]).find(".first-a").hasClass('open')) {
+                $(cat_list[i]).find(".first-a").removeClass('open');
+                $(cat_list[i]).find('.second').slideUp("fast");
+                break;
+            };
+        };
+
+        var article_list = $('.help-article');
+        for (var i = 0; i < article_list.length; i++) {
+            var article_id = $(article_list[i]).attr('id');
+            var article_dataId = $(article_list[i]).attr('data-id');
+            if (parent.find('.first-a').attr('data-id') == article_dataId) {
+                $('#'+article_id).css('display','block');
+                parent.find('.first-a').addClass('open');
+                break;
+            };
+        };
+
+
+        if (parent.find('.second')) {
+            // parent.find('ul').css('display','block');
+            parent.find('.second').slideDown();
+            parent.find('.first-a').addClass('open');
+            $(parent.find('.second').find('a')[0]).addClass('active');
+        };
+    })
+
+    // click second catagory
+    $('.help-sidebar .first .second li').on('click',function(e){
+        var parent = $(e.target).closest('li');
+        var a_id = parent.find('a').attr('data-id');
+        var article_list = $('.help-article');
+        $('.help-article').css('display','none');
+        $('.second a').removeClass('active');
+        for (var i = 0; i < article_list.length; i++) {
+            var article_id = $(article_list[i]).attr('id');
+            if (a_id == article_id) {
+                $('#'+article_id).css('display','block');
+                parent.find('a').addClass('active');
+                break;
+            };
+        };
+    })
+
+
+
+    var t = 0;
+    var p = 0;
+    var help_left = parseInt($('.help-content-inner').css('margin-left').replace('px', ''));
+    $(document).scroll(function(e){
+        y = $(this).scrollTop();
+        x = $(this).scrollLeft();
+        if (t != x) {
+            //alert('left');
+            $('.help-sidebar').css('position','absolute');
+            $('.help-content-inner').css('margin-left',help_left + 'px');
+        }
+        if (p != y) {
+            //alert('top');
+            //$('.help-sidebar').css('position','fixed');
+            var left_px = help_left + parseInt(x);
+            $('.help-content-inner').css('margin-left',left_px + 'px');
+        }
+        setTimeout(function(){
+            t = x;
+            p = y;
+        },0);
+    })
+
+    //导航箭头动画
+    $('li.top-li-with-popup').hover(function(event){
+        if($(this).hasClass('user-action')){
+            $(this).find('.ul_popup_menu').css('width',$(this).css('width'));
+        }
+        $(this).children('a').addClass('active');
+        $(this).find('.ul_popup_menu').show();
+        $(this).find('.news-arrow').removeClass('mouseout').addClass('mousein');
+    },function(event){
+        $(this).children('a').removeClass('active');
+        $(this).find('.ul_popup_menu').hide();
+        $(this).find('.news-arrow').removeClass('mousein').addClass('mouseout');
+    });
+    $('#news_navi_li').hover(function(){
+        $(this).children('a').addClass('active');
+        $(this).find('div.navi-news-container').show();
+        $(this).find('.news-mail').addClass('active');
+        $(this).find('.news-arrow').removeClass('mouseout').addClass('mousein');
+    },function(){
+        $(this).children('a').removeClass('active');
+        $(this).find('div.navi-news-container').hide();
+        $(this).find('.news-mail').removeClass('active');
+        $(this).find('.news-arrow').removeClass('mousein').addClass('mouseout');
+    });
+    </script>
+    </body>
+</html>
+

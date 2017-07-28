@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<title>页面没找到_时空云平台</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="Keywords" content="{$keywords}" />
+		<meta name="Description" content="{$description}" />
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+		<link href="/themes/gisstore/main.css" rel="stylesheet" type="text/css" />
+<style>
+.error-main{
+	margin:auto;
+	margin-top:250px;	
+	width:810px;
+	height:240px;
+}
+.error-img{
+	float:left;
+	width: 446px;
+	height:234px;
+}
+.error-description{
+	float:right;
+	margin-top: 92px;
+	width:350px;
+	height:50px;	
+}
+.error-description p{
+	line-height:25px;
+	font-size:18px;	
+	font-weight: bold;
+}
+
+.error-description a{
+	color:#229ace;	
+}
+.error-description a:hover{
+	color:#66b3d6;
+}
+</style>
+    </head>
+	<body>
+    <div class="error-main">
+    	<div class="error-img">
+			<img src="themes/appcloud/images/404.png" class="error-box" />
+    	</div>
+    	<div class="error-description">
+           <p>对不起</p>
+           <p>您请求的页面没有找到，<a href="index.php">我找首页去</a></p>
+    	</div>
+    </div>
+
+
+
+	</body>
+</html>

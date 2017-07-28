@@ -1,0 +1,306 @@
+﻿window.Multidate = window.Multidate || {};
+var map1, map2;
+var LayerArr;
+
+
+Multidate.showMultidate = function() {
+    $('.eee').toggle();
+    $('.vvv').toggle();
+
+    $('#multi').css('display','block');
+    if($('#multi').attr("value")==0){
+        $('#multi').css('left','0px');
+        $('#multi').css('width','100%');
+        $('#map1').css('width','50%');
+        $('#map2').css('width','50%');
+        Multidate.init();
+        $('#multi').attr("value",1);
+        
+    }
+    if($('#swipe').attr('show')==1){
+        $('.ddd').toggle();
+        $('.xxx').toggle();
+        $('#swipe').attr('show',0);
+        $('#swipe').hide();
+        $('#multi').css('left','0px');
+           // this.init();
+        $('#multi').css('width','100%');
+        $('#map1').css('width','50%');
+        $('#map2').css('width','50%');
+        $('#layerDiv').hide();
+        $('#mapCon').hide();
+        $('#swipe').hide();
+        $('#multi').attr('show',1);
+        $('#searchbox').hide();
+        $('#multi').attr('show',1);
+    }else{
+        $('.left-box').toggle();
+        if($('#multi').attr('show')==0){
+            $('.do').hide();
+            $('#multi').css('left','0px');
+           // this.init();
+            $('#multi').css('width','100%');
+            $('#map1').css('width','50%');
+            $('#map2').css('width','50%');
+            $('#layerDiv').hide();
+            $('#mapCon').hide();
+            $('#swipe').hide();
+            $('#multi').attr('show',1);
+            $('#searchbox').hide();
+        }else if($('#multi').attr('show')==1){
+            $('.do').show();
+            $('.navbar-wrapper').show();
+            $('#multi').hide();
+         //   $('#mapCon').html('');
+            $('#mapCon').show();
+            $('#layerDiv').show();
+            $('#searchbox').show();
+            $('#multi').attr('show',0);
+            $('#mapCon').css('left','320px');
+            if(TileLayer1!=null&&TileLayer2!=null){
+                map.removeLayer(TileLayer1);
+                map.removeLayer(TileLayer2);
+                map.addLayer(TileLayer);
+            }
+            //ShowMap.getMapInfo(data.defaultMapSL);
+           // ShowMap.initMap(data.defaultMapSL,dataInfo);
+        }
+    }
+    
+}
+var layer1, layer2;
+Multidate.init=function () {
+    // var multileftname='';
+    // var multirightname = '';
+    var option = "";
+    // var data.multileft = "";//多时像左边地图名称  如果没有初始化赋值会读取data.defaultMapSL
+    // var data.multiright = "";//多时相右边地图名称   如果没有初始化赋值会读取data.defaultMapYX
+    $.ajax({
+        url: 'themes/appcloud/onlinesrc/multi.json',
+        type:"POST",
+        data:{},
+        dataType:"json",
+        success:function(msg){
+            $(msg).each(function(i,item){
+                var projection = item.projection=="degree"?'EPSG:4326':'EPSG:3857';
+                 option += "<option value='"+item.layer+"' type='"+item.lx+"'>"+item.text+"</option>";
+                 if(item.default =='left'){
+                    data.multileft=item.layer;
+                    data.multicenterx=item.centerx;
+                    data.multicentery=item.centery;
+                    data.multizoom=item.zoom;
+                 }
+                 if(item.default =='right'){
+                    data.multiright=item.layer;
+                 }
+                 
+            });
+            $('#LayerSelect1').append(option);
+            $('#LayerSelect2').append(option);
+                $('#multi').show();
+            layer1 = new Zondy.Map.TileLayer(data.multileft, data.multileft, {
+                ip: ip,
+                port: port
+            });
+            
+            layer2 = new Zondy.Map.TileLayer(data.multiright, data.multiright, {
+                ip: ip,
+                port: port
+            });
+            var multiview;
+            if(data.multicenterx!=0&&data.multicentery!=0&&data.multizoom!=0){
+                multiview = new ol.View({
+                    projection: projection,
+                    center: [data.multicenterx,data.multicentery],
+                        //最大显示级数
+                    // maxZoom: endLevel,
+                        //最小显示级数
+                    // minZoom: startLevel,
+                        // 当前显示级数
+                    zoom: data.multizoom
+                });
+            }else{
+                var info=new Zondy.Service.GetMapInfoService({mapName:data.multileft,ip:ip,port:port});
+                info.GetMapInfo(function(result){
+                    var xmin=result.xMin;
+                    var xmax=result.xMax;
+                    var ymin=result.yMin;
+                    var ymax=result.yMax;
+                    var startLevel=result.startLevel;
+                    var endLevel=result.endLevel;
+                    var multixCenter=(parseFloat(xmin)+parseFloat(xmax))/2;
+                    var multiyCenter=(parseFloat(ymin)+parseFloat(ymax))/2;
+                    var multizoom=parseInt(endLevel)-3;
+                    multiview = new ol.View({
+                        projection: projection,
+                        center: [multixCenter,multiyCenter],
+                            //最大显示级数
+                        maxZoom: endLevel,
+                            //最小显示级数
+                        minZoom: startLevel,
+                            //当前显示级数
+                        zoom: multizoom
+                    });
+                });
+            }
+            map1 = new ol.Map({
+                controls: ol.control.defaults({
+                    attribution: false
+                }),
+                target: 'map1',
+                layers: [layer1],
+                view: multiview
+            });
+            map2 = new ol.Map({
+                controls: ol.control.defaults({
+                    attribution: false
+                }),
+                target: 'map2',
+                layers: [layer2],
+                view: multiview
+            });
+        },
+        error:function(e){
+            
+        }
+    });
+}
+
+Multidate.changeMapDouble=function (mapType, type) {
+    if (mapType == 'map1') {
+        if (type == 'vec') {
+         // map1.removeLayer(layer1);
+         // map1.removeLayer(layer2);
+         // map1.removeLayer(layerchange);
+         // map1.addLayer(layer1);
+            var flag=false;
+            var layers=map1.getLayerGroup().getLayers().getArray();
+            for(var j=0;j<layers.length;j++){
+                if(layers[j].name==layer1.name){
+                    flag=true;
+                }
+                if(layers[j].name==layer2.name||(layerchange!=null&&layers[j].name==layerchange.name)){
+                    map1.removeLayer(layers[j]);
+                    j=0;
+                }
+            }
+            if(flag==false){
+                map1.addLayer(layer1);
+            }
+        } else {
+            // map1.removeLayer(layer2);
+            // map1.removeLayer(layer1);
+            // map1.removeLayer(layerchange);
+            var flag=false;
+            var layers=map1.getLayerGroup().getLayers().getArray();
+            for(var j=0;j<layers.length;j++){
+                if(layers[j].name==layer2.name){
+                    flag=true;
+                }
+                if(layers[j].name==layer1.name||(layerchange!=null&&layers[j].name==layerchange.name)){
+                      map1.removeLayer(layers[j]);
+                      j=0;
+                }
+            }
+            if(flag==false){
+                map1.addLayer(layer2);
+            }
+            //map1.addLayer(layer2);
+        }
+    } else {
+        if (type == 'vec') {
+         var flag=false;
+            var layers=map2.getLayerGroup().getLayers().getArray();
+            for(var j=0;j<layers.length;j++){
+                if(layers[j].name==layer1.name){
+                    flag=true;
+                }
+                if(layers[j].name==layer2.name||(layerchange!=null&&layers[j].name==layerchange.name)){
+                    map2.removeLayer(layers[j]);
+                    j=0;
+                }            }
+            if(flag==false){
+                map2.addLayer(layer1);
+            }
+        } else {
+            var flag=false;
+            var layers=map2.getLayerGroup().getLayers().getArray();
+            for(var j=0;j<layers.length;j++){
+                if(layers[j].name==layer2.name){
+                    flag=true;
+                }
+                if(layers[j].name==layer1.name||(layerchange!=null&&layers[j].name==layerchange.name)){
+                      map2.removeLayer(layers[j]);
+                      j=0;
+                }
+            }
+            if(flag==false){
+                map2.addLayer(layer2);
+            }
+        }
+    }
+
+}
+//图层切换函数
+var layerchange=null;
+Multidate.changeLayer=function (mapType) {
+    // var multimap2 = null;
+    if (mapType == 'map1') {
+        // multimap2 = map1;
+        // map1.removeLayer(layer2);
+        // map1.removeLayer(layer1);
+        // map1.removeLayer(layerchange);
+        var layers=map1.getLayerGroup().getLayers().getArray();
+        for(var i=0;i<layers.length;i++){
+            map1.removeLayer(layers[i]);
+            i=0;
+        }
+        layerchange=null;
+        var name = $("#LayerSelect1").val();
+        var type = $("#LayerSelect1").children("option:selected").attr('type');
+        if(type==1){
+            layerchange = new Zondy.Map.Doc(name, name, {
+                ip: ip,
+                port: port
+            });
+        }else if(type==2){
+            layerchange = new Zondy.Map.TileLayer(name, name, {
+                ip: ip,
+                port: port
+            }); 
+        }
+        map1.addLayer(layerchange);
+        // var index = $("#LayerSelect1").val() - 1;
+    } else {
+        var layers=map2.getLayerGroup().getLayers().getArray();
+        for(var i=0;i<layers.length;i++){
+            map2.removeLayer(layers[i]);
+            i=0;
+        }
+        layerchange=null;
+        var name = $("#LayerSelect2").val();
+        var type = $("#LayerSelect2").children("option:selected").attr('type');
+        if(type==1){
+            layerchange = new Zondy.Map.Doc(name, name, {
+                ip: ip,
+                port: port
+            });
+        }else if(type==2){
+            layerchange = new Zondy.Map.TileLayer(name, name, {
+                ip: ip,
+                port: port
+            }); 
+        }
+        map2.addLayer(layerchange);
+        // multimap2 = map2;
+        // var index = $("#LayerSelect2").val() - 1;
+    }
+    // var Layers = map1.getLayers().getArray();;
+    // //移除图层
+    // for (var i = 0; i < Layers.length; i++) {
+    //     multimap2.removeLayer(Layers[i]);
+    // }
+    // //添加图层
+    // multimap2.addLayer(LayerArr[index]);
+    // multimap2.addLayer(LayerArr[index + 1]);
+}

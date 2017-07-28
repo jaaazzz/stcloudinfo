@@ -1,0 +1,32 @@
+[
+    {
+        "id": "1",
+        "lx": "1",
+        "text": "INDEX2015G",
+        "layer": "INDEX2015G",
+        "centerx": 0,
+        "centery": 0,
+        "zoom":0,
+        "projection":"degree"
+    },
+    {
+        "id": "2",
+        "lx": "2",
+        "text": "永州影像数据danfu",
+        "layer": "永州影像数据danfu",
+        "centerx": 0,
+        "centery": 0,
+        "zoom":0,
+        "projection":"degree"
+    },
+    {
+        "id": "3",
+        "lx": "3",
+        "text": "永州兴趣点",
+        "layer": "永州兴趣点",
+        "centerx": 0,
+        "centery": 0,
+        "zoom":0,
+        "projection":"degree"
+    }
+]

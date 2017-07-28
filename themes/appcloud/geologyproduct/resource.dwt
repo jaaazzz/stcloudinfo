@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地质产品_资源目录</title>
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+	<script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+
+    <!--[if lt IE 8]>
+    <script type="text/javascript" src="js/iconfont-ie7.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <script type="text/javascript" src="js/html5.js"></script>
+    <![endif]-->
+
+</head>
+<style type="text/css">
+	.content-con
+	{
+		width: 1170px;
+		margin: auto;
+		min-height: 700px;
+		margin-top: 30px;
+	}
+</style>
+<body>
+<div class="space-time-cloud-home">
+<!-- 引入Header开始 -->
+    <!-- #BeginLibraryItem "/library/header_new.lbi" --><!-- #EndLibraryItem -->
+<!-- 引入Header结束 -->
+    <!--于广庆css begin-->
+    <style type="text/css">
+        .right-content{
+	        width: 920px;
+	        float: right;
+	    }
+	    .right-content-nav{
+	        height: 50px;
+	        width: 100%;
+	        background: #f5f5f5;
+	    }
+	    .right-content-nav .nav-info{
+	        height: 100%;
+	        line-height: 50px;
+	        padding: 0px 16px;
+	        position: relative;
+	    }
+	    .right-content input,.right-content select{
+	        width: 100px;
+	        height: 32px;
+	        border: 1px solid #dcdcdc;
+	    }
+	    .right-content input{
+	        margin-left: 5px;
+	    }
+	    .right-content select{
+	        margin-left: 10px;
+	        width: 120px;
+	        font-size: 14px;
+	        color: #999999;
+	    }
+	    .right-content input[type="button"]{
+	        width: 70px;
+	        background: #71a100;
+	        vertical-align: middle;
+	        line-height: 32px;
+	        color: #ffffff;
+	        text-align: center;
+	        position: absolute;
+	        top: 9px;
+	        right: 16px;
+	    }
+	    .right-content-main{
+	        border: 1px solid #dcdcdc;
+	        margin-top: 8px;
+	        width: 100%;
+	    }
+	    .right-content-main img{
+	        width: 96%;
+	        height: 100%;
+	        height: 640px;
+	        cursor: pointer;
+	    }
+    </style>
+    <!--于广庆css end-->
+    <!--于广庆js begin-->
+    <script type="text/javascript">
+        $(function(){
+           var tree_data=[
+               {
+                   text:'专题资源目录',
+                   children:[
+                       {text:'基础地质资源目录',img:'themes/appcloud/images/geoimgs/aa0.png'},
+                       {text:'矿产地质资源目录',img:'themes/appcloud/images/geoimgs/aa.png'},
+                       {text:'基础地质资源目录',img:'themes/appcloud/images/geoimgs/aa1.png'},
+                       {text:'油气地质资源目录',img:'themes/appcloud/images/geoimgs/resource-list.png'},
+                       {text:'水文地质资源目录',img:''},
+                       {text:'工程地质资源目录',img:''},
+                       {text:'海洋地质资源目录',img:''},
+                       {text:'岩溶地质资源目录',img:''},
+                       {text:'农业地质资源目录',img:''},
+                       {text:'城市地质资源目录',img:''}
+                   ]
+               },
+               {
+                   text:'勘探类型资源目录',
+                   children:[
+                        {text:'钻探数据目录',img:''},
+                        {text:'坑探数据目录',img:''},
+                        {text:'槽探数据目录',img:''},
+                        {text:'野外地质剖面数据目录',img:''},
+                        {text:'重力勘探',img:''},
+                        {text:'磁场勘探',img:''},
+                        {text:'电场勘探',img:''},
+                        {text:'地震勘探',img:''},
+                        {text:'化探数据目录',img:''},
+                        {text:'遥感数据目录',img:''},
+                        {text:'航磁数据目录',img:''}
+                   ]
+               },
+               {
+                   text:'区域资源目录',
+                   children:[
+                        {text:'东北地区资源目录',img:''},
+                        {text:'华北地区资源目录',img:''},
+                        {text:'华东地区资源目录',img:''},
+                        {text:'西北地区资源目录',img:''},
+                        {text:'华中地区资源目录',img:''},
+                        {text:'华南地区资源目录',img:''},
+                        {text:'盆地资源目录',img:''},
+                        {text:'成矿区带资源目录',img:''}
+                   ]
+               }
+           ];
+            init_tree(tree_data);
+
+        });
+        function init_tree(data){
+            //构造树
+            var html='';
+            for(var i=0;i<data.length;i++){
+                var child_html='';
+                for(var j=0;j<data[i].children.length;j++){
+                    child_html+='<div class="child-node node" img="'+data[i].children[j].img+'">'+data[i].children[j].text+'</div>';
+                }
+                html+='<div class="tree-parent">'+
+                        '<div class="parent"><img src="themes/appcloud/images/geoimgs/leixing.png" style="margin-right: 4px;">'+data[i].text+'</div>'+
+                        '<div class="children">'+child_html+'</div>'+
+                       '</div>';
+            }
+            $(".tree-area").html(html);
+            //绑定结点事件
+            $(".tree-parent .parent").click(function(){
+                if($(this).parent().hasClass('open')){
+                    return false;
+                }
+                if(!$(this).parent().find('.child-node').length){
+                    return false;
+                }
+                $(".tree-parent.open .children").slideUp();
+                $(".tree-parent.open").removeClass('open');
+                $(this).parent().addClass('open');
+                $(this).parent().find('.children').slideDown();
+            });
+            $(".child-node").click(function(){
+                $(".child-node.active").removeClass('active');
+                $(this).addClass('active');
+                var img=$(this).attr('img');
+                if(img){
+                    $(".right-content-main img").attr('src',img);
+                }
+            });
+        }
+    </script>
+    <!--于广庆js end-->
+    <div class="content-con">
+        <!--于广庆html begin-->
+        <div class="left_tree">
+            <div class="top-info">
+                <img src="themes/appcloud/images/geoimgs/mulu.png" style="margin-right: 10px;">资源目录
+            </div>
+            <div class="tree-area">
+            </div>
+        </div>
+        <!--于广庆html end-->
+		<div class="right-content">
+	        <div class="right-content-nav">
+	            <div class="nav-info">
+	                经纬度：
+	                <input type="text">
+	                <input type="text">
+	                <select>
+	                    <option>行政区划</option>
+	                </select>
+	                <select>
+	                    <option>图幅号</option>
+	                </select>
+	                <select>
+	                    <option>盆地</option>
+	                </select>
+	                <select>
+	                    <option>成矿地带</option>
+	                </select>
+	                <input type="button" value="检索">
+	            </div>
+	        </div>
+	        <div class="right-content-main">
+	            <img src="themes/appcloud/images/geoimgs/aa0.png">
+	        </div>
+	    </div>
+	    <div style="clear: both;height: 60px;"></div>
+
+    </div>
+<!-- 引入Footer开始 -->
+    <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+<!-- 引入Footer结束 -->
+</div>
+
+
+</body>
+</html>

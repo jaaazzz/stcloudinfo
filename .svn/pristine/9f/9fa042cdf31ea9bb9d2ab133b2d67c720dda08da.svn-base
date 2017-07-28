@@ -1,0 +1,12 @@
+<span class="stars star_0 {if $goods.grade >=0 && $goods.grade < 0.5}active {/if}">
+    <span class="stars star_1 {if $goods.grade >=0.5&& $goods.grade < 1}active half {/if}{if $goods.grade >=1 && $goods.grade < 1.5}active {/if}"  >
+        <span class="stars star_2 {if $goods.grade >= 1.5 && $goods.grade < 2}active half {/if}{if $goods.grade>=2 && $goods.grade<2.5 }active<{/if}" >
+            <span class="stars star_3 {if $goods.grade>=2.5 && $goods.grade<3}active half {/if}{if $goods.grade>=3 && $goods.grade<3.5 }active{/if}">
+                <span class="stars star_4 {if $goods.grade>=3.5 && $goods.grade<4}active half {/if}{if $goods.grade>=4 && $goods.grade<4.5 }active{/if}" >
+                    <span class="stars star_5 {if $goods.grade>=4.5 && $goods.grade<5}active half {/if}{if $goods.grade==5 }active{/if}">
+                    </span>
+                </span>
+            </span>
+        </span>
+    </span>
+</span>

@@ -1,0 +1,74 @@
+<style type="text/css">
+.layerDiv{
+    position: absolute;
+        top: 0px;
+        left:0px;
+        width:366px;
+        height:86px;
+        overflow: hidden;
+    }
+    .layerDiv div{
+        float:left;
+    }
+    .layer1{
+        width:118px;
+        height:82px;
+        background:url(../js/openlayer3/img/layer_raster.png) no-repeat;
+        border:2px solid #fff;
+        position:relative;
+    }
+    .layer2{
+        width:118px;
+        height:82px;
+        background:url(../js/openlayer3/img/Layer_vector.png) no-repeat;
+        border:2px solid #fff;
+        position:relative;
+    }
+
+    .layerHover{
+        width:118px;
+        height:82px;border:2px solid #fde305;
+    }
+    .layerSelect{
+        border:2px solid #336EF8;
+    }
+    .layerTitle{
+        display:block;
+        background:#ccc;
+        color:#fff;
+        width:60px;
+        height:20px;
+        line-height:20px;
+        position:absolute;
+        right:0px;
+        bottom:0px;
+        text-align:center;
+    }
+    .layerTitleSelect,.layerTitleHover{
+        background:#336EF8;
+    }
+</style>
+<script src="../js/openlayer3/jquery-1.11.2.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#layerDiv div").click(function(){
+	        $("#layerDiv div").attr("select",false);
+	        $("#layerDiv div").removeClass("layerSelect");
+	        $("#layerDiv .layerTitle").removeClass("layerTitleSelect");
+	        //parent.ShowMap.selectLayer($(this));
+            parent.location.href="../../../onlinemap.php";
+    	});
+	})
+</script>
+<div id="layerDiv" class="layerDiv" style="position:absolute;right:10px;width:366px;height:86px;overflow:hidden;">
+<div id="layer2" class="layer2" layerIndex="1">
+    <span id="layerTitle2" class="layerTitle">返回</span>
+</div>
+<div id="layer1" class="layer1" layerIndex="2" style="display:none">
+    <span id="layerTitle1" class="layerTitle">影像</span>
+</div>
+<div id="layer3" class="layer1 layerSelect" layerIndex="3" select="true" style="display:none">
+    <span id="layerTitle3" class="layerTitle layerTitleSelect">三维</span>
+</div>
+</div>
+  

@@ -1,0 +1,78 @@
+var goods_id = {$goods.goodsId};
+var COOKIE_INDEX, COOKIE_NAME;
+
+
+{if $parent_goods}
+//获取当前插件所属的应用id
+var parentId = $(".packages").find("span[selected]=true").attr("data-goods-id");
+var can_add_customized = false;
+
+{if $bac_act eq 'reassemble' && $order_sn}
+COOKIE_NAME = "ZONDY_ORDER";
+COOKIE_INDEX = '{$order_sn}';
+var myCookie = eval('('+$.cookie(COOKIE_NAME)+')');//购物车缓存
+if (!myCookie) {
+    myCookie = {};
+}
+if (!myCookie[COOKIE_INDEX]) {
+    myCookie[COOKIE_INDEX] = [];
+}
+
+{else}
+COOKIE_NAME = "ZONDY_CUSTOMIZE";
+COOKIE_INDEX = parentId;
+var myCookie = eval('('+$.cookie(COOKIE_NAME)+')');//购物车缓存
+if (!myCookie) {
+    myCookie = {};
+}
+if (!myCookie[COOKIE_INDEX]) {
+    myCookie[COOKIE_INDEX] = [];
+}
+{/if}
+
+$(function(){
+    var i = 0;
+
+    //必选插件不能加入定制
+    var can_add = !{$is_basic_plugin};
+    while (i < myCookie[COOKIE_INDEX].length) {
+        if (myCookie[COOKIE_INDEX][i] == goods_id) {
+            can_add = false;
+        }
+        i++;
+    }
+    if(can_add) {
+        can_add_customized = true;
+    } else {
+        can_add_customized = false;
+        $(".btn-zondy.add-customize").addClass("disabled").attr("disabled", "disabled").html("已加入定制");
+    }
+
+    $("#package_link").attr("href",
+        "sfw.php?do=goods&id=" + parentId + "{if $bac_act eq 'reassemble'}&bac=order&order_sn={$order_sn}{/if}"
+    )
+});
+
+$(".btn-zondy.add-customize").on("click",function(){
+    if(can_add_customized) {
+        myCookie[COOKIE_INDEX].push(goods_id);
+        $.cookie(COOKIE_NAME,JSON.stringify(myCookie));
+        location.href = "sfw.php?do=goods&id=" + parentId + "{if $bac_act eq 'reassemble'}&bac=order&order_sn={$order_sn}{/if}";
+    }
+});
+
+$(".btn-zondy.checkout-customize").on("click",function(){
+    location.href = "sfw.php?do=goods&id=" + parentId + "{if $bac_act eq 'reassemble'}&bac=order&order_sn={$order_sn}{/if}";
+});
+
+
+{else}
+
+var packageArray = $('.app-item');
+for (var i =0 ; i < packageArray.length; i++) {
+    util.ellipsisWidth($(packageArray[i]));
+};
+
+
+
+{/if}

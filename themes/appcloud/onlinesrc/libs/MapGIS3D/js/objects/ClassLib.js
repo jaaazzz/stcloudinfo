@@ -1,0 +1,963 @@
+//////////下面是地形分析相关///////////////////////////////////////////////////////////
+// 地形分析类型枚举
+//UNKNOW = 0,
+// 洪水淹没演示
+//FLOOOD_ANALYZE = 1,
+// 填挖方计算
+//CUTFILL_ANALYZE = 2,
+// 可视域分析
+//VIEWSHED_ANALYZE = 3,
+// 单点地形参数查询
+//POINT_QUERY = 4,
+// 两点通视性判断
+//VISIBLE_ANALYZE = 5,
+// 坡度分析
+//SLOPE_ANALYZE = 6,
+// 坡向分析
+//ASPECT_ANALYZE = 7,
+// 等高线显示
+//SECLIN_SHOW = 8,
+// 坡度坡向分层设色
+//COLORTABLE_SET = 9,
+
+//修改说明:球控件结构同步，包括洪水淹没，填挖方，可视域分析
+//修改人:wujunhui 2016-04-08
+/**
+* 洪水淹没分析参数类
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var FLoodAnalyzeInfo = function () {
+    /**
+    * 分析对应编号
+    * @type {Int}
+    */
+    this.type = 1;
+    /**
+     * 数据模式，1用户输入，0交互,当前仅此次用户输入
+     * @type {Int}
+     */
+    this.DataType = 1;
+    /**
+     * 观察点x
+     * @type {double}
+     */
+    this.ObserveDotX = 0.0;
+    /**
+    * 观察点y
+    * @type {double}
+    */
+    this.ObserveDotY = 0.0;
+    /**
+    * 观察点z
+    * @type {double}
+    */
+    this.ObserveDotZ = 0.0;
+    /**
+     * 区域起点x
+     * @type {double}
+     */
+    this.StartDotX = 0.0;
+    /**
+    * 区域起点y
+    * @type {double}
+    */
+    this.StartDotY = 0.0;    
+    /**
+     * 区域起点z
+     * @type {double}
+     */
+    this.StartDotZ = 0.0;
+    /**
+    * 区域终点x
+    * @type {double}
+    */
+    this.EndDotX = 0.0;
+    /**
+    * 区域终点x
+    * @type {double}
+    */
+    this.EndDotY = 0.0;
+    /**
+    * 区域终点x
+    * @type {double}
+    */
+    this.EndDotZ = 0.0;
+    /**
+     * 淹没区域扩大倍数
+     * @type {Int}
+     */
+    this.dRegZoom = 1;
+    /**
+     * 透明度(0-1.0之间有效)
+     * @type {float}
+     */
+    this.alpha = 0.5;
+    /**
+     * 淹没区域颜色
+     * @type {Uint}
+     */
+    this.lFloodClr = 255;
+    /**
+     * 是否显示标注
+     * @type {bool}
+     */
+    this.ShowBillBoard = true;
+    /**
+    * 淹没高度
+    * @type {double}
+    */
+    this.Height = 1;
+//    /**
+//    * 考虑连通性标识
+//    * @type {0|1}
+//    */
+//    this.connectivity = 1;
+//    /**
+//    * 开始选择起点
+//    * @type {0|1}
+//    */
+//    this.startpos = 0;
+//    /**
+//    * 开始选择淹没区
+//    * @type {0|1}
+//    */
+//    this.startreg = 0;
+//    /**
+//    * 当前高程
+//    * @type {Double}
+//    */
+//    this.height = 0;
+//    /**
+//    * 透明度(0-1.0之间有效)
+//    * @type {Int}
+//    */
+//    this.alpha = 0.5;
+//    /**
+//    * 高程最大值
+//    * @type {Double}
+//    */
+//    this.max = 0;
+//    /**
+//    * 高程最小值
+//    * @type {Double}
+//    */
+//    this.min = 0;
+//    /**
+//    * 淹没区域扩大倍数 
+//    * @type {Double}
+//    */
+//    this.regzoom = 1;
+//    /**
+//    * 淹没区域颜色
+//    * @type {Unit}
+//    */
+//    this.floodclr = 255;
+};
+
+/**
+* 填挖方分析参数类
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var CutFillInfo = function () {
+    /**
+    * 分析对应编号
+    * @type {Int}
+    */
+    this.type = 2;
+    /**
+    * 数据模式，1用户输入，0交互,当前仅此次用户输入
+    * @type {Int}
+    */
+    this.DataType = 1;
+    /**
+     * 区域起点x
+     * @type {double}
+     */
+    this.StartDotX = 0.0;
+    /**
+    * 区域起点y
+    * @type {double}
+    */
+    this.StartDotY = 0.0;
+    /**
+    * 区域起点z
+    * @type {double}
+    */
+    this.StartDotZ = 0.0;
+    /**
+    * 区域结束x
+    * @type {double}
+    */
+    this.EndDotX = 0.0;
+    /**
+    * 区域结束y
+    * @type {double}
+    */
+    this.EndDotY = 0.0;
+    /**
+    * 区域结束z
+    * @type {double}
+    */
+    this.EndDotZ = 0.0;
+    /**
+    * 高度
+    * @type {double}
+    */
+    this.Height = 1;
+    /**
+    * 挖区域颜色
+    * @type {uint}
+    */
+    this.CutClr = 255;
+    /**
+    * 填区域颜色
+    * @type {uint}
+    */
+    this.FillClr = 0;
+    /**
+    * 不挖不填区域颜色
+    * @type {uint}
+    */
+    this.NoCutFillClr = 100;
+//    /**
+//    * 开始选择区范围
+//    * @type {0|1}
+//    */
+//    this.startreg = 0;
+//    /**
+//    * 当前高程
+//    * @type {Double}
+//    */
+//    this.height = 0;
+//    /**
+//    * 高程最小值
+//    * @type {Double}
+//    */
+//    this.min = 0;
+//    /**
+//    * 高程最大值
+//    * @type {Double}
+//    */
+//    this.max = 0;
+//    /**
+//    * 挖的颜色
+//    * @type {Unit}
+//    */
+//    this.cutclr = 255;
+//    /**
+//    * 填的颜色
+//    * @type {Unit}
+//    */
+//    this.fillclr = 100;
+//    /**
+//    * 不填不挖的颜色
+//    * @type {Unit}
+//    */
+//    this.nocutfillclr = 0;
+//    /**
+//    * 表面积
+//    * @type {Double}
+//    */
+//    this.surfacearea = 0;
+//    /**
+//    * 填充体积
+//    * @type {Double}
+//    */
+//    this.fillvolume = 0;
+//    /**
+//    * 挖出体积
+//    * @type {Double}
+//    */
+//    this.cutVolume = 0;
+};
+
+/**
+* 可视域分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var ViewShedInfo = function () {
+    /**
+    * 分析对应编号
+    * @type {Int}
+    */
+    this.type = 3;
+    /**
+    * 数据模式，1用户输入，0交互,当前仅此次用户输入
+    * @type {Int}
+    */
+    this.DataType = 1;
+    /**
+     * 观察点x
+     * @type {double}
+     */
+    this.ObserveDotX = 0.0;
+    /**
+    * 观察点y
+    * @type {double}
+    */
+    this.ObserveDotY = 0.0;
+    /**
+    * 观察点z
+    * @type {double}
+    */
+    this.ObserveDotZ = 0.0;
+    /**
+    * 分析区域起点x
+    * @type {double}
+    */
+    this.StartDotX = 0.0;
+    /**
+    * 分析区域起点y
+    * @type {double}
+    */
+    this.StartDotY = 0.0;
+    /**
+    * 分析区域起点z
+    * @type {double}
+    */
+    this.StartDotZ = 0.0;
+    /**
+    * 分析区域终点x
+    * @type {double}
+    */
+    this.EndDotX = 0.0;
+    /**
+    * 分析区域终点y
+    * @type {double}
+    */
+    this.EndDotY = 0.0;
+    /**
+    * 分析区域终点z
+    * @type {double}
+    */
+    this.EndDotZ = 0.0;
+    /**
+     * 观察点高度
+     * @type {double}
+     */
+    this.Height = 1;
+    /**
+     * 透明度 0-1之间
+     * @type {double}
+     */
+    this.Alpha = 0.5;
+    /**
+     * 可视域颜色
+     * @type {uint}
+     */
+    this.ViewClr = 100;
+    /**
+    * 非可视域颜色
+    * @type {uint}
+    */
+    this.ShedClr = 200;
+//    /**
+//    * 开始选择起点
+//    * @type {0|1}
+//    */
+//    this.startpos = 0;
+//    /**
+//    * 开始选择分析区
+//    * @type {0|1}
+//    */
+//    this.startreg = 0;
+//    /**
+//    * 观察点高程
+//    * @type {Double}
+//    */
+//    this.height = 0;
+//    /**
+//    * 透明度(0-1.0之间有效)
+//    * @type {Int}
+//    */
+//    this.alpha = 0.5;
+//    /**
+//    * 可视域颜色
+//    * @type {Unit}
+//    */
+//    this.viewclr = 255;
+//    /**
+//    * 非可视域颜色
+//    * @type {Unit}
+//    */
+//    this.shedclr = 0;
+};
+/**
+ * 动态可视域分析结构
+ * @returns {} 
+ */
+var DynamicViewShedInfo = function () {
+    /**
+     * 分析对应编号
+     * @type {int}
+     */
+    this.type = 10;
+    /**
+    * 数据模式，1用户输入，0交互,当前仅此次用户输入
+    * @type {Int}
+    */
+    this.DataType = 1;
+    /**
+     * 开始动态可视域分析演示
+     * @type {bool}
+     */
+    this.StartAnalyze = true;
+    /**
+     * 视距
+     * @type {double}
+     */
+    this.SightDistance = 2000;
+    /**
+     * 视角（0-90度）
+     * @type {int}
+     */
+    this.AngleOfView = 60;
+    /**
+     * 动态分析时演示速度，两帧之间的间隔
+     * @type {double}
+     */
+    this.Speed = 1;
+    /**
+     * 观察点之间分段数
+     * @type {int}
+     */
+    this.SegmentNum = 10;
+    /**
+     * 动态可视域分析点列表
+     * @type {array<Point3D>}
+     */
+    this.PntArray = new Array();
+}
+/**
+* 单点地形参数查询分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var PointQueryInfo = function () {
+    /**
+    * 分析对应编号
+    * @type {Int}
+    */
+    this.type = 4;
+    /**
+    * 当前点三维坐标
+    * @type {Point3D}
+    */
+    this.pos = new Point3D(0, 0, 0);
+    /**
+    * 经度
+    * @type {Double}
+    */
+    this.longitude = 0;
+    /**
+    * 纬度
+    * @type {Double}
+    */
+    this.latitude = 0;
+    /**
+    * 高程
+    * @type {Double}
+    */
+    this.height = 0;
+    /**
+    * 坡度
+    * @type {Double}
+    */
+    this.slope = 0;
+    /**
+    * 坡向
+    * @type {Double}
+    */
+    this.aspect = 0;
+};
+
+/**
+* 两点通视性分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var VisibleInfo = function () {
+    /**
+    * 分析对应编号
+    * @type {Int}
+    */
+    this.type = 5;
+};
+
+/**
+* 坡度分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var SlopeInfo = function () {
+    /**
+    * 分析对应编号
+    * @type {Int}
+    */
+    this.type = 6;
+};
+
+/**
+* 坡向分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var AspectInfo = function () {
+    /**
+    * 分析对应编号
+    * @type {Int}
+    */
+    this.type = 7;
+};
+//////////以上是地形分析相关///////////////////////////////////////////////////////////
+
+
+/**
+* 爆炸效果演示分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var BombInfo = function () {
+    /**
+    * 工具的启动方式
+    * TOOL_START  0     启动工具
+    * TOOL_SETINFO  1  设置参数
+    * TOOL_APPLY  2    应用
+    * TOOL_RESET  3    复位
+    * type为0时,除isallscene有效外，其他参数均无效;反之相反
+    * @type {Int}
+    */
+    this.type = 1;
+    /**
+    * 爆炸方式,0=任意爆炸;1=整体爆炸;2=沿轴向爆炸;
+    * @type {Int}
+    */
+    this.bombtype = 0;
+    /**
+    * 轴向，1=x轴;2=y轴;3=z轴;-1=x轴反向;-2=y轴反向;-3=z轴反向
+    * @type {Int}
+    */
+    this.axistype = 3;
+    /**
+    * 爆炸距离
+    * @type {Double}
+    */
+    this.expdis = 50.0;
+    /**
+    * 爆炸帧数
+    * @type {Int}
+    */
+    this.frame = 30;
+    /**
+    * 爆炸范围比例
+    * @type {Double}
+    */
+    this.radioscale = 0.75;
+    /**
+     * 1爆炸当前活动图层,0爆炸整个场景
+     * @type {Int}
+     */
+    this.bomrange = 1;
+    /**
+    * 是否是整个场景爆炸，为flase为当前活动图层爆炸
+    * @type {bool}
+    */
+    this.isallscene = true;
+};
+
+/**
+* 日照分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var SunLightInfo = function () {
+    /**
+    * 工具的启动方式
+    * TOOL_START  0     启动工具
+    * TOOL_SETINFO  1  设置参数
+    * TOOL_APPLY  2    应用
+    * TOOL_RESET  3    复位
+    * @type {Int}
+    */
+    this.type = 1;
+    /**
+    * 时区设置，相对与格林威治标准时间的时间差，如北京时区设置为-8*60.
+    * @type {Double}
+    */
+    this.timedif = -8 * 60;
+    /**
+    * 使用环境光标识
+    * @type {bool}
+    */
+    this.isuseambient = false;
+    /**
+    * 启用平面模式标识
+    * @type {bool}
+    */
+    this.isplanemode = false;
+    /**
+    * 高度角(0~90度]
+    * @type {Int}
+    */
+    this.altitudeangle = 30;
+    /**
+    * 方位角(-180~180度]
+    * @type {Int}
+    */
+    this.azimuthangle = 30;
+
+    /**
+    * 年
+    * @type {int}
+    */
+    this.year = 0;
+    /**
+    * 月
+    * @type {int}
+    */
+    this.month = 0;
+    /**
+    * 天
+    * @type {int}
+    */
+    this.day = 0;
+    /**
+    * 小时
+    * @type {int}
+    */
+    this.hour = 0;
+    /**
+    * 分钟
+    * @type {int}
+    */
+    this.minute = 0;
+    /**
+    * 秒钟
+    * @type {int}
+    */
+    this.second = 0;
+    /**
+    * 星期
+    * @type {int}
+    */
+    this.dayofweek = 0;
+};
+
+/**
+* 地形剖切剖面图分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var TerSectInfo = function () {
+    /**
+    * 工具的启动方式
+    * TOOL_START  0     启动工具
+    * TOOL_SETINFO  1  设置参数
+    * TOOL_APPLY  2    应用
+    * TOOL_RESET  3    复位
+    * @type {Int}
+    */
+    this.type = 1;
+    /**
+    * 切割线颜色
+    * @type {Unit}
+    */
+    this.cutlinclr = 255;
+    /**
+    * 线宽,大于0有效
+    * @type {UInt}
+    */
+    this.linwidth = 10;
+    /**
+    * 是否显示剖面
+    * @type {0|1}
+    */
+    this.showsection = 1;
+    /**
+    * 剖面图模式：0=依线段长度采样高程点，1=平均采样高程点
+    * @type {0|1}
+    */
+    this.state = 0;
+    /**
+    * 采样点数
+    * @type {int}
+    */
+    this.pntnum = 150;
+    /**
+    * 切割线颜色
+    * @type {Unit}
+    */
+    this.graphclr = 255;
+    /**
+    * 剖面线颜色
+    * @type {Unit}
+    */
+    this.graphlinclr = 255;
+};
+
+/**
+* 模型编辑分析
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var ModelInfo = function () {
+    /**
+    * 工具的启动方式
+    * TOOL_START  0     启动工具
+    * TOOL_SETINFO  1  设置参数
+    * TOOL_APPLY  2    应用
+    * TOOL_RESET  3    复位
+    * @type {Int}
+    */
+    this.type = 1;
+    /**
+    * 模型拖动参数 0=x轴，1=y轴，2=z轴，3=近裁面
+    * @type {Int}
+    */
+    this.movetype = 3;
+    /**
+    * 模型旋转参数 0=x轴，1=y轴，2=z轴，3=任意面
+    * @type {Int}
+    */
+    this.rottype = 3;
+};
+
+/**
+* 测量方式
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var MeasureInfo = function () {
+    /**
+    * 工具的启动方式
+    * TOOL_START  0     启动工具
+    * TOOL_SETINFO  1  设置参数
+    * TOOL_APPLY  2    应用
+    * TOOL_RESET  3    复位
+    * @type {Int}
+    */
+    this.type = 1;
+    /**
+    * 量算类别
+    * 如果是距离量测,0=地表距离,1=直接距离,2=水平距离,3=垂直距离
+    * 如果是面积量测,0=圆形面积,1=多边形面积
+    * @type {Int}
+    */
+    this.measuretype = 0;
+    /**
+    * 工具方式,lengthmeasure 或者 areameasure
+    * @type {String}
+    */
+    this.tooltype = "lengthmeasure";
+    /**
+    * 交互工具颜色，如果是距离量测，中间连接线显示的颜色;如果是面积量测，为面积量测中间的填充颜色
+    * @type {Unit}
+    */
+    this.color = 255;
+};
+
+/**
+* 绘图工具
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var DrawInfo = function () {
+    /**
+    * 设置绘制类型：TypeLine = 0,TypeRect = 1,TypePolygon = 2,TypeCircle = 3,TypeArrow=4, TypeMultiPolygon=5 
+    * @type {Enum2DShapeType}
+    */
+    this.shapeType = 2;
+    /**
+    * 背景颜色
+    * @type {Unit}
+    */
+    this.bdColor = 255;
+    /**
+    * 填充颜色
+    * @type {Unit}
+    */
+    this.fillColor = 100;
+    /**
+    * 透明度的值 0-1
+    * @type {Double}
+    */
+    this.transparence = 1;
+    /**
+    * 线的宽度
+    * @type {Double}
+    */
+    this.linWid = 5;
+    /**
+    * 线的类型：TypeSolid = 0,TypePolyLine = 1,TypePointLine = 2,TypePolyLinePoint = 3
+    * @type {Enum2DLineType}
+    */
+    this.lineType = 0;
+};
+
+/**
+* 三维绘制传入的类
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var Draw3DElementInfo = function () {
+    /**
+    * 设置绘制类型：Type3DPoint: 0,Type3DLine: 1,TypeSurface: 2
+    * @type {Enum3DShapeType}
+    */
+    this.type = 0;
+    /**
+    * 点字符串,绘制单点：x,y,z，线和面：x,y,z；x,y,z；x,y,z
+    * @type {String}
+    */
+    this.pnts = '';
+    /**
+    * 默认为0，无需修改
+    * @type {String}
+    */
+    this.libID = '0';
+    /**
+    * 符号库里面找到相应符号id附上去
+    * @type {String}
+    */
+    this.symID = '10000016';
+    /**
+    * MapGIS颜色号一致
+    * @type {String}
+    */
+    this.fillClr = '2';
+    /**
+    * Transparent默认255，表示不透明，0表示全透明
+    * @type {Int}
+    */
+    this.transparent = '255';
+    /**
+    * 暂无具体含义
+    * @type {String}
+    */
+    this.att = '';
+};
+
+/**
+* 地图服务类
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var MapDocObj = function () {
+    /**
+    * 添加完数据后返回的id
+    * @type {String}
+    */
+    this.id = '';
+    /**
+    * 地图服务对应服务器IP
+    * @type {String}
+    */
+    this.ip = '';
+    /**
+    * 地图服务访问使用端口
+    * @type {String}
+    */
+    this.port = '';
+    /**
+    * 地图服务名称
+    * @type {String}
+    */
+    this.name = '';
+    /**
+    * 构建的基本url
+    * @type {String}
+    */
+    this.url = '';
+    /**
+    * 地图服务类型
+    * @type {String}
+    */
+    this.type = '';
+};
+/**
+ * 工作流post传入对象结构
+ * @constructor 
+ * @param {string} key
+ * @param {string} value
+ * @author chelsea
+ */
+var WFKeyValue = function (k, v) {
+    /**
+     * 工作流参数键名
+     * @type {string}
+     */
+    this.Key = k;
+    /**
+     * 工作流参数值
+     * @type {string}
+     */
+    this.Value = v;
+};
+/**
+ * 向WFKeyValue对象插入key，value值
+ * @param {string} k 
+ * @param {string} v 
+ */
+WFKeyValue.prototype.put = function (k, v) {
+    this.Key = k;
+    this.Value = v;
+};
+/**
+ * WFKeyValue数组包装对象
+ * @returns {} 
+ */
+var WFKeyValueMap = function () {
+    this.map = new Array();
+};
+/**
+ * 向WFKeyValueMap字典中加入WFKeyValue对象
+ * @param {WFKeyValue} kv WFKeyValue
+ */
+WFKeyValueMap.prototype.add = function (k, v) {
+    if (k instanceof WFKeyValue) {
+        this.map.push(k);
+    } else if (typeof k !== "undefined" && typeof v !== "undefined") {
+        this.map.push(new WFKeyValue(k, v));
+    }
+};
+/**
+ * WFKeyValueMap转换为json字符串
+ */
+WFKeyValueMap.prototype.toJSON = function () {
+    new Util().toJSON(this.map);
+};
+
+
+//--------------------------------by liuruoli------------------------
+/**
+* 粒子特效
+* @author 创建者:liuruoli 2016-06-29
+* @constructor
+*/
+var ParticeInfo = function () {
+    /**
+    * 粒子特效类型
+    0烟花 1 烟雾 2降雨 3喷泉 4 降雪 5自定义粒子
+    * 0  烟花
+    * 1  烟雾
+    * 2  降雨
+    * 3  喷泉
+    * 4  降雪
+    * 5  自定义粒子
+    * @type {Int}
+    */
+    this.ParticleType = 1;
+    /**
+    * 爆炸方式,0=任意爆炸;1=整体爆炸;2=沿轴向爆炸;
+    * @type {Int}
+    */
+    this.Postion =  new Point3D(0, 0, 0); 
+    /**
+    * 轴向，1=x轴;2=y轴;3=z轴;-1=x轴反向;-2=y轴反向;-3=z轴反向
+    * @type {Int}
+    */
+    this.Scale = new Point3D(0, 0, 0);
+};

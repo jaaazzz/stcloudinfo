@@ -1,0 +1,66 @@
+<?php
+// +----------------------------------------------------------------------
+// | zdcyber
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011-2016
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: huangbin
+// +----------------------------------------------------------------------
+// | Desc: 集成ucenter登陆
+// +----------------------------------------------------------------------
+
+require_once ROOT_PATH.'uc_api/config.inc.php';
+require_once ROOT_PATH.'uc_api/uc_client/client.php';
+
+//通过接口判断登录帐号的正确性，返回值为数组
+$check = "/^([a-z0-9A-Z\\-_\\.]+)@([a-z0-9]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/i";
+
+if(preg_match($check,$_POST['username'])){
+    list($uid, $username, $password, $email) = uc_user_login($_POST['username'], $_POST['password'],2);
+}else{
+    list($uid, $username, $password, $email) = uc_user_login($_POST['username'], $_POST['password'],0);
+}
+
+
+ setcookie('uc_auth', '', -86400);
+
+//初始化返回的数组信息
+$result  = array('error' => 0, 'content' => '');
+
+if($uid > 0) {
+	//生成同步登录的代码
+	$ucsynlogin = uc_user_synlogin($uid);
+	$result['content'] = $ucsynlogin;
+
+	/* 检测用户表中是否有此用户,如不存在,需同步此用户信息 begin */
+
+	//用户流程逻辑类
+	$user_flow_obj = zd_core::instance('zd_users_class');
+	//执行同步
+	$user_flow_obj->_uc_login_add_user($username,$password,$email,$uid);
+
+	/* 检测用户表中是否有此用户,如不存在,需同步此用户信息 end */
+
+	//用户登陆成功，设置 Cookie
+	//过期时间
+	global $cookietime;
+	$lifetime = time() + $cookietime;
+	setcookie('uc_auth', uc_authcode($uid."\t".$username, 'ENCODE'), $lifetime);
+} 
+elseif($uid == -1) {
+	$result['error'] = 1;
+	$result['content'] = '用户不存在,或者被删除';
+} 
+elseif($uid == -2) {
+	$result['error'] = 1;
+	$result['content'] = '密码错误';
+} 
+else {
+	$result['error'] = 1;
+	$result['content'] = '未定义';
+}
+die(json_encode($result));
+exit;
+?>

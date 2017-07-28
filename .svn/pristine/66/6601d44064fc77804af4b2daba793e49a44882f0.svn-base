@@ -1,0 +1,187 @@
+<?php
+// +----------------------------------------------------------------------
+// | zdcyber
+// +----------------------------------------------------------------------
+// | Copyright (c) 2011-2016
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: huangbin
+// +----------------------------------------------------------------------
+
+/*
+ * 已购软件逻辑类
+*/
+class zd_order_class{
+
+	//构造函数
+	function __construct($user_id = 0)
+	{
+		
+	}
+
+	/**
+	 * 获取用户已购软件信息
+	 * @access public
+	 * @author huangbin
+	 * @param int $user_id 用户id
+	 * @param int $page 页数
+	 * @param int $size 每页数据个数
+	 * @return array
+	*/
+	public function _get_order_list($user_id, $page, $size){
+		//初始化返回数据
+		$return_result = array();
+		//实例zd_db_order_class类库
+		$order_obj = zd_core::instance('zd_db_order_class');
+		//获取数据
+		$order_arr = $order_obj->_get_user_order_info($user_id, $page, $size);
+		//格式化处理数据
+		$return_result['list'] = $this->_format_order_info($order_arr['list']);
+		//数据总数
+		$return_result['count'] = $order_arr['count'];
+		//返回数据
+		return $return_result;
+	}
+
+    public function get_order_list($user_id, $page, $size){
+        $ip = trim($GLOBALS['iggs_api_url_base_url']);
+
+        $api_url = $ip."ecs/get/orderlist";
+
+        $api_url_s = $api_url."?user_id=".$user_id."&page=".$page."&page_size=".$size;
+        //加载zd_common_class类库
+        zd_core::autoload('zd_common_class');
+        //发送请求
+        $message_result = zd_common_class::_send_get($api_url_s);
+
+        $result = json_decode($message_result,true);
+
+        return $result;
+    }
+
+    /**
+     * 对从order_info表中查询出来的数据进行格式化处理
+     * @param array $result 订单数据数组
+     * @return array
+     */
+    private function _format_order_info($result){
+    	//加载zd_db_account_class类库
+    	zd_core::autoload('zd_db_account_class');
+    	//加载zd_db_price_class类库
+		zd_core::autoload('zd_db_price_class');
+    	//加载zd_db_price_class类库
+		zd_core::autoload('zd_common_class');
+        $result_all_array = array();
+
+        $now_time = time();
+
+        foreach ($result as &$item){
+            /* 初始化功能组价格,解决某些情况下当前订单的功能组价格与上一个订单的功能组价格一致的问题 */
+            $order_group_price = 0;
+            /* 产品价格初始化 */
+            $goods_total_price = $item['shop_price'];
+            $item_order_id = $item['order_id'];
+            $final_file_size = intval($item['file_size']);
+            //获取订单价格模板类型id
+            $order_scale_type = zd_db_account_class::_get_order_scale_type($item_order_id);
+            //订单的框架产品id
+            $goods_id = $item['goods_id'];
+            //根据产品id获取可定制功能组的插件
+            $group_plugin = zd_db_price_class::_get_group_plugin_by_id($goods_id);
+            //有价格模板
+            if ($order_scale_type) {
+                //根据产品id,价格模板类型获取产品的价格系数,功能组id
+                $d_price_ratio = zd_db_price_class::_get_goods_base_price_by_id($goods_id,$order_scale_type);
+                //获取此订单产品真实价格(价格乘以价格系数)
+                if (is_array($d_price_ratio) && $d_price_ratio['price_ratio']) {
+                    $goods_total_price = $goods_total_price*$d_price_ratio['price_ratio'];
+                }
+                /* 计算功能组点数 */
+                $group_id = $item['group_id'];
+               	//获取功能组需支付的点数
+				$order_group_price = zd_db_price_class::_get_group_price_by_id_type($group_id,$order_scale_type);
+            }
+
+            $nick_name = $GLOBALS['gis']->get_nick_name($item['cat_id']);
+            //计算是否已过期
+            $rest_time = $item['end_time'] - $now_time;
+            //获取此订单的框架下包含的插件
+            $get_plugin_sql = "
+                    SELECT goods.cat_id,goods.envs,goods.file_size,ordergoods.goods_name,ordergoods.goods_id,goods.shop_price AS goods_price
+                    FROM {$GLOBALS['ecs']->table('order_goods')} ordergoods,
+                         {$GLOBALS['ecs']->table('goods')} goods
+                    WHERE ordergoods.order_id = $item_order_id and ordergoods.parent_id <> 0 and
+                          goods.goods_id = ordergoods.goods_id
+			";
+            $plugin_result = $GLOBALS['db']->getAll($get_plugin_sql);
+            //四舍五入产品价格
+            $goods_total_price = floatval($goods_total_price);
+            //初始化插件数组
+            $addon_list = array();
+            foreach ($plugin_result as $p_item) {
+                $final_file_size += intval($p_item['file_size']);
+                //获取插件的价格模板系数
+                $price_ratio_arr = zd_db_price_class::_get_goods_base_price_by_id($p_item['goods_id'],$order_scale_type);
+                //初始化插件价格
+                $final_price = $p_item['goods_price'];
+                if (is_array($price_ratio_arr) && $price_ratio_arr['price_ratio']) {
+                    $final_price = $p_item['goods_price'] * $price_ratio_arr['price_ratio'];
+                }
+                $addon_item = array(
+                    'cat_id' => $p_item['cat_id'],
+                    'name'   => $p_item['goods_name'],
+                    'id'     => $p_item['goods_id'],
+                    'price'  => $p_item['goods_price'],
+                    'final_price' => floatval($final_price),
+                    'envs'   => $p_item['envs'],
+                    'is_show'=> true
+                );
+                array_push($addon_list, $addon_item);
+            }
+            //如果有功能授权价格
+            if ($order_group_price) {
+                $group_item = array(
+                    'name' => '功能授权',
+                    'final_price' => floatval($order_group_price),
+                    'is_show'=> false
+                );
+                array_push($addon_list, $group_item);
+            }
+            $goods_arr = array(
+                'name' => $item['goods_name'],
+                'final_price' => $goods_total_price
+            );
+            array_push($addon_list, $goods_arr);
+            $final_file_size_format = $final_file_size == 0 ? '未知' : zd_common_class::_get_real_size($final_file_size);
+            $result_all_array[] =  array(
+                'goods_id'        => $item['goods_id'],
+                'name'            => $item['goods_new_name'],
+                'goods_img'       => zd_common_class::_convert_url_in_string($item['original_img']),
+                'id'              => $item['goods_id'],
+                'order_id'        => $item['order_id'],
+                'thumb'           => zd_common_class::_convert_url_in_string($item['original_img']),
+                'is_on_sale'      => !! $item['is_on_sale'],
+                'order_sn'        => $item['order_id'],
+                'order_count'     => ($item['order_count'] < 1 ? 1 : $item['order_count']),
+                'cat_id'          => $item['cat_id'],
+                'is_trial'        => !! $item['is_trial'],
+                'is_delete'       => !! $item['is_delete'],
+                'date'            => date("Y-m-d H:i",$item['end_time']),
+                'create_time'     => date("Y-m-d H:i",$item['add_time']),
+                'rest_time'       => $rest_time,
+                'file_size'       => $final_file_size,
+                'top_cat'         => $nick_name[0],
+                'type'            => $nick_name[1],
+                'size'            => $final_file_size_format,
+                'price'           => 0,
+                'addon_list'      => $addon_list,
+                'envs'            => $item['envs'],
+                'file_info'       => $item['file_info'],
+                'integrate_workbench_id'  => $item['integrate_workbench_id']
+            );
+        }
+        return $result_all_array;
+    }
+
+}

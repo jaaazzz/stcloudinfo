@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>开发中心_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/dev.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+        <style type="text/css">
+            
+        </style>
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="content-top">
+                <div class="top-menu">
+                    <div class="menu-ul">
+                        <ul class="clearfix">
+                            <!--{if $nav_data}-->
+                            <!-- {foreach from=$nav_data item=item key=key name=nav_data} -->
+                            <li>
+                                <div class="menu-li-1">
+                                    <div class="menu-img">
+                                        <img src="{$item.img_url}">
+                                    </div>
+                                    <div class="menu-text">
+                                        {$item.name}
+                                    </div>
+                                </div>
+                                <!--{if $item.child}-->
+                                <div class="menu-li-2 clearfix">
+                                <!-- {foreach from=$item.child item=item_child key=key2 name=item_child} -->
+                                    <div class="item"><a href="{$item_child.url}">{$item_child.name}</a></div>
+                                <!-- {/foreach} -->
+                                </div>
+                                <!--{/if}-->
+                            </li>
+                            <!-- {/foreach} -->
+                            <!--{/if}-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="content-middle-1">
+                <div class="middle-1-title">
+                    <img src="themes/appcloud/images/dev/slant.png">
+                    <span class="title">平<span class="point">.</span>台<span class="point">.</span>能<span class="point">.</span>力</span>
+                    <img src="themes/appcloud/images/dev/slant.png">
+                </div>
+                <div class="middle-1-list clearfix">
+                    <!--{if $sec_nav_data}-->
+                    <!-- {foreach from=$sec_nav_data item=sec_item key=key name=sec_nav_data} -->
+                    <div class="item">
+                        <div class="item-1">
+                            <div class="item-img">
+                                <img src="{$sec_item.img_url}">
+                            </div>
+                            <div class="item-text-1">
+                                {$sec_item.name}
+                            </div>
+                            <div class="item-text-2">
+                                {$sec_item.desc}
+                            </div>
+                        </div>
+                        <!--{if $sec_item.child}-->
+                        <div class="item-2">
+                            <div class="item-2-list clearfix">
+                                <!-- {foreach from=$sec_item.child item=sec_item_child key=key3 name=sec_item_child} -->
+                                <div class="item-2-text"><a href="{$sec_item_child.url}">{$sec_item_child.name}</a></div>
+                                <!-- {/foreach} -->
+                            </div>
+                        </div>
+                        <!--{/if}-->
+                    </div> 
+                    <!-- {/foreach} -->
+                    <!--{/if}-->
+                </div>
+            </div>
+        </div>
+        <div class="container-2">
+            <div class="container">
+                <div class="content-middle-2">
+                    <div class="middle-2-title">
+                        <img src="themes/appcloud/images/dev/slant.png">
+                        <span class="title">开<span class="point">.</span>发<span class="point">.</span>示<span class="point">.</span>例</span>
+                        <img src="themes/appcloud/images/dev/slant.png">
+                    </div>
+                    <div class="middle-2-list clearfix">
+                        <!--{if $thr_nav_data}-->
+                        <!-- {foreach from=$thr_nav_data item=thr_item key=key name=thr_nav_data} -->
+                        <div class="middle-2-item {if $smarty.foreach.thr_nav_data.index == 0}active{/if}{if $smarty.foreach.thr_nav_data.index % 5 == 0} no-margin{/if}">{$thr_item.name}</div>
+                        <data data-res-name="{$thr_item.res_name}" data-desc="{$thr_item.desc}" data-img-url="{$thr_item.img_url}"></data>
+                        <!-- {/foreach} -->
+                        <!--{/if}-->
+                    </div>               
+                    <div class="middle-2-list-content clearfix">
+                        <div class="content-left">
+                            <p class="content-title"></p>
+                            <div class="content-text"></div>
+                        </div>
+                        <div class="content-right">
+                            <img src="">
+                        </div>
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="container-3">
+            <div class="container">
+                <div class="content-middle-3">
+                    <div class="middle-3-title">
+                        <img src="themes/appcloud/images/dev/slant.png">
+                        <span class="title">我<span class="point">.</span>要<span class="point">.</span>开<span class="point">.</span>发</span>
+                        <img src="themes/appcloud/images/dev/slant.png">
+                    </div>
+                    <div class="middle-3-list clearfix">
+                        <div class="middle-3-item">
+                            <div class="item-3-img">
+                                <img src="themes/appcloud/images/dev/reg_key.png">
+                            </div>
+                            <a href="#">
+                                <div class="item-3-btn">申请密钥</div>
+                            </a>
+                        </div>
+                        <div class="middle-3-item">
+                            <div class="item-3-img">
+                                <img src="themes/appcloud/images/dev/dev_home.png">
+                            </div>
+                            <a href="#">
+                                <div class="item-3-btn">开发社区</div>
+                            </a>
+                        </div>
+                        <div class="middle-3-item">
+                            <div class="item-3-img">
+                                <img src="themes/appcloud/images/dev/auth.png">
+                            </div>
+                            <a href="#">
+                                <div class="item-3-btn">我要认证</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <script type="text/javascript" src="js/dev.js"></script>
+</html>

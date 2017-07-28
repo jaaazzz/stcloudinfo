@@ -1,0 +1,149 @@
+﻿window.Multidate = window.Multidate || {};
+var map1, map2;
+var layer1, layer2, layer3, layer4;
+var LayerArr;
+
+Multidate.showMultidate = function() {
+    multi.show();
+    if(multi.attr("value")==0){
+        Multidate.init();
+        multi.attr("value",1);
+        multi.show();
+    }
+    if(swipe.attr('show')==1){
+        swipe.attr('show',0);
+        swipe.hide();
+        multi.css('left','0px');
+           // this.init();
+        multi.css('width','100%');
+        $('#map1').css('width','50%');
+        $('#map2').css('width','50%');
+        layerDiv.hide();
+        mapCon.hide();
+        swipe.hide();
+        multi.attr('show',1);
+        searchbox.hide();
+        multi.attr('show',1);
+    }else{
+        $('.left-box').toggle();
+        if(multi.attr('show')==0){
+            multi.css('left','0px');
+           // this.init();
+            multi.css('width','100%');
+            $('#map1').css('width','50%');
+            $('#map2').css('width','50%');
+            layerDiv.hide();
+            mapCon.hide();
+            swipe.hide();
+            multi.attr('show',1);
+            searchbox.hide();
+        }else if(multi.attr('show')==1){
+            multi.hide();
+            mapCon.html('');
+            mapCon.show();
+            layerDiv.show();
+            searchbox.show();
+            multi.attr('show',0);
+            mapCon.css('left','320px');
+            ShowMap.initMap();
+        }
+    }
+    
+}
+
+Multidate.init=function () {
+    /*layer1 = new Zondy.Map.TianDiTu({ layerType: Zondy.Enum.Map.TiandituType.VEC, projection: ol.proj.get('EPSG:4326') });
+    layer2 = new Zondy.Map.TianDiTu({ layerType: Zondy.Enum.Map.TiandituType.CVA, projection: ol.proj.get('EPSG:4326') });
+    layer3 = new Zondy.Map.TianDiTu({ layerType: Zondy.Enum.Map.TiandituType.IMG, projection: ol.proj.get('EPSG:4326') });
+    layer4 = new Zondy.Map.TianDiTu({ layerType: Zondy.Enum.Map.TiandituType.CIA, projection: ol.proj.get('EPSG:4326') });*/
+    var TileName1 = "武汉影像";
+    layer1 = new Zondy.Map.TileLayer(TileName1, TileName1, {
+        ip: ip,
+        port: port
+    });
+    var TileName2 = "武汉矢量";
+    layer2 = new Zondy.Map.TileLayer(TileName2, TileName2, {
+        ip: ip,
+        port: port
+    });
+    var TileName3 = "武汉矢量";
+    layer3 = new Zondy.Map.TileLayer(TileName3, TileName3, {
+        ip: ip,
+        port: port
+    });
+    var TileName4 = "武汉影像";
+    layer4 = new Zondy.Map.TileLayer(TileName4, TileName4, {
+        ip: ip,
+        port: port
+    });
+    LayerArr = [layer1, layer2, layer3, layer4];
+    var view = new ol.View({
+        projection: new ol.proj.Projection({
+            code: 'EPSG:4326',
+            units: 'degrees'
+        }),
+        center: [114.65,30.665],
+            //最大显示级数
+        maxZoom: 16,
+            //最小显示级数
+        minZoom: 9,
+            //当前显示级数
+        zoom: 9
+    });
+    map1 = new ol.Map({
+        controls: ol.control.defaults({
+            attribution: false
+        }),
+        target: 'map1',
+        layers: [layer1, layer2],
+        view: view
+    });
+    map2 = new ol.Map({
+        controls: ol.control.defaults({
+            attribution: false
+        }),
+        target: 'map2',
+        layers: [layer1, layer2],
+        view: view
+    });
+    multi.hide();
+}
+
+Multidate.changeMapDouble=function (mapType, type) {
+    var map = null;
+    if (mapType == 'map1') {
+        map = map1;
+    } else {
+        map = map2;
+    }
+    if (type == 'vec') {
+        map.removeLayer(layer3);
+        map.removeLayer(layer4);
+        map.addLayer(layer1);
+        map.addLayer(layer2);
+    } else {
+        map.removeLayer(layer1);
+        map.removeLayer(layer2);
+        map.addLayer(layer3);
+        map.addLayer(layer4);
+    }
+}
+//图层切换函数
+Multidate.changeLayer=function (mapType) {
+    var map = null;
+    if (mapType == 'map1') {
+        map = map1;
+        var index = $("#LayerSelect1").val() - 1;
+    } else {
+        map = map2;
+        var index = $("#LayerSelect2").val() - 1;
+    }
+    var Layers = map1.getLayers().getArray();;
+    //移除图层
+    for (var i = 0; i < Layers.length; i++) {
+        map.removeLayer(Layers[i]);
+    }
+    //添加图层
+    map.addLayer(LayerArr[index]);
+    map.addLayer(LayerArr[index + 1]);
+}

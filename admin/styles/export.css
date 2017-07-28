@@ -1,0 +1,170 @@
+/*
+  add by zc 2015-08-11 15:59:23 $
+*/
+
+
+/******************************框架*********************************/
+.export-div{
+    height: 550px;
+    min-height: 550px;
+}
+.export{
+    background: #FFF;
+    border: 1px solid #BBDDE5;
+}
+.export-left{
+    float:left;
+    width: 100%;
+    margin-right: -350px !important;
+    height: 100%;
+    position: relative;
+}
+.left-inner{
+    height: 100%;
+    margin-right: 350px;
+    overflow: auto;
+}
+
+.export-right{
+    float: right;
+    width: 320px;
+    height: 100%;
+    position: relative;
+    min-width: 320px;
+    overflow: auto;
+}
+.clear{clear:both}
+
+
+/******************************搜索*********************************/
+.form-div{
+    padding: 10px;
+    color: #808080;
+    margin: 0 0 10px 0;
+    border: 0px;
+    background-color: #FFF;
+    border-bottom: 1px solid #BBDDE5;
+    height: 20px;
+}
+.form-left-div{
+    /*width:250px;*/
+    display: inline-block;
+}
+.form-div select{
+    width: 90px;
+}
+
+/******************************左侧列表*********************************/
+.sub-top{
+    margin:10px;
+    border: 1px solid #BBDDE5;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.sub-top:hover{
+    border: 1px solid #0E569C;
+}
+.sub-plug .expand,.sub-top .expand{
+    margin-left: 10px;
+}
+.sub-plug span,.sub-top span{
+    margin-left: 10px;
+}
+.sub-plug .add,.sub-top .add{
+    float:right;
+    margin-right: 20px;
+    margin-top: 8px;
+    cursor: pointer;
+}
+.sub-plug .add{
+    margin-right: 10px;
+}
+/******************************插件三角框*********************************/
+.sub-main{
+    position: relative;
+    display:block;
+    margin:10px;
+    border:1px solid #aaa;
+    background-color:#fff;
+}
+.sub-main s{
+    position:absolute;
+    top:-20px;
+    left:60px;
+    display:block;
+    height:0;
+    width:0;
+    font-size: 0;
+    line-height: 0;
+    border-color:transparent transparent #aaa transparent;
+    border-style:dashed dashed solid dashed;
+    border-width:10px;
+}
+.sub-main i{
+    position:absolute;
+    top:-9px;
+    left:-10px;
+    display:block;
+    height:0;
+    width:0;
+    font-size: 0;
+    line-height: 0;
+    border-color:transparent transparent #fff transparent;
+    border-style:dashed dashed solid dashed;
+    border-width:10px;
+}
+/******************************插件列表*********************************/
+
+.sub-plug{
+    margin:5px 10px 5px 20px;
+    height: 25px;
+    line-height: 25px;
+    border-bottom: 1px dashed #ccc;
+}
+/******************************已选插件列表*********************************/
+.form-div > span{
+    font-size: 14px;
+}
+.sub-sel{
+    margin:10px;
+    border: 1px solid #BBDDE5;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+.sub-sel * {
+    vertical-align: middle;
+}
+.sub-sel:hover{
+    border: 1px solid #0E569C;
+}
+.sub-sel .expand{
+    margin-left: 10px;
+}
+.sub-sel .sel-span{
+    display: inline-block;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    -o-text-overflow:ellipsis;
+    white-space:nowrap;
+    max-width: 220px;
+}
+.sub-sel span{
+    margin-left: 10px;
+}
+.sub-sel .add{
+    float:right;
+    margin-right: 20px;
+    margin-top: 8px;
+    cursor: pointer;
+}
+
+
+
+
+.export_btn{
+    text-align: center;
+}

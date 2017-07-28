@@ -1,0 +1,117 @@
+<!-- 快速导航 -->
+<!--<section style="background-color: #162e42;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                <div class="fastlink">
+                    <h4 class="fastlink-title">关于我们</h4>
+                    <ul>
+                        <li class="fastlink-link"><a href="">联系我们</a></li>
+                        <li class="fastlink-link"><a href="">企业地址</a></li>
+                        <li class="fastlink-link"><a href="">单位情况</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                <div class="fastlink">
+                    <h4 class="fastlink-title">专题服务</h4>
+                    <ul>
+                        <li class="fastlink-link"><a href="">物化</a></li>
+                        <li class="fastlink-link"><a href="">水资源</a></li>
+                        <li class="fastlink-link"><a href="">矿产</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                <div class="fastlink">
+                    <h4 class="fastlink-title">数据服务</h4>
+                    <ul>
+                        <li class="fastlink-link"><a href="">软件</a></li>
+                        <li class="fastlink-link"><a href="">服务</a></li>
+                        <li class="fastlink-link"><a href="">矿产</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                <div class="fastlink">
+                    <h4 class="fastlink-title">互联信息</h4>
+                    <ul>
+                        <li class="fastlink-link"><a href="">发展研究中心</a></li>
+                        <li class="fastlink-link"><a href="">中国地质科学院</a></li>
+                        <li class="fastlink-link"><a href="">物化探所</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>-->
+
+<!-- footer -->
+<footer class="footernav" style="background-color:#193c57">
+    <div class="container">
+        <p class="text-center">主办：中国地质调查局 &nbsp;&nbsp;技术支持：中国地质调查局发展研究中心</p>
+        <p class="text-center">北京市西城区阜外大街45号院&nbsp;&nbsp;100037</p>
+        <p class="text-center">京ICP备05036996号</p>
+    </div>
+</footer>
+
+<div id="goToTop"></div>
+ <script type='text/javascript'>
+/**  $(function(){
+ 		var $nav = $(".nav-under"),$window = $(window),$body = $('body'),
+ 			$nav_on = $(".nav-on"),padding_height = $nav_on.height(),temp_top;
+
+ 		$nav.css('width','100%');
+
+ 		$window.scroll(function(){
+ 			var top = $window.scrollTop();
+
+ 			if(top > 105 && $nav.length > 0){
+ 				$nav.css({
+ 					"position":'fixed',
+ 					'top':0,
+ 					'zIndex':10,
+ 					'box-shadow':'0 1px 4px rgba(0,0,0,0.3)'
+ 				});
+ 				$body.css('paddingTop',padding_height-60);
+                $('.nav-switch .dropdown-menu').hide();
+ 			}else{
+ 				$nav.css({
+ 					"position":"",
+ 					'top' : '',
+ 					'zIndex':1,
+ 					'boxShadow':''
+ 				});
+ 				$body.css('paddingTop',0);
+ 			}
+
+ 			temp_top = top;
+ 		});
+        $('.nav-switch > div').hover(
+            function(){
+                $(this).find('.switch-text').addClass('font-active');
+                $(this).find('.dropdown-menu').show();
+            },
+            function(){
+                $(this).find('.switch-text').removeClass('font-active');
+                $(this).find('.dropdown-menu').hide();
+            }
+        )
+	});
+**/
+ </script>
+<script type="text/javascript">
+    var UCServerConfig="";
+    var ServiceCenterConfig = '#';
+</script>
+<script type="text/javascript" src="js/guc_login.js?position=fixed"></script>
+<!-- {insert_scripts files='echo.min.js'} -->
+<script>
+    //图片懒加载
+    echo.init({
+      offsetVertical: 100,   //用于设置距离视口多远（水平、垂直方向）时开始载入图片， 为 0 时，图片进入视口以后立即加载
+      offsetRight: 500,      //图片距离右侧多少时开始载入图片
+      throttle: 200, //控制 window.onscroll 触发频率，以避免过于频繁导致性能问题
+      unload: false
+    });
+</script>

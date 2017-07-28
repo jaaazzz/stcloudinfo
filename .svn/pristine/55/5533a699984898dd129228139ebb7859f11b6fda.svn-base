@@ -1,0 +1,547 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>用户管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <link href="js/sweetalert.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/sweetalert.min.js"></script>
+    <script type="text/javascript" src="js/jquery.form.js"></script>
+    <!--[if lt IE 9]>
+    <script>
+        var swal=function(obj){
+            return alert(obj.title);
+        }
+    </script>
+    <![endif]-->
+    <style type="text/css">
+        .modal-body table tr td{
+            /*padding: 3px;*/
+        }
+    </style>
+
+    <script type="text/javascript">
+        var type='add_user';
+        var user_id=0;
+        $(function(){
+            //初始化分页
+            var pObj=new pageObj({$total_page},{$page},'{$current_url}',{$size},{$count});
+            pObj.initPagination();
+            set_delete_btn();
+            //点击　弹出创建用户框
+            $(".tool_btn.add_user").click(function(){
+                type='add_user';
+                user_id=0;
+                $(".modal_box input").val('');
+                $(".hostnum").val(0);
+                $(".username").attr('readonly',false);
+                $(".username").removeAttr('disabled');
+                $(".email").removeAttr('disabled');
+                $(".password").attr('placeholder','');
+                $(".modal_background.user,.modal_box.userAdd").show();
+                $(".modal-header .title-word").html('创建账户');
+                $(".error_tip").html('');
+            });
+            //点击　编辑　弹出用户框
+            $(".app_table .edit_user").click(function(){
+                type='edit_user';
+                user_id=$(this).attr('data_id');
+                $.post('user_list.php',{act:'get_user_by_id',user_id:user_id},function(res){
+                    var user=JSON.parse(res);
+                    $(".username").val(user.user_name);
+                    $(".username").attr('disabled',true);
+                    $(".email").val(user.email);
+                    $(".email").attr('disabled',true);
+                    $(".point").val(user.point_all);
+                    $(".hostnum").val(user.host_num);
+                    $(".password").val('');
+                    $(".password").attr('placeholder','*********');
+                    $(".remark").val(user.remark);
+                    $(".username").attr('readonly',true);
+                    $(".modal_background.user,.modal_box.userAdd").show();
+                    $(".modal-header .title-word").html('编辑账户');
+                    $(".error_tip").html('');
+                });
+
+            });
+            //点击　确定创建、修改用户
+            $(".userAdd .modal_btns .sure").click(function(){
+                var canpass=false;
+                if($(".username").val().length<6||$(".username").val().length>32){
+                    $(".username").next().html('6~32个字符，支持英文、数字和"_"格式');
+                    return;
+                }else{
+                    $(".username").next().html('');
+                }
+                if($('.password').val()||type=='add_user'){
+                    var is_pwd=/^(?![^a-zA-Z]+$)(?!\D+$).{6,16}$/;
+                    if(!is_pwd.test($('.password').val())){
+                        $(".password").next().html('6~16个字符，必须至少含字母和数字');
+                        canpass=false;
+                        return;
+                    }else{
+                        canpass=true;
+                        $(".password").next().html('');
+                    }
+                }
+                var email = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/;
+                if(!email.test($(".email").val())){
+                    $(".email").next().html('请输入正确的邮箱格式');
+                    return;
+                }else{
+                    $(".email").next().html('');
+                }
+                var point = /\D+/;
+                if(!$(".point").val()||point.test($(".point").val())){
+                    $(".point").next().html('请输入正确的点数配额');
+                    return;
+                }else{
+                    $(".point").next().html('');
+                }
+                var data={
+                    user_name:$(".username").val(),
+                    email:$(".email").val(),
+                    point_all:$(".point").val(),
+                    host_num:$(".hostnum").val(),
+                    remark:$(".remark").val()
+                }
+                if(canpass){
+                    data.password=$('.password').val();
+                }
+                if(type=='add_user'){
+                    data.point_have=$('.point').val();
+                    data.host_have=$('.hostnum').val();
+                }
+                $.post('user_list.php',{act:type,user:JSON.stringify(data),user_id:user_id},function(res){
+                    if(res=='ok'){
+                        var title=type=='add_user'?"创建用户成功!":"修改用户成功!";
+                        swal({
+                            title: title,
+                            text: "",
+                            type: "success",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        location.reload();
+                    }else{
+                        swal({
+                            title: res,
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                    }
+
+                });
+
+            });
+            //点击　删除用户
+            $(".delete_user").click(function(){
+               if($(this).hasClass('disalbe')){
+                    return;
+                }
+                //判断有无资源
+                var del_arr=[];
+                $(".app_table tbody input[type=checkbox]:checked").each(function(){
+                    del_arr.push($(this).attr('data_id'));
+                });
+                $.post('user_list.php',{act:'check_resource',ids:del_arr.join(',')},function(res){
+                    if(res=='have'){
+                        $(".modal_background.user,.modal_box.del_have_resource").show();
+                    }else if(res=='no'){
+                        $(".modal_background.user,.modal_box.del_no_resource").show();
+                    }else{
+                        alert('error');
+                    }
+                });
+            });
+            //点击批量导入弹出框
+            $(".tool_btn.user_import").click(function(){
+                $('.import_file').val('');
+                $(".modal_background.user,.modal_box.import").show();
+            });
+            //点击　确定　导入
+            $(".import .modal_btns .sure").click(function(){
+                $('.modal_box.import').WaitPanel();
+                $('#file_form').ajaxSubmit({
+                    type:'POST',
+                    beforeSubmit:function(){
+                        var fileExtension = $('.import_file').val().split('.').pop().toLowerCase();
+                        var arr=['xls','xlsx'];
+                        if(arr.indexOf(fileExtension)<0){
+                            swal({
+                                title: '请上传xls、xlsx等excel文件',
+                                text: "",
+                                type: "error",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                            $('.modal_box.import').hideWaitPanel();
+                            return false;
+                        }
+                    },
+                    success:function(res){
+                        $('.modal_box.import').hideWaitPanel();
+                        if(res=='ok'){
+                            swal({
+                                title: '导入成功',
+                                text: "",
+                                type: "success",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                            location.reload();
+                        }else{
+                            res=res.length<80?res:'导出出错';
+                            swal({
+                                title: res,
+                                text: "",
+                                type: "error",
+                                allowOutsideClick:true,
+                                confirmButtonText: "关闭"
+                            });
+                        }
+                        return true;
+                    }
+                });
+            });
+            //点击查询
+            $(".user_search").click(function(){
+                var um=$('.search_username').val();
+                var email=$('.search_email').val();
+                location.href="user_list.php?um="+um+"&email="+email;
+            });
+            //点击 移交 弹出
+            $(".yijiao_user").click(function () {
+                var not_id=$(this).attr('data_id');
+                $.post('user_list.php',{act:'yj_list',not_id:not_id},function(res) {
+                    $(".modal_box.yijiao").attr('not_id',not_id);
+                    var str='';
+                    var users=JSON.parse(res);
+                    for(var i=0;i<users.length;i++){
+                        str+='<tr>'+
+                                '<td>'+users[i].user_name+'</td>'+
+                                '<td>'+users[i].email+'</td>'+
+                                '<td><a onclick="yj_sure('+users[i].user_id+')">移交</a></td>'+
+                              '</tr>';
+                    }
+                    $(".yj-table table tbody").html(str);
+                    $(".modal_background.user,.modal_box.yijiao").show();
+                });
+
+            });
+            //暂不删除
+            $(".sure.host").click(function () {
+                $(".modal_background.user,.modal_box.del_no_resource").hide();
+            });
+            //直接删除
+            $(".cancel.host").click(function () {
+                var del_arr=[];
+                $(".app_table tbody input[type=checkbox]:checked").each(function(){
+                    del_arr.push($(this).attr('data_id'));
+                });
+                $.post('user_list.php',{act:'delete_user',ids:del_arr.join(',')},function(res){
+                    if(res=='ok'){
+                        var title="删除用户成功!";
+                        swal({
+                            title: title,
+                            text: "",
+                            type: "success",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        location.reload();
+                    }else{
+                        swal({
+                            title: res,
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                    }
+                });
+            });
+            //移交后删除
+            $(".sure.yj_delete").click(function () {
+                $(".modal_box.del_have_resource").hide();
+                var del_arr=[];
+                $(".app_table tbody input[type=checkbox]:checked").each(function(){
+                    del_arr.push($(this).attr('data_id'));
+                });
+                $(".modal_box.yijiao").attr('not_id',del_arr.join('|'));
+                var not_id=del_arr.join('|');
+                $.post('user_list.php',{act:'yj_list',not_id:not_id,key:$(".yj_key").val()},function(res) {
+                    var str='';
+                    var users=JSON.parse(res);
+                    for(var i=0;i<users.length;i++){
+                        str+='<tr>'+
+                                '<td>'+users[i].user_name+'</td>'+
+                                '<td>'+users[i].email+'</td>'+
+                                '<td><a onclick="yj_sure('+users[i].user_id+',true)">移交</a></td>'+
+                                '</tr>';
+                    }
+                    $(".yj-table table tbody").html(str);
+                    $(".modal_box.yijiao").show();
+                });
+
+            });
+        });
+    function yj_search() {
+        var not_id=$('.modal_box.yijiao').attr('not_id');
+        $.post('user_list.php',{act:'yj_list',not_id:not_id,key:$(".yj_key").val()},function(res) {
+            var str='';
+            var users=JSON.parse(res);
+            for(var i=0;i<users.length;i++){
+                str+='<tr>'+
+                        '<td>'+users[i].user_name+'</td>'+
+                        '<td>'+users[i].email+'</td>'+
+                        '<td><a onclick="yj_sure('+users[i].user_id+')">移交</a></td>'+
+                        '</tr>';
+            }
+            $(".yj-table table tbody").html(str);
+        });
+    }
+    function yj_sure(des_id,is_delete) {
+        var sid=$(".modal_box.yijiao").attr('not_id');
+        var data={act:'yj_sure',src_id:sid,des_id:des_id};
+        if(is_delete){
+            data.is_delete='delete';
+        }
+        $.post('user_list.php',data,function (res){
+            if(res=='ok'){
+                swal({
+                    title: '移交成功',
+                    text: "",
+                    type: "success",
+                    allowOutsideClick:true,
+                    confirmButtonText: "关闭"
+                });
+                location.reload();
+            }else{
+                swal({
+                    title: '移交失败',
+                    text: "",
+                    type: "error",
+                    allowOutsideClick:true,
+                    confirmButtonText: "关闭"
+                });
+            }
+        })
+    }
+
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container">
+    <div class="page_title">
+        用户管理
+    </div>
+    <div class="page_ul">
+        <ul>
+            <li {if $url=='user_list.php'}class="active"{/if}><a href="user_list.php">用户</a></li>
+            <li {if $url=='admin_user_list.php'}class="active"{/if}><a href="admin_user_list.php">管理员</a></li>
+        </ul>
+    </div>
+    <div class="page_content">
+
+        <div class="table_tools">
+            用户名:<input type="text" class="search_username" value="{$um}"   style="width: 150px;margin: 0 15px;height: 30px" />
+            邮箱：<input type="text" class="search_email" value="{$email}"    style="width: 150px;margin: 0 15px;height: 30px" />
+            <a class="user_search">查询</a>
+            <a class="tool_btn add_user">创建账户</a>
+            <a class="tool_btn user_import">批量导入</a>
+            <a class="tool_btn delete delete_user disalbe">删除</a>
+        </div>
+        <table class="app_table">
+            <thead>
+            <tr>
+                <th width="15%"><input type="checkbox"  class="head_check"/>用户名</th>
+                <th width="20%">邮箱</th>
+                <th width="15%">点数配额/点数使用</th>
+                <th width="15%">云主机配额/云主机使用</th>
+                <th width="25%">备注</th>
+                <th width="10%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach from=$user_list item=user}
+            <tr>
+                <td><input type="checkbox"  data_id="{$user.user_id}" />{$user.user_name}</td>
+                <td>{$user.email}</td>
+                <td>{$user.point_all}/{$user.point_used}</td>
+                <td>{$user.host_num}/{$user.host_used}</td>
+                <td>{$user.remark}</td>
+                <td><a class="edit_user" style="margin-right: 5px" data_id="{$user.user_id}">编辑</a><a class="yijiao_user" data_id="{$user.user_id}">移交</a></td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <!-- 分页列表 begin-->
+        <div class="page_statics"></div>
+        <div class="pagination pagination-centered">
+            <ul>
+                <li><a href="javascript:void(0);"><上一页</a></li>
+                <li><a href="javascript:void(0);">下一页></a></li>
+            </ul>
+        </div>
+        <!-- 分页列表 end-->
+    </div>
+</div>
+
+<div class="modal_background user">
+
+    <div class="modal_box userAdd" style="width: 525px;height: 536px; ">
+        <div class="modal-header">
+            <span class="title-word">创建账户</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <table>
+                <tr>
+                    <td>用户名：</td><td><input type="text" onblur="check_username(this)" class="username"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>密码：</td><td><input type="password" onblur="check_pwd(this)"  class="password"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>邮箱：</td><td><input type="text" onblur="check_email(this)" class="email"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>点数配额：</td><td><input type="text" class="point" onblur="check_point(this)"  placeholder="总点数剩余{$point.max_can_give_point}"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>云主机数：</td>
+                    <td>
+                        <select class="hostnum">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <div class="error_tip"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>备注：</td><td><input class="remark" type="text"/></td>
+                </tr>
+            </table>
+            <div class="modal_btns">
+                <a class="modal_btn sure">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal_box import" style="width: 450px;height: 370px; ">
+        <div class="modal-header">
+            <span class="title-word">批量导入</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <form action="user_list.php?act=import" id="file_form" method="post" enctype="multipart/form-data">
+                <!--<input type="hidden" name="act" value="import"/>-->
+                导入excel:<input type="file" class="import_file" name="excel" style="display: inline-block;width: 200px"/>
+            </form>
+            <br/>
+            模板示例截图:
+            <img src="images/excel.png" style="width: 400px;height: 120px" alt=""/>
+            <br/>
+            <a href="{$baseUrl}/data/批量导入用户模板.xlsx" style="color: #ff0000;text-decoration: underline">模板文件下载</a>
+            <div class="modal_btns">
+                <a class="modal_btn sure" style="margin-left: 0">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal_box yijiao" style="width: 550px;height: 530px; ">
+        <div class="modal-header">
+            <span class="title-word">移交用户</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <div class="yj-top">
+                <div style="color: #666666;font-size: 13px;background-color: #f9f9f9">移交后用户的全部应用、云主机和剩余许可资源将移交给其他用户</div>
+                <div style="margin-top: 10px">
+                    用户名/邮箱：<input type="text" class="yj_key" placeholder="请输入用户名或邮箱" /><span onclick="yj_search()">查找</span>
+                </div>
+            </div>
+            <div class="yj-table">
+                <table class="app_table" style="margin: 15px 0 0 0px;max-height: 360px;overflow-y: auto;">
+                    <thead>
+                    <tr>
+                        <th width="40%">用户名</th>
+                        <th width="40%">邮箱</th>
+                        <th width="20%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal_btns">
+                <a class="modal_btn sure" style="margin-left: 0">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal_box del_no_resource" style="width: 450px;height: 210px; ">
+        <div class="modal-header">
+            <span class="title-word">提示</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <div style="margin: 25px 0">删除后用户相关信息将被彻底删除，确定要删除当前用户吗？</div>
+            <div class="modal_btns">
+                <a class="modal_btn sure host" style="margin-left: 0">暂不删除</a>
+                <a class="modal_btn cancel host">直接删除</a>
+            </div>
+        </div>
+    </div>
+    <div class="modal_box del_have_resource" style="width: 450px;height: 210px; ">
+        <div class="modal-header">
+            <span class="title-word">提示</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <div style="margin: 25px 0">如选择删除则所选用户的应用和云主机将被彻底删除，我们建议您移交给其他用户管理</div>
+            <div class="modal_btns">
+                <a class="modal_btn sure yj_delete" style="margin-left: 0">移交后删除</a>
+                <a class="modal_btn cancel host">直接删除</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<style type="text/css">
+    .yj-top{
+        height: 80px;
+        border-bottom: 1px solid #dcdcdc;
+    }
+    .yj-top span{
+        background-color: #52b678;
+        border-radius: 3px;
+        color: white;
+        cursor: pointer;
+        margin-left: 5px;
+        padding: 5px 15px;
+        text-align: center;
+        width: 40px;
+    }
+    .yj-table{
+        height: 300px;
+        overflow-y: auto;
+    }
+</style>
+</html>

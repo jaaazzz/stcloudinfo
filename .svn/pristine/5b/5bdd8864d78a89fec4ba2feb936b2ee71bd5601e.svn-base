@@ -1,0 +1,38 @@
+<div class="price-help-main">
+	<img src="./images/button.png" class="price-help-img">
+	<div class="price-help-main2">
+		<div class="price-help-guide"></div>
+		<div class="price-help-body">
+			<div class="price-help-content">
+				<div class="price-help-title">
+					框架（可定制）
+				</div>
+				<div class="price-help-detail">
+					总价格=(框架价格*价格模板系数+框架下插件*价格模板系数+功能组价格*价格模板系数)*时间*份数
+				</div>
+				<div class="price-help-title">
+					框架（不可定制）
+				</div>
+				<div class="price-help-detail">
+					总价格=(框架价格*价格模板系数+功能组价格*价格模板系数)*时间*份数
+				</div>
+				<div class="price-help-title">
+					独立插件
+				</div>
+				<div class="price-help-detail">
+					总价格=(插件价格*价格模板系数)*时间*份数
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$(".price-help-img").hover(
+		function(){
+			$(".price-help-main2").show();
+		},
+		function(){
+			$(".price-help-main2").hide();
+		}
+	);
+</script>

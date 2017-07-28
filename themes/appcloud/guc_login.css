@@ -1,0 +1,585 @@
+@charset "UTF-8";
+.guc-login-mask{
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #666;
+    opacity: 0.5;
+    filter: Alpha(opacity=50); BACKGROUND-COLOR: #666
+}
+.guc-login-prompt{
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: #fff;
+    margin: 0;
+    font-family: verdana,Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgb(51, 51, 51);
+    border-radius: 3px;
+}
+.guc-login-prompt a {
+    color: rgb(0, 136, 204);
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+}
+.guc-login-prompt a:link, .guc-login-prompt a:visited {
+    color: rgb(0, 136, 204);
+    outline: none;
+}
+.guc-login-prompt a:hover {
+    color:#005580;
+    text-decoration: none;
+}
+
+.guc-login-prompt .row {
+    margin-left: 0px;
+}
+
+.guc-login-prompt .center {
+    text-align: center !important;
+}
+
+.guc-login-prompt p.center {
+    margin: 0;
+}
+
+.guc-login-prompt p.auto {
+    margin-top: 10px;
+}
+.guc-login-prompt label {
+    display: block;
+    margin-bottom: 5px;
+}
+.guc-login-prompt .radio, .guc-login-prompt  .checkbox {
+    min-height: 20px;
+}
+.guc-login-prompt input[type="radio"], .guc-login-prompt input[type="checkbox"] {
+    margin: 0px 5px 0px 0px;
+    line-height: normal;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.guc-login-prompt ul {
+    list-style: none;
+    margin: 0;
+}
+.guc-login-prompt .pull-left {
+    float: left;
+}
+.guc-login-prompt .pull-right {
+    float: right;
+}
+.guc-login-prompt button.btn-zondy {
+    display: inline-block;
+    background-color: #52b678;
+    height: 40px;
+    width: 230px;
+    color: #FFF;
+    border: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    font-size: 20px;
+}
+.guc-login-prompt button.btn-zondy.cannot-click {
+    pointer-events: none;
+    cursor: default;
+}
+.guc-login-prompt button.btn-zondy.disabled {
+    background-color: #e0e0e0;
+    color: #b4b4b4;
+    pointer-events: none;
+    cursor: default;
+}
+.guc-login-prompt button.btn-zondy:hover {
+    background-color: #64c886;
+}
+.guc-login-prompt button.btn-zondy.disabled:hover {
+    background-color: #e0e0e0;
+}
+.guc-login-prompt button.btn-zondy .caret {
+    margin-top: 8px;
+    margin-left: 0;
+    border-top-color: #fff;
+}
+.guc-login-prompt .guc-login-tab{
+    position: relative;
+}
+.guc-login-prompt .guc-login-tab > a.head-close{
+    position: absolute;
+    font-size: 25px;
+    cursor: pointer;
+    right: 10px;
+    top: 8px;
+    z-index: 10;
+    color: rgb(187, 187, 187);
+}
+.guc-login-prompt .guc-login-tab > a.head-close:hover{
+    text-decoration: none;
+    color:#777;
+}
+.guc-login-prompt .guc-form-wrapper >a:hover{
+    text-decoration: none;
+}
+.guc-login-prompt .guc-form-wrapper > div > a:hover{
+    text-decoration: none;
+}
+.guc-login-prompt .guc-login-tab .form.success a:hover{
+    text-decoration: none;
+}
+.guc-login-prompt .guc-login-tab .form a:hover{
+    text-decoration: none;
+}
+.guc-login-prompt .row:before, .guc-login-prompt .row:after {
+    display: table;
+    line-height: 0;
+    content: "";
+}
+.guc-login-prompt .alert{
+    padding: 8px 35px 8px 14px;
+    margin-bottom: 20px;
+    color: rgb(192, 152, 83);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    background-color: rgb(252, 248, 227);
+    border: 1px solid rgb(251, 238, 213);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.guc-login-prompt .alert .close {
+    position: relative;
+    top: -2px;
+    right: -21px;
+    line-height: 20px;
+}
+.guc-login-prompt .close {
+    float: right;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 20px;
+    color: rgb(0, 0, 0);
+    text-shadow: 0 1px 0 rgb(255, 255, 255);
+    opacity: .2;
+    filter: alpha(opacity=20);
+}
+.guc-login-prompt button.close {
+    padding: 0;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0);
+    border: 0;
+    -webkit-appearance: none;
+}
+.guc-login-prompt fieldset {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+.guc-login-prompt input[type="text"],.guc-login-prompt input[type="password"]{
+    display: inline-block;
+    height: 20px;
+    padding: 4px 6px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgb(85, 85, 85);
+    vertical-align: middle;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(204, 204, 204);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear .2s,box-shadow linear .2s;
+    -moz-transition: border linear .2s,box-shadow linear .2s;
+    -o-transition: border linear .2s,box-shadow linear .2s;
+    transition: border linear .2s,box-shadow linear .2s;
+}
+.guc-login-prompt input[type="text"]:focus, .guc-login-prompt input[type="password"]:focus{
+    border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(82,168,236,0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+.guc-login-prompt input.err_input{
+    border-color: rgba(255, 0, 0, 0.8);
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(255, 0, 0, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(255,0,0,0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(255, 0, 0, 0.6);
+}
+
+.guc-login-prompt input.ok_input{
+    border-color: rgba(0, 255, 0, 0.8);
+    outline: 0;
+    outline: thin dotted \9;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(0, 255, 0, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(0,255,0,0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),0 0 8px rgba(0, 255, 0, 0.6);
+}
+
+.guc-login-prompt .guc-login-body .row.form {
+    width: 280px;
+/*    margin: 0 auto;*/
+    padding: 100px 110px 70px 110px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    position: relative;
+    z-index: 9;
+    box-sizing:  content-box;
+}
+.guc-login-prompt .guc-login-body .row.form.sign-up {
+    /*margin: 0 auto;*/
+    padding: 60px 110px 45px 110px;
+}
+.guc-login-prompt .guc-login-body .row.form .alert {
+    margin-bottom: 0px;
+    width: 231px;
+}
+.guc-login-prompt .guc-login-body .row.form .alert#login-notice {
+    margin-top: -58px;
+    position: absolute;
+}
+.guc-login-prompt .guc-login-body .row.form .alert#register-notice{
+    margin-top: -30px;
+    position: absolute;
+}
+.guc-login-prompt .guc-login-body .row.form1 .label-placeholder_login {
+    height: 45px;
+    line-height: 45px;
+    margin-top: -49px;
+    margin-bottom: 0px;
+    padding-left: 9px;
+    color: #999;
+    cursor: text;
+    float: left;
+    pointer-events: none;
+}
+.guc-login-prompt .guc-login-body .row.form2 .label-placeholder_login {
+    height: 35px;
+    line-height: 41px;
+    margin-top: -39px;
+    margin-bottom: 0px;
+    padding-left: 9px;
+    color: #999;
+    cursor: text;
+    float: left;
+    pointer-events: none;
+}
+.guc-login-prompt .guc-login-body .row.form .label-placeholder_login.validate {
+    margin-top: 11px;
+    margin-left: -131px;
+}
+.guc-login-prompt .guc-login-body .row.form .validate-img {
+    height: 43px;
+    line-height: 43px;
+    width: 100px;
+    display: inline-block;
+    float: left;
+    margin-top: 10px;
+}
+.guc-login-prompt .guc-login-body .row.form .changeimg {
+    display: inline-block;
+    margin-top: 20px;
+}
+.guc-login-prompt .guc-login-body .row.form1 input[type="text"], .guc-login-prompt .guc-login-body .row.form1 input[type="password"] {
+    width: 268px;
+    height: 35px;
+    line-height: 15px;
+    line-height: 35px\9;
+    vertical-align: middle;
+    outline: none;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    float: left;
+    /*margin-right: 10px;*/
+    box-sizing: content-box;
+}
+.guc-login-prompt .guc-login-body .row.form2 input[type="text"], .guc-login-prompt .guc-login-body .row.form2 input[type="password"] {
+    width: 268px;
+    height: 25px;
+    line-height: 15px;
+    line-height: 35px\9;
+    vertical-align: middle;
+    outline: none;
+    margin-top: 2px;
+    margin-bottom: 1px;
+    float: left;
+    margin-right: 10px;
+    box-sizing: content-box;
+}
+.guc-login-prompt .guc-login-body .row.form input[type="text"].validate {
+    width: 106px;
+}
+.guc-login-prompt .guc-login-body .row.form input.verification-code {
+    margin-bottom: 0px;
+    margin-right: 13px;
+    width: 105px;
+    float: left;
+}
+.guc-login-prompt .guc-login-body .row.form .verification-wrap {
+    margin-bottom: 15px;
+    height: 45px;
+}
+.guc-login-prompt .guc-login-body .row.form .verification-wrap a {
+    float: left;
+    display: inline-block;
+    margin-top: 13px;
+}
+.guc-login-prompt .guc-login-body .row.form .verification-img {
+    display: inline-block;
+    height: 41px;
+    width: 98px;
+    border: 1px solid #d5d5d5;
+    float: left;
+    margin-top: 1px;
+    margin-right: 11px;
+}
+.guc-login-prompt .guc-login-body .row.form .btn-zondy {
+    width: 280px;
+    height: 45px;
+    margin-top: 10px;
+    float: left;
+}
+.guc-login-prompt .guc-login-body .row.form1 .form-label {
+    padding-left: 5px;
+    width: 100%;
+    color: #9d9d9d;
+    white-space: nowrap;
+}
+.guc-login-prompt .guc-login-body .row.form2 .form-label {
+    padding-left: 5px;
+    width: 100%;
+    color: #9d9d9d;
+    white-space: nowrap;
+    margin: 3px 0px 1px 0px;
+}
+.guc-login-prompt .row.form2 .pwd-strength{
+    width: 268px;
+    height: 5px;
+    margin: 5px 8px;
+    display: none;
+}
+.guc-login-prompt .row.form2 .pwd-strength span{
+    float: left;
+    width: 75px;
+    margin: 0px 7px;
+    height: 5px;
+    background: #eee;
+}
+.guc-login-prompt .row.form2 .pwd-strength span.pwd-strength-weak{
+    background: #dc3c00;
+}
+.guc-login-prompt .row.form2 .pwd-strength span.pwd-strength-normal{
+    background: #D7C232;
+}
+.guc-login-prompt .row.form2 .pwd-strength span.pwd-strength-strong{
+    background: #008000;
+}
+.guc-login-prompt .guc-login-body .row.form .form-confirm {
+    display: inline-block;
+    height: 18px;
+    width: 16px;
+    background-image: url("./images/edit-confirm.png");
+    margin-right: -17px;
+    margin-top: 31px;
+    display: none; }
+.guc-login-prompt .guc-login-body .row.info {
+    margin-top: 20px;
+    margin-bottom: 125px;
+    text-align: center;
+}
+.guc-login-prompt .clear {
+    clear: both;
+}
+.guc-login-prompt .guc-login-timer{
+    padding: 0px 3px;
+}
+
+.guc-login-prompt button:focus{
+    outline: none;
+}
+/**********************微信登录****************************/
+.guc_img_wechat{
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 10020;
+    cursor: pointer;
+}
+.guc_img_wechat:hover{
+    opacity:0.6;
+    filter:alpha(opacity=60);
+}
+.guc-login-prompt .guc-login-body .row.form.form3 {
+    /* margin: 0 auto; */
+    padding: 20px 110px 45px 110px;
+}
+.guc-code{
+    width:280px;
+    height:320px;
+    /*border: 1px solid #ddd;*/
+    overflow: hidden;
+
+}
+#wx_container iframe{
+    width: 320px !important;
+    height: 400px !important;
+    margin-top: -75px;
+    margin-left: -20px;
+    margin-top: 15px\9;
+}
+
+/**********************微信绑定账号（头部）****************************/
+.guc-login-prompt .guc-login-body .row.form.form4 {
+    /* margin: 0 auto; */
+    /*padding: 0px 70px 30px 70px;*/
+    padding:0px;
+    width: 340px;
+    margin:0px auto;
+}
+.guc-login-body .row.form.form4 .guc-head-info{
+    margin-top:-30px;
+    width: 100%;
+    height:100px;
+}
+.guc-login-body .row.form.form4 .guc-head-info a {
+    /*border-radius: 45px;*/
+    /*-webkit-border-radius: 45px;*/
+    /*-moz-border-radius: 45px;*/
+    border: 5px solid #DCE3E5;
+    float:left;
+    overflow: hidden;
+    width: 80px;
+    height: 80px;
+}
+.guc-login-body .row.form.form4 .guc-head-info a img{
+    width: 80px;
+    height: 80px;
+}
+
+.guc-login-body .row.form.form4 .guc-head-info .head-welcome{
+    float:left;
+    margin-top:30px;
+}
+
+.guc-login-body .row.form.form4 .guc-head-info .head-welcome h3 {
+    line-height: 26px;
+    font-size: 16px;
+    margin: 5px 10px;
+}
+.guc-login-body .row.form.form4 .guc-head-info .head-welcome h3 .uesrname {
+    color: #29a033;
+    font-size: 16px;
+}
+.guc-login-body .row.form.form4 .guc-head-info .head-welcome p {
+    margin: 0px 0px 0px 10px;
+}
+
+/**********************微信绑定账号（登录）****************************/
+.guc-login-body .row.form.form4 .guc-form-bd {
+    width: 100%;
+    margin:0px auto;
+    padding-top:15px;
+}
+.guc-login-body .row.form.form4 .guc-form-bd #bind-notice{
+    width: 291px;
+    position: relative;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .bd-tit{
+    font-size: 14px;
+    margin:20px 0px 0px 0px;
+    line-height: 25px;
+}
+
+.guc-login-body .row.form.form4 .guc-form-bd .bd-main-box{
+    background: #fff;
+    border: 1px solid #ced1d0;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    width: 340px;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .bd-main-box .bd-field-account{
+    height: 45px;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    background: #fff;
+    border-radius: 4px;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .bd-main-box .bd-field-account > label{
+    color: #999;
+    font-size: 16px;
+    line-height: 45px;
+    margin-right: 0;
+    padding: 0 5px;
+    width: 65px;
+    display: inline-block;
+    text-align: right;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .bd-main-box .bd-field-account .bd-input-bg{
+    width: 240px;
+    display: inline-block;
+    height: 42px;
+    vertical-align: middle;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .bd-main-box .bd-field-account .bd-input-bg > input{
+    background: none;
+    border: none;
+    color: gray;
+    height: 21px;
+    outline: none;
+    padding: 6px 7px;
+    width: 220px;
+    margin: 3px 0;
+    box-shadow: none;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .bd-main-box .bd-field-account .bd-input-bg > input:focus{
+    border: none;
+    outline: none;
+    box-shadow: none;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .bd-main-box .botborder{
+    border-bottom: 1px solid #e5e5e5;
+    border-radius: 4px 4px 0px 0px;
+}
+
+.guc-login-body .row.form.form4 .guc-form-bd .bind-submit{
+    width:340px;
+    float: none;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .autoset{
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+    margin-top: 15px;
+}
+.guc-login-body .row.form.form4 .guc-form-bd .autoset > a{
+    color: #767676;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    width: 220px;
+}
+
+/**********************微信二维码样式****************************/
+body{
+    margin:0px;
+}
+.impowerBox .qrcode {width: 200px;margin-top: 0px;border:0px;}
+.impowerBox .title {display: none;}
+.impowerBox .info {width: 260px;}
+.impowerBox .status {text-align: center;}

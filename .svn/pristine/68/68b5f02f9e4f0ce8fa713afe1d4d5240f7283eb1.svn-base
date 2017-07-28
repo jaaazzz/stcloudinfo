@@ -1,0 +1,29 @@
+<!-- {if $goods_type == 'package' || $goods_type == 'tool'} -->
+    <!-- {if $bac_act eq 'order'} -->
+    <div class="row title"><a href="user.php?act=order_list">已购</a>&nbsp;>&nbsp;{if $goods_name}{$goods_name}{else}{$goods.goodsName}{/if}</div>
+    <!-- {else} -->
+
+        <!-- {if $top_parent_cat eq 2} -->
+        <div class="row title"><a href="sfw.php">软件中心</a>&nbsp;>&nbsp;<a href="sfw.php?id={$top_parent_cat}">桌面产品</a>&nbsp;>&nbsp;{$goods.goodsName}</div>
+        
+
+
+        <!-- {elseif $top_parent_cat eq 3} -->
+        <div class="row title"><a href="sfw.php">软件中心</a>&nbsp;>&nbsp;<a href="sfw.php?id={$top_parent_cat}">Web产品</a>&nbsp;>&nbsp;{$goods.goodsName}</div>
+
+        <!-- {elseif $top_parent_cat eq 98} -->
+        <div class="row title"><a href="category.php?id=100">移动应用</a>&nbsp;>&nbsp;<a href="{foreach from=$cat_tree item=cat}{if $cat.id eq 99}{foreach from=$cat.cat_id item=min_cat}{if $min_cat.name eq $goods.ecsCategory.catName}{$min_cat.url}{/if}{/foreach}{/if}{/foreach}">{$goods.ecsCategory.catName}</a>&nbsp;>&nbsp;{$goods.goodsName}</div>
+        <!-- {/if} -->
+    <!-- {/if} -->    
+
+<!-- {elseif $goods_type == 'addon'} -->
+    <!-- {if $bac_act eq 'order'} -->
+    <div class="row title"><a href="user.php?act=order_list">已购</a>&nbsp;>&nbsp;{$goods.goods_name}</div>
+    <!-- {else} -->
+        <!-- {if $parent_goods} -->
+            <div class="row title"><a href="sfw.php?id={$top_parent_cat}">{if $top_parent_cat eq 2}桌面工具{elseif $top_parent_cat eq 3}Web应用{/if}</a>&nbsp;>&nbsp;<a href="sfw.php?do=goods&id={$parent_goods.goods_id}{if $bac_act eq 'reassemble'}&bac=order&order_sn={$order_sn}{/if}">{$parent_goods.goods_name}</a>&nbsp;>&nbsp;{$goods.goods_name}</div>
+        <!-- {else} -->
+            <div class="row title"><a href="index.php">首页</a>&nbsp;>&nbsp;{$goods.goods_name}</div>
+        <!-- {/if} -->
+    <!-- {/if} -->
+<!-- {/if} -->

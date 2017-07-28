@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>资源中心_地图服务_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/mapservice.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <style>
+        .content-body{
+            border:1px solid #dcdcdc;
+            width:200px;
+            padding:10px;
+        }
+        .content-head{
+            width:180px;
+            margin:5px 10px;
+            border-bottom:1px solid #dcdcdc;
+        }
+
+    </style>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="resource-navigation clearfix">
+                <a href="resource.php?do=mapservice" class="col-sm">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/map_s.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            地图服务
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=sdk" class="col-sm sdk">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/sdk.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            SDK
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=service" class="col-sm  active">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/cat_27_active.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            服务资源
+                        </div>
+                    </div>
+                </a>
+                <div class="col-sm blank-div"></div>
+            </div>
+            <div class="content-body">
+                <div class="content-head">
+                    <div style="border-bottom:3px solid #6389de;width:35px;font-size:16px;font-weight:bold;">目录</div>
+                </div>
+                <div style="width:180px;margin:5px 10px;border-bottom:1px solid #dcdcdc;">
+                    <div style="margin-left:10px;font-weight:bold;">按服务类型选择</div>
+                </div>
+                <div style="width:180px;margin:5px 10px;">
+                    <div><span style="margin-left:20px;color:#6389de;">WMS服务</span></div>
+                    <div><span style="margin-left:20px;color:#6389de;">WFS服务</span></div>
+                    <div><span style="margin-left:20px;color:#6389de;">WCS服务</span></div>
+                    <div><span style="margin-left:20px;color:#6389de;">WMTS服务</span></div>
+                    <div><span style="margin-left:20px;color:#6389de;">WFS-G服务</span></div>
+                </div>
+                <div style="width:180px;margin:5px 10px;border-bottom:1px solid #dcdcdc;">
+                    <div style="margin-left:10px;font-weight:bold;">按数据类型选择</div>
+                </div>
+                <div style="width:180px;margin:5px 10px;">
+                    <div style="margin-left:20px;color:#6389de;">矢量数据</div>
+                    <div style="margin-left:20px;color:#6389de;">影像数据</div>
+                </div>
+                <div style="width:180px;margin:5px 10px;border-bottom:1px solid #dcdcdc;">
+                    <div style="margin-left:10px;font-weight:bold;">按专题服务选择</div>
+                </div>
+                <div style="width:180px;margin:5px 10px;">
+                    <select style="margin-left:20px;width:140px;color:#6389de;">
+                        <option>---请选择---</option>
+                    </select>   
+                </div>
+                <div style="width:180px;margin:5px 10px;border-bottom:1px solid #dcdcdc;">
+                    <div style="margin-left:10px;font-weight:bold;">选择所有类型服务</div>
+                </div>
+                <div style="width:180px;margin:5px 10px;">
+                    <div style="margin-left:20px;color:#6389de;">所有类型</div>
+                </div>
+            </div>
+        </div>
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/mapservice.js"></script>
+</html>

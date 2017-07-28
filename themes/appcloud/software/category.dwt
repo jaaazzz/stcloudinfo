@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>软件中心_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+       <link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+       <script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+       <script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+
+        <div class="jumbotron"  style="background: url(../images/地质产品/banner.png) 0% 100% /cover no-repeat;min-height: 200px;">
+            <div class="container" style="display: none;">
+                <form id="searchCard" class="text-center search-card" onsubmit="return search_check();" action="sfw.php?do=category">
+                    <div class="search-card_content">
+                        <input type="text" class="search-card_text"  maxlength="255" autocomplete="off" placeholder="搜索软件产品" {if $key}value="{$key}"{/if}>
+                    </div>
+                    <div class="search-card-submit">
+                        <input type="submit" class="search-card_btn" value="搜索" class="btn" onclick="if (search_check()){document.getElementById(&quot;searchCard&quot;).submit()}">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 地质产品导航 -->
+        <section>
+            <div class="container">
+                <div class="product-navbar">
+                    <a class="product-navbar_link {if !$id}active{/if}" href="{$current_url}">地质数据</a>
+                    <a class="product-navbar_link {if $id eq 2}active{/if}" href="{$current_url}?id=2">地质图</a>
+                    <a class="product-navbar_link {if $id eq 3}active{/if}" href="{$current_url}?id=3">地学科普</a>
+                    <span class="morelike">
+                        <a class="{if $id eq 4}active{/if}" href="{$current_url}?id=4">软件及仪器设备</a>
+                        <a class="{if $id eq 5}active{/if}" href="{$current_url}?id=5">文献与出版物</a>
+                        <a class="{if $id eq 6}active{/if}" href="{$current_url}?id=6">技术方法与标注</a>
+                        <a class="{if $id eq 7}active{/if}" href="{$current_url}?id=7">专题服务</a>
+                    </span>
+                    <span class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多 <span class="caret"></span></a>
+                        <ul class="dropdown-menu"  style="top: 120%;">
+                           <li><a class="{if $id eq 4}active{/if}" href="{$current_url}?id=4">软件及仪器设备</a></li>
+                           <li><a class="{if $id eq 5}active{/if}" href="{$current_url}?id=5">文献与出版物</a></li>
+                           <li><a class="{if $id eq 6}active{/if}" href="{$current_url}?id=6">技术方法与标注</a></li>
+                           <li><a class="{if $id eq 7}active{/if}" href="{$current_url}?id=7">专题服务</a></li>
+                        </ul>
+                    </span>
+                </div>  
+            </div>
+        </section>
+
+        <!-- 地质产品展示 -->
+        <section>
+            <div class="container">
+                <div class="row">
+                    <!-- {if $goods_arr }  -->
+                    <!-- {foreach from=$goods_arr item=item key=key name=goods_arr} -->
+                    <div class="col-md-4 col-sm-6 col-xs-12 {if $smarty.foreach.goods_arr.index % 4 == 0}first-child{/if}">
+                        <div class="product-box-item">
+                            <a href="sfw.php?do=goods&id={$item.goods_id}">
+                                <div class="product-box">
+                                    <div class="product-box_image" style="height: 179px;overflow: hidden;">
+                                        <img src="{if $item.goods_img}{$item.goods_img}{else}./images/app_01.png{/if}" alt="暂无图片" height="179" width="100%">
+                                    </div>
+                                    <div class="product-box_content">
+                                        <h4 class="text-center">
+                                            <a href="sfw.php?do=goods&id={$item.goods_id}">
+                                            <script>
+                                                util.cutEllipsis(true,".list","{$item.name|escape:html}");
+                                            </script>
+                                            </a>
+                                        </h4>
+                                        <!-- <div style="font-size:14px;color:#666;width:800px;height:20px;overflow:hidden;"><span>版本：</span><span>{$item.version}</span></div>
+                                        <div style="font-size:14px;color:#666;"><span>详情：</span><span>{$item.goods_desc}</span></div> -->
+                                    </div>  
+                                </div>
+                            </a>    
+                        </div>
+                    </div>
+
+                </div>
+                <!-- {/foreach} -->
+                <!-- {else} -->
+                <div class="tip-content">
+                    <!-- {if $key }  -->
+                    <div class="tip-content-text-2">抱歉，没有找到{$key}相关的产品，建议您重新设置搜索关键字</div>
+                    <!-- {else} -->
+                    <div class="tip-content-text" style="position: relative; top: 200px; left: 191px;">
+                        <div class="text-1">空空如也～</div>
+                        <div class="text-2">
+                        ,敬请期待...</div>
+                    </div>
+                    <img src="themes/appcloud/images/no_product_img.png">
+                    <!-- {/if} -->
+                </div>
+                        
+                <!-- {/if} -->
+            </div>
+        </section>
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript">
+        $(function(){
+            /* 分页 begin */
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        return "{$p_url}p="+n;
+                    }
+                })            
+            }
+            /* 分页 end */
+        })
+    </script>
+    <script type="text/javascript" src="js/index.js"></script>
+</html>

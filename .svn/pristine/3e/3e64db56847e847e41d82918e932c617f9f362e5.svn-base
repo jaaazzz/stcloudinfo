@@ -1,0 +1,26 @@
+[
+    {
+        "id": "1",
+        "lx": "1",
+        "layer": "武汉矢量",
+        "text": "武汉矢量",
+        "default": "left",
+        "zoom": 9,
+        "centerx": 0,
+        "centery": 0,
+        "projection":"degree",
+        "maxZoom":0,
+        "minZoom":0
+    },
+    {
+        "id": "2",
+        "lx": "2",
+        "layer": "武汉影像",
+        "text": "武汉影像",
+        "default":"right",
+        "zoom": 9,
+        "centerx": 0,
+        "centery": 0,
+        "projection":"degree"
+    }
+]

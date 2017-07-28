@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>资源管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <style type="text/css">
+        .modal-body table tr td{
+            padding: 3px;
+        }
+        .app_table td,.app_table th{
+            border: 1px solid #dcdcdc;
+            text-align: center;
+        }
+        /*.app_table tbody tr:not(.plugin-tr){*/
+            /*cursor: pointer;*/
+        /*}*/
+        .plugin-detail{
+            color: #3f8ccd;
+            cursor: pointer;
+            position: absolute;
+            margin-right: 5px;
+            right: 10px;
+        }
+        .hide-tr{
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function(){
+            //初始化分页
+            var pObj=new pageObj({$total_page},{$page},'{$current_url}',{$size},{$count});
+            pObj.initPagination();
+
+            $(".tool_btn.add_user").click(function(){
+                $(".modal_background,.modal_box").show();
+            });
+            $(".plugin-detail").click(function(){
+                var $plugin=$(this).parent().parent().next('.plugin-tr');
+                if($plugin.hasClass('hide-tr')){
+                    $plugin.show();
+                    $plugin.removeClass('hide-tr');
+                    $(this).text('收起');
+                }else{
+                    $plugin.hide();
+                    $plugin.addClass('hide-tr');
+                    $(this).text('详细');
+                }
+                var m_height=$('.page_container').css('height');
+                $('.left').css({'height':parseInt(m_height)+15+'px'});
+            });
+
+            //console.log($('.app_table tr'));
+        });
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container">
+    <div class="page_title">
+        资源管理
+    </div>
+    <div class="page_ul">
+                <ul>
+                    <li ><a href="rm_cloudhost.php">云主机</a></li>
+                    <li><a href="rm_product.php">产品</a></li>
+                    <li class="active"><a href="rm_license.php">许可</a></li>
+                </ul>
+            </div>
+            <div class="table_span_info">
+                            <div class="search_title">总点数：{$user_list.point_total}</div>
+                            <div class="search_title">已使用点数：{$user_list.point_have}</div>
+                            <div class="btn_search" style="display:none;"><a>导入许可</a></div>
+                        </div>
+    <div class="page_content">
+
+        <div>
+
+
+            <div style="clear: both;"></div>
+            <table class="app_table" style="border-collapse: collapse;border: 1px solid #dcdcdc;">
+                <thead>
+                <tr>
+                    <th width="15%">订单号</th>
+                    <th width="25%">订单产品</th>
+                    <th width="15%">下单时间</th>
+                    <th width="10%">购买期限</th>
+                    <th width="15%">消费点数记录</th>
+                    <th width="10%">用户</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach from=$order_list item=item}
+                <tr>
+                    <td>{$item.order_sn}</td>
+                    <td style="position: relative">{$item.goods_name}<span class="plugin-detail">详细</span></td>
+                    <td>{$item.create_time_2}</td>
+                    <td>{$item.period}天</td>
+                    <td>{$item.price}</td>
+                    <td>{$item.user_name}</td>
+                </tr>
+                <tr class="plugin-tr hide-tr">
+                    <td style="border-right: none;"></td>
+                    <td style="border-right: none;border-left: none;">
+                        {foreach from=$item.plugins item=p}
+                        <div>{$p.goods_name}</div>
+                        {/foreach}
+                    </td>
+                    <td style="border-right: none;border-left: none;"></td>
+                    <td style="border-right: none;border-left: none;"></td>
+                    <td style="border-right: none;border-left: none;"></td>
+                    <td style="border-left: none;"></td>
+                </tr>
+                {/foreach}
+
+                </tbody>
+            </table>
+            <!-- 分页列表 begin-->
+            <div class="page_statics"></div>
+            <div class="pagination pagination-centered">
+                <ul>
+                    <li><a href="javascript:void(0);">上一页</a></li>
+                    <li><a href="javascript:void(0);">下一页</a></li>
+                </ul>
+            </div>
+            <!-- 分页列表 end-->
+        </div>
+
+    </div>
+</div>
+
+<div class="modal_background">
+
+    <div class="modal_box" style="width: 310px;height: 350px; ">
+        <div class="modal-header">
+            <span class="title-word">创建账户</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <table>
+                <tr>
+                    <td>用户名：</td><td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td>密码：</td><td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td>邮箱：</td><td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td>点数配额：</td><td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td>云主机数：</td><td><input type="text"/></td>
+                </tr>
+                <tr>
+                    <td>备注：</td><td><input type="text"/></td>
+                </tr>
+            </table>
+            <div class="error_tip"></div>
+            <div class="modal_btns">
+                <a class="modal_btn">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

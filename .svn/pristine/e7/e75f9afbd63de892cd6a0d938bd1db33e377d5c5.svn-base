@@ -1,0 +1,380 @@
+
+//全屏
+function fullscreen(){
+    if(swipe.attr('show')==1||multi.attr('show')==1){
+        $('.navbar-wrapper').toggle();
+        if($('.navbar-wrapper').css('display').equals('none')){
+            $('.zoomScreen').text('窗口');
+        }else{
+            $('.zoomScreen').text('全屏');
+        }
+    }else{
+        $('.navbar-wrapper').toggle();
+        $('.left-box').toggle();
+        if($('#mapCon').css('left') != "0px"){
+           $('.operate-ul').hide();
+           $('#mapCon').css('left','0px'); 
+           swipe.css('left','-100px');
+           multi.css('left','0px');
+           multi.css('width','100%');
+           $('#map1').css('width','50%');
+           $('#map2').css('width','50%');
+           $('.zoomScreen').text('窗口');
+        }
+        else{
+           $('.operate-ul').show();
+           $('#mapCon').css('left','320px');
+           swipe.css('left','220px');
+           multi.css('left','320px');
+           multi.css('width','auto');
+           $('#map1').css('width','550px');
+           $('#map2').css('width','550px');
+           $('.zoomScreen').text('全屏');
+        }
+    }
+    
+};
+
+//加载测量的绘制矢量层
+var source = new ol.source.Vector();
+var vector = null;
+
+//地图视图的初始参数
+var view;
+var zoom;
+var center;
+var rotation;
+
+function initMeasure(){
+     view= map.getView();
+     zoom=view.getZoom();
+     center=view.getCenter();
+     rotation=view.getRotation();
+}
+//单击缩小按钮功能
+var small = function () {
+    removeMeasure();
+    //获取地图视图
+    var view = map.getView();
+    //获得当前缩放级数
+    var zoom = view.getZoom();
+    //地图缩小一级
+    view.setZoom(zoom - 1);
+};
+//单击放大按钮功能
+var big = function () {
+    removeMeasure();
+    //获取地图视图
+    var view = map.getView();
+    //获得当前缩放级数
+    var zoom = view.getZoom();
+    view.setZoom(zoom + 1);
+    //地图放大一级
+};
+
+
+//复位功能（复位到初始状态）
+var restore = function () {
+    removeMeasure();
+    //初始中心点
+    view.setCenter(center);
+    //初始旋转角度
+    view.setRotation(rotation);
+    //初始缩放级数
+    view.setZoom(zoom);
+};
+
+var wgs84Sphere = new ol.Sphere(6378137); //定义一个球对象
+/**
+ * 当前绘制的要素（Currently drawn feature.）
+ * @type {ol.Feature}
+ */
+var sketch;
+/**
+ * 帮助提示框对象（The help tooltip element.）
+ * @type {Element}
+ */
+var helpTooltipElement;
+/**
+ *帮助提示框显示的信息（Overlay to show the help messages.）
+ * @type {ol.Overlay}
+ */
+var helpTooltip;
+/**
+ * 测量工具提示框对象（The measure tooltip element. ）
+ * @type {Element}
+ */
+var measureTooltipElement;
+/**
+ *测量工具中显示的测量值（Overlay to show the measurement.）
+ * @type {ol.Overlay}
+ */
+var measureTooltip;
+/**
+ *  当用户正在绘制多边形时的提示信息文本
+ * @type {string}
+ */
+var continuePolygonMsg = 'Click to continue drawing the polygon';
+/**
+ * 当用户正在绘制线时的提示信息文本
+ * @type {string}
+ */
+var continueLineMsg = 'Click to continue drawing the line';
+
+/**
+ * 鼠标移动事件处理函数
+ * @param {ol.MapBrowserEvent} evt
+ */
+var pointerMoveHandler = function (evt) {
+    if (evt.dragging) {
+        return;
+    }
+    /** @type {string} */
+    //当前默认提示信息
+    var helpMsg = 'Click to start drawing';
+    //判断绘制几何类型设置相应的帮助提示信息
+    if (sketch) {
+        var geom = (sketch.getGeometry());
+        if (geom instanceof ol.geom.Polygon) {
+            //绘制多边形时提示相应内容
+            helpMsg = continuePolygonMsg;
+        } else if (geom instanceof ol.geom.LineString) {
+            //绘制线时提示相应内容
+            helpMsg = continueLineMsg;
+        }
+    }
+    //将提示信息设置到对话框中显示
+    helpTooltipElement.innerHTML = helpMsg;
+    //设置帮助提示框的位置
+    helpTooltip.setPosition(evt.coordinate);
+    //移除帮助提示框的隐藏样式进行显示
+    $(helpTooltipElement).removeClass('hidden');
+};
+//地图绑定鼠标移出事件，鼠标移出时为帮助提示框设置隐藏样式
+
+// $(map.getViewport()).on('mouseout', function () {
+//     $(helpTooltipElement).addClass('hidden');
+// });
+
+var draw;
+/**
+* 加载交互绘制控件函数
+*/
+function addInteraction(type1) {
+    removeMeasure();
+   
+    if (!vector) {
+        vector = new ol.layer.Vector({
+            source: source,
+            style: new ol.style.Style({ //图层样式
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)' //填充颜色
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#ffcc33',  //边框颜色
+                    width: 2   // 边框宽度
+                }),
+                image: new ol.style.Circle({
+                    radius: 7,
+                    fill: new ol.style.Fill({
+                        color: '#ffcc33'
+                    })
+                })
+            })
+        });
+        map.addLayer(vector);
+    }
+    
+    //地图容器绑定鼠标移动事件，动态显示帮助提示框内容
+    map.on('pointermove', pointerMoveHandler);
+    //移除绘制图形
+    map.removeInteraction(draw);
+    var type = (type1 == 'area' ? 'Polygon' : 'LineString');
+    draw = new ol.interaction.Draw({
+        //测量绘制层数据源
+        source: source,
+        //几何图形类型
+        type: /** @type {ol.geom.GeometryType} */ (type),
+        //绘制几何图形的样式
+        style: new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: 'rgba(0, 0, 0, 0.5)',
+                lineDash: [10, 10],
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 5,
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(0, 0, 0, 0.7)'
+                }),
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
+                })
+            })
+        })
+    });
+    map.addInteraction(draw);
+    //创建测量工具提示框
+    createMeasureTooltip();
+    //创建帮助提示框
+    createHelpTooltip();
+
+    var listener;
+    //绑定交互绘制工具开始绘制的事件
+    draw.on('drawstart',
+      function (evt) {
+          //绘制的要素
+          sketch = evt.feature;
+          // 绘制的坐标
+          var tooltipCoord = evt.coordinate;
+          //绑定change事件，根据绘制几何类型得到测量长度值或面积值，并将其设置到测量工具提示框中显示
+          listener = sketch.getGeometry().on('change', function (evt) {
+              //绘制几何要素
+              var geom = evt.target;
+              var output;
+              if (geom instanceof ol.geom.Polygon) {
+                  //面积值
+                  output = formatArea(/** @type {ol.geom.Polygon} */(geom));
+                  //坐标
+                  tooltipCoord = geom.getInteriorPoint().getCoordinates();
+              } else if (geom instanceof ol.geom.LineString) {
+                  //长度值
+                  output = formatLength( /** @type {ol.geom.LineString} */(geom));
+                  //坐标
+                  tooltipCoord = geom.getLastCoordinate();
+              }
+              //将测量值设置到测量工具提示框中显示
+              measureTooltipElement.innerHTML = output;
+              //设置测量工具提示框的显示位置
+              measureTooltip.setPosition(tooltipCoord);
+          });
+      }, this);
+    //绑定交互绘制工具结束绘制的事件
+    draw.on('drawend',
+        function (evt) {
+            //设置测量提示框的样式
+            measureTooltipElement.className = 'tooltip tooltip-static';
+            measureTooltip.setOffset([0, -7]);
+            //置空当前绘制的要素对象
+            sketch = null;
+            //置空测量工具提示框对象
+            measureTooltipElement = null;
+            //重新创建一个测试工具提示框显示结果
+            createMeasureTooltip();
+            ol.Observable.unByKey(listener);
+        }, this);
+}
+/**
+*创建一个新的帮助提示框（tooltip）
+*/
+function createHelpTooltip() {
+    if (helpTooltipElement) {
+        helpTooltipElement.parentNode.removeChild(helpTooltipElement);
+    }
+    helpTooltipElement = document.createElement('div');
+    helpTooltipElement.className = 'tooltip hidden';
+    helpTooltip = new ol.Overlay({
+        id: 'HelpTooltip',
+        element: helpTooltipElement,
+        offset: [15, 0],
+        positioning: 'center-left'
+    });
+    map.addOverlay(helpTooltip);
+}
+/**
+*创建一个新的测量工具提示框（tooltip）
+*/
+function createMeasureTooltip() {
+    if (measureTooltipElement) {
+        measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+    }
+    measureTooltipElement = document.createElement('div');
+    measureTooltipElement.className = 'tooltip tooltip-measure';
+    measureTooltip = new ol.Overlay({
+        element: measureTooltipElement,
+        offset: [0, -15],
+        positioning: 'bottom-center'
+    });
+    measureTooltip.class = "MeasureTooltip";
+    map.addOverlay(measureTooltip);
+}
+
+/**
+* 测量长度输出
+* @param {ol.geom.LineString} line
+* @return {string}
+*/
+var formatLength = function (line) {
+    var length;
+    //解析线的坐标
+    var coordinates = line.getCoordinates();
+    length = 0;
+    //地图数据源投影坐标系
+    var sourceProj = map.getView().getProjection();
+    //通过遍历坐标计算两点之前距离，进而得到整条线的长度
+    for (var i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+        var c1 = ol.proj.transform(coordinates[i], sourceProj, 'EPSG:4326');
+        var c2 = ol.proj.transform(coordinates[i + 1], sourceProj, 'EPSG:4326');
+        length += wgs84Sphere.haversineDistance(c1, c2);
+    }
+    var output;
+    if (length > 100) {
+        //换算成KM单位
+        output = (Math.round(length / 1000 * 100) / 100) + ' ' + 'km';
+    } else {
+        //m为单位
+        output = (Math.round(length * 100) / 100) + ' ' + 'm';
+    }
+    return output;//返回线的长度
+};
+/**
+* 测量面积输出
+* @param {ol.geom.Polygon} polygon
+* @return {string}
+*/
+var formatArea = function (polygon) {
+    var area;
+    //地图数据源投影坐标系
+    var sourceProj = map.getView().getProjection();
+    //将多边形要素坐标系投影为EPSG:4326
+    var geom = /** @type {ol.geom.Polygon} */(polygon.clone().transform(sourceProj, 'EPSG:4326'));
+    //解析多边形的坐标值
+    var coordinates = geom.getLinearRing(0).getCoordinates();
+    //获取面积
+    area = Math.abs(wgs84Sphere.geodesicArea(coordinates));
+
+    var output;
+    if (area > 10000) {
+        //换算成KM单位
+        output = (Math.round(area / 1000000 * 100) / 100) + ' ' + 'km<sup>2</sup>';
+    } else {
+        //m为单位
+        output = (Math.round(area * 100) / 100) + ' ' + 'm<sup>2</sup>';
+    }
+    //返回多边形的面积
+    return output;
+};
+
+var removeMeasure = function () {
+    map.un('pointermove', pointerMoveHandler); //地图容器绑定鼠标移动事件，动态显示帮助提示框内容
+    source.clear();
+    if (vector) {
+        map.removeLayer(vector);
+        vector = null;
+    }
+    if (map.getOverlayById('HelpTooltip')) {
+        map.removeOverlay(helpTooltip);
+    }
+    var len = map.getOverlays().getLength();
+    var j = 0;
+    for (var i = 0; i < len; i++) {
+        if (map.getOverlays().getArray()[j].class == "MeasureTooltip") {
+            map.removeOverlay(map.getOverlays().getArray()[j]);
+        } else {
+            j++;
+        }
+    }
+}

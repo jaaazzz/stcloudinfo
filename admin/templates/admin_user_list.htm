@@ -1,0 +1,317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>用户管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv= "X-UA-Compatible" content = "IE=edge,chrome=1"/>
+    <link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="styles/style.css" rel="stylesheet" type="text/css" />
+    <link href="styles/app_base.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/jquery.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script type="text/javascript" src="js/init.js"></script>
+    <link href="js/sweetalert.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/sweetalert.min.js"></script>
+    <style type="text/css">
+        .modal-body table tr td{
+            /*padding: 3px;*/
+        }
+        .role_list{
+            /*margin-top: 5px;*/
+            /*height: 110px;*/
+        }
+        .role_list label{
+            width: 45%;
+            font-weight: normal;
+            display: block;
+            float: left;
+            margin: 5px 0;
+        }
+        .table_tools .disalbe{
+            opacity: 0.5;
+        }
+    </style>
+    <script type="text/javascript">
+        var type='add_user';
+        var user_id=0;
+        $(function(){
+            //初始化分页
+            var pObj=new pageObj({$total_page},{$page},'{$current_url}',{$size},{$count});
+            pObj.initPagination();
+            //点击　弹出创建用户框
+            $(".tool_btn.add_user").click(function(){
+                type='add_user';
+                user_id=0;
+                $(".modal-body table input[type!=checkbox]").val('');
+                $(".modal-body input[type=checkbox]").each(function(){
+                   this.checked=false;
+                });
+                $(".username").attr('readonly',false);
+                $(".username").removeAttr('disabled');
+                $(".email").removeAttr('disabled');
+                $(".password").attr('placeholder','');
+                $(".modal_background.user,.modal_box.user").show();
+                $(".modal-header .title-word").html('创建账户');
+            });
+
+            //点击　确定创建、修改用户
+            $(".modal_btns .sure").click(function(){
+                var canpass=false;
+                if($(".username").val().length<6||$(".username").val().length>32){
+                    $(".username").next().html('6~32个字符，支持英文、数字和"_"格式');
+                    return;
+                }else{
+                    $(".username").next().html('');
+                }
+                if($('.password').val()||type=='add_user'){
+                    var is_pwd=/^(?![^a-zA-Z]+$)(?!\D+$).{6,16}$/;
+                    if(!is_pwd.test($('.password').val())){
+                        $(".password").next().html('6~16个字符，必须至少含字母和数字');
+                        canpass=false;
+                        return;
+                    }else{
+                        canpass=true;
+                        $(".password").next().html('');
+                    }
+                }
+                var email = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/;
+                if(!email.test($(".email").val())){
+                    $(".email").next().html('请输入正确的邮箱格式');
+                    return;
+                }else{
+                    $(".email").next().html('');
+                }
+
+                var data={
+                    user_name:$(".username").val(),
+                    email:$(".email").val(),
+                    remark:$(".remark").val()
+                }
+                if(canpass){
+                    data.password=$('.password').val();
+                }
+                var roles=[];
+                $(".role_list input[type=checkbox]").each(function(){
+                    if(this.checked){
+                        roles.push($(this).val()+'|'+$(this).attr('data_url')+'|'+$(this).attr('data_img'));
+                    }
+                });
+                data.role_list=roles.join(',');//JSON.stringify(roles);
+                $.post('admin_user_list.php',{act:type,user:JSON.stringify(data),user_id:user_id},function(res){
+                    if(res=='ok'){
+                        var title=type=='add_user'?"创建用户成功!":"修改用户成功!";
+                        swal({
+                            title: title,
+                            text: "",
+                            type: "success",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        location.reload();
+                    }else{
+                        swal({
+                            title: res,
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                    }
+
+                });
+
+            });
+
+            //点击　编辑　弹出用户框
+            $(".app_table .edit_user").click(function(){
+                type='edit_user';
+                user_id=$(this).attr('data_id');
+                $.post('admin_user_list.php',{act:'get_user_by_id',user_id:user_id},function(res){
+                    var user=JSON.parse(res);
+                    $(".username").val(user.user_name);
+                    $(".username").attr('disabled',true);
+                    $(".email").val(user.email);
+                    $(".email").attr('disabled',true);
+                    $(".remark").val(user.remark);
+                    $(".password").attr('placeholder','*********');
+                    $(".role_list input[type=checkbox]").each(function(){
+                        if(user.role_list.indexOf(this.value)>=0){
+                            this.checked=true;
+                        }else{
+                            this.checked=false;
+                        }
+                    });
+                    if(user_id=='{$user_id}'){
+                        $(".role_tr").hide();
+                    }else{
+                        $(".role_tr").show();
+                    }
+                    $(".username").attr('readonly',true);
+                    $(".modal_background.user,.modal_box.user").show();
+                    $(".modal-header .title-word").html('编辑账户');
+                });
+
+            });
+
+            //点击　删除用户
+            $(".delete_user").click(function(){
+                if($(this).hasClass('disalbe')){
+                    return;
+                }
+                $(".modal_background.user,.modal_box.del_no_resource").show();
+            });
+
+            //点击查询
+            $(".user_search").click(function(){
+                var um=$('.search_username').val();
+                var email=$('.search_email').val();
+                location.href="admin_user_list.php?um="+um+"&email="+email;
+            });
+
+            //暂不删除
+            $(".sure.host").click(function () {
+                $(".modal_background.user,.modal_box.del_no_resource").hide();
+            });
+
+            //直接删除
+            $(".cancel.host").click(function () {
+                var del_arr=[];
+                $(".app_table tbody input[type=checkbox]:checked").each(function(){
+                    del_arr.push($(this).attr('data_id'));
+                })
+                $.post('admin_user_list.php',{act:'delete_user',ids:del_arr.join(',')},function(res){
+                    if(res=='ok'){
+                        var title="删除用户成功!";
+                        swal({
+                            title: title,
+                            text: "",
+                            type: "success",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                        location.reload();
+                    }else{
+                        swal({
+                            title: res,
+                            text: "",
+                            type: "error",
+                            allowOutsideClick:true,
+                            confirmButtonText: "关闭"
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+{include file="/library/header.htm"}
+{include file="/library/left.htm"}
+<div class="page_container">
+    <div class="page_title">
+        用户管理
+    </div>
+    <div class="page_ul">
+        <ul>
+            <li {if $url=='user_list.php'}class="active"{/if}><a href="user_list.php">用户</a></li>
+            <li {if $url=='admin_user_list.php'}class="active"{/if}><a href="admin_user_list.php">管理员</a></li>
+        </ul>
+    </div>
+    <div class="page_content">
+
+        <div class="table_tools">
+            用户名:<input type="text" class="search_username" value="{$um}" 　 style="width: 200px;margin: 0 15px;"/>
+            邮箱：<input type="text" class="search_email" value="{$email}"  　 style="width: 200px;margin: 0 15px;"/>
+            <a class="user_search" >查询</a>
+            <a class="tool_btn add_user">创建账户</a>
+            <!--<a class="tool_btn">批量导入</a>-->
+            <a class="tool_btn delete delete_user disalbe">删除</a>
+        </div>
+        <table class="app_table">
+            <thead>
+            <tr>
+                <th width="10%"><input type="checkbox"  class="head_check"/>用户名</th>
+                <th width="20%">邮箱</th>
+                <th width="30%">备注</th>
+                <th width="20%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach from=$user_list item=user}
+            <tr>
+                <td {if $user.user_name=='admin' or $user.user_id == $user_id}style="padding-left: 35px"{/if}>{if $user.user_name!='admin' and $user.user_id != $user_id}<input type="checkbox"  data_id="{$user.user_id}" />{/if}{$user.user_name}</td>
+                <td>{$user.email}</td>
+                <td>{$user.remark}</td>
+                <td>{if $user.user_name!='admin'}<a class="edit_user" data_id="{$user.user_id}">编辑</a>{/if}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <!-- 分页列表 begin-->
+        <div class="page_statics"></div>
+        <div class="pagination pagination-centered">
+            <ul>
+                <li><a href="javascript:void(0);"><上一页</a></li>
+                <li><a href="javascript:void(0);">下一页></a></li>
+            </ul>
+        </div>
+        <!-- 分页列表 end-->
+    </div>
+</div>
+
+<div class="modal_background user">
+
+    <div class="modal_box user" style="width: 525px;height: 530px; ">
+        <div class="modal-header">
+            <span class="title-word">创建账户</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <table>
+                <tr>
+                    <td>用户名：</td><td><input type="text" onblur="check_username(this)"  class="username"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>密码：</td><td><input type="password" onblur="check_pwd(this)"  class="password"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>邮箱：</td><td><input type="text" onblur="check_email(this)"  class="email"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>备注：</td><td><input type="text" class="remark"/></td>
+                </tr>
+                <tr class="role_tr">
+                    <td>权限设置：</td>
+                    <td>
+                        <div class="role_list">
+                            {foreach from=$role_array item=role}
+                            <label><input type="checkbox" data_img="{$role.img}" data_url="{$role.url}" value="{$role.value}"/>{$role.value}</label>
+                            {/foreach}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="modal_btns">
+                <a class="modal_btn sure">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal_box del_no_resource" style="width: 450px;height: 210px; ">
+        <div class="modal-header">
+            <span class="title-word">提示</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <div style="margin: 25px 0">删除后用户相关信息将被彻底删除，确定要删除当前用户吗？</div>
+            <div class="modal_btns">
+                <a class="modal_btn sure host" style="margin-left: 0">暂不删除</a>
+                <a class="modal_btn cancel host">直接删除</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

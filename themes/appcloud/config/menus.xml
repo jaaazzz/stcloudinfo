@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+    <node code="MENU" name="地质云平台门户菜单">
+        <Field index="1" active="index_active" url="index.php" is_user="false" status="true"><lable>首页</lable></Field>
+       <!--  <Field index="2" active="sfw_active" url="sfw.php" is_user="false" status="true"><lable>地质产品</lable></Field> -->
+        <Field index="2" active="resource" url="geologyproduct.php?act=resource" is_user="false" status="true"><lable>资源目录</lable></Field>
+        <!-- <Field index="2" active="map_active" url="onlinemap.php" is_user="false" status="true"><lable>地质产品</lable></Field> -->
+        <Field index="3" active="geodata_active" url="geologyproduct.php?act=geodata" is_user="false" status="true"><lable>地质数据</lable></Field>
+        <!-- <Field index="3" active="news_active" url="news.php" is_user="false" status="true"><lable>新闻中心</lable></Field> -->
+        <Field index="4" active="map_active" url="map.php" is_user="false" status="true"><lable>地质在线</lable></Field>
+        <Field index="5" active="publication_active" url="http://qb.cgl.org.cn/" is_user="false" status="true"><lable>资源文献与出版物</lable></Field>
+        <!-- <Field index="6" active="dev_active" url="dev.php" is_user="false" status="true"><lable>开发中心</lable></Field>
+        <Field index="7" active="user_active" url="user.php?act=my_app" is_user="true" status="true"><lable>个人中心</lable></Field> -->
+        <Field index="6" active="dukp" url="geologyproduct.php?act=specialser" is_user="false" status="true"><lable>地学科普</lable></Field>
+        <Field index="7" active="zbyqyrj" url="geologyproduct.php?act=software" is_user="false" status="true"><lable>装备仪器与软件</lable></Field>
+        <Field index="8" active="jsffybz" url="geologyproduct.php?act=technolgy" is_user="false" status="true"><lable>技术方法与标准</lable></Field>
+        <!-- <Field index="9" active="zdsj" url="http://www.cgs.gov.cn/xwl/tpxw/tupian/" is_user="false" status="true"><lable>重大事件</lable></Field> -->
+        <Field index="9" active="zdsj" url="http://www.cgs.gov.cn/ddztt/jqthd/eyi/" is_user="false" status="true"><lable>重要成果</lable></Field>
+    </node>
+</root>

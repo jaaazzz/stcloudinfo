@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>应用详情</title>
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <link href="css/app_detail.css" rel="stylesheet" type="text/css" /> 
+    <link href="DialogBySHF.css" rel="stylesheet" type="text/css" />
+    <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js'} -->
+        <!--[if IE 7]>
+          <link href="ie7.css" rel="stylesheet" type="text/css" />
+          {insert_scripts files='json2.js'}
+        <![endif]-->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+     <!-- {insert_scripts files='DialogBySHF.js'} -->
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+</head>
+<!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+<div class="main-content">
+    <div class="content">
+        <div class="app-info-bg">
+            <div class="app-one">
+               <div class="app-one-img">
+                    {if empty($app_detail_obj.logoImage)}
+                        <img src="themes/appcloud/images/app_logo.png">
+                    {else}
+                        <img src="{$app_detail_obj.logoImage}">
+                    {/if}
+               </div>
+            </div>
+            <div class="app-info">
+                <div class="app-name">
+                    <a href="#" class="no-use">应用名称：{$app_detail_obj.appName}</a>
+                </div>
+                <!--<div class="itme">-->
+                    <!--<span class="itme-title">发布时间:</span>-->
+                    <!--<span class="itme-des">{$app_detail_obj.created}</span>-->
+                <!--</div>-->
+                <!--<div class="itme">-->
+                    <!--<span class="itme-title">发<span style="display: inline-block;width: 5px;"></span>布<span style="display: inline-block;width: 6px;"></span>者:</span>-->
+                    <!--<span class="itme-des">{$app_detail_obj.user_name}</span>-->
+                <!--</div>-->
+                <div class="itme">
+                    <span class="itme-title no-use">访问地址：</span>
+                    <span class="itme-des">
+                        {if $app_detail_obj.appType== 2}
+                        <a class="online-use" href="javascript:void(0)" onclick='console_app_host({$app_detail_obj.host_id})'>访问</a>
+                        {elseif $app_detail_obj.appType== 4}
+                        <a class="online-use" href="javascript:void(0)" onclick='console_app_host_openstack("{$app_detail_obj.appUrl}")'>访问</a>
+                        { else }
+                            {if $app_detail_obj.appUrl==""||$app_detail_obj.appUrl==null}
+                            <a class="online-use no-use" href="javascript:;">无</a>
+                            { else }
+                            <a class="online-use" href="{$app_detail_obj.appUrl}" target="_blank">{$app_detail_obj.appUrl}</a>
+                            {/if}
+                        {/if}
+                    </span>
+                </div>
+                <div class="app-opr">
+                    {if $app_detail_obj.appType== 2}
+                    <a class="online-use" href="javascript:void(0)" onclick='console_app_host({$app_detail_obj.host_id})'>访问</a>
+                    {elseif $app_detail_obj.appType== 4}
+                    <a class="online-use" href="javascript:void(0)" onclick='console_app_host_openstack("{$app_detail_obj.appUrl}")'>访问</a>
+                    { else }
+                        {if $app_detail_obj.appUrl==""||$app_detail_obj.appUrl==null}
+                            <a class="online-use no-access" href="javascript:;">访问</a>
+                            { else }
+                            <a class="online-use" href="{$app_detail_obj.appUrl}" target="_blank">访问</a>
+                        {/if}
+                    {/if}
+                    
+                  <!-- {if $is_collection} -->
+                  <a id="collection" onclick="javascript:cancle_collection('{$is_collection}','{$app_detail_obj.id}','app',event);" class="collection">{$collection_count}</a>
+                  <!-- {else} -->
+                  <a id="collection" onclick="javascript:add_collection('{$app_detail_obj.id}','app',event);" class="no-collection">{$collection_count}</a>
+                  <!-- {/if} -->
+                </div>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="introduciton">
+            <div class="introduciton-top">
+            应用详情介绍
+            </div>
+        </div>
+        <div class="introduciton-info">
+            {$app_detail_obj.appDescription}
+            <div style="clear: both;"></div>
+            {if empty($app_detail_obj.fileList)}
+            {else}
+                {foreach from=$file_list item=file name=name}
+                    <div class="file-item">
+                    <div class="file-name-left">
+                        <span>【附件{$smarty.foreach.name.iteration}】</span>
+                        <a href="{$file.file_url}" style="color: #3A85C6;text-decoration: underline;" download="a.zip">{$file.file_name}</a>
+                    </div>
+                    <div class="file-view">
+                        <a href="{$file.file_url}" target="_blank" data="{$file.file_name}"></a>
+                    </div>
+                </div>
+                {/foreach}
+                <!--全部下载-->
+                <div class="all-files">
+                    <a class="appendix-online-use all-files-down" href="{$file_all_list}"  target="_blank">全部下载</a>
+                </div>
+            {/if}  
+        </div>
+        <iframe src="" width="0" height="0" id="myIframe" name="myIframe">
+        </iframe>
+      <!--   <div class="introduciton">
+            <div class="introduciton-top">
+            附件
+            </div>
+        </div>
+        <div class="introduciton-info">
+ 
+            
+        </div> -->
+    </div>    
+</div>
+<!-- #BeginLibraryItem "/library/load_animation.lbi" --><!-- #EndLibraryItem -->
+<!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+</body>
+<script>
+ $(function()
+ {   
+    $(".trade-field .field").click(function(e){
+        $(".trade-field").find('.field.select').removeClass('select');
+        $(this).addClass('select');
+    });
+ }) 	
+</script>

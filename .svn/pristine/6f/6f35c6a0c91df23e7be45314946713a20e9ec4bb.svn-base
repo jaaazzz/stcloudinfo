@@ -1,0 +1,29 @@
+[
+    {
+        "id": "1",
+        "lx": "1",
+        "text": "永州底图数据",
+        "layer": "永州底图数据",
+        "centerx": 111.74,
+        "centery": 26.03,
+        "zoom":8
+    },
+    {
+        "id": "2",
+        "lx": "2",
+        "text": "永州影像数据danfu",
+        "layer": "永州影像数据danfu",
+        "centerx": 0,
+        "centery": 0,
+        "zoom":0
+    },
+    {
+        "id": "3",
+        "lx": "3",
+        "text": "永州兴趣点",
+        "layer": "永州兴趣点",
+        "centerx": 0,
+        "centery": 0,
+        "zoom":0
+    }
+]

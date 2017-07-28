@@ -1,0 +1,11 @@
+
+<script>
+
+var hasLogin = {if $user_info}true{else}false{/if};
+var can_try = {if $can_try}true{else}false{/if};
+
+$(function(){		
+	can_try && $("button.btn-zondy.try").removeClass("disabled").removeAttr("disabled");
+});
+
+</script>

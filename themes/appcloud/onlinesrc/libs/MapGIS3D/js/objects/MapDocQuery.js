@@ -1,0 +1,169 @@
+
+/**
+ * This callback is displayed as a global member.
+ * @callback requestSuccessCallback
+ * @param {object} httpMsg
+ * @param {string} httpCode
+ */
+/**
+ * This callback is displayed as a global member.
+ * @callback requestErrorCallback
+ * @param {object} XMLHttpRequest
+ */
+/**
+* 普通二维文档服务数据的查询类
+* @author 创建者:姚志武 2014-04-25
+* @constructor
+*/
+var MapDocQuery = function () {
+
+    /**
+    * 查询对应的地图服务,参考ClassLib.js中的MapDocObj对象
+    * @type {MapDocObj}
+    */
+    this.docObj = null;
+
+    /**
+    * 地图服务名称
+    * @type {String}
+    */
+    this.docName = '';
+    /**
+    * 地图在文档下得序号,一般为0
+    * @type {Int}
+    */
+    this.mapIndex = 0;
+    /**
+    * 图层序号
+    * @type {Int}
+    */
+    this.layerID = 0;
+
+    /**
+    * 几何类型描述,格式:point | circle | rect | line | polygon
+    * @type {string}
+    */
+    this.geometryType = '';
+
+    /**
+    * 点的集合        
+    * 几何约束区域参数，其形式取决于geometryType的值，即取决于几何约束类型
+    * point--x,y,[ neardistance],neardistance为可选，即容差，下同
+    * circle--x，y，r 注意在球上执行画圆时由于插件提供的圆为椭圆，给出的点集也是大量离散点，因此这种情况下，依然采用polygon方式执行查询
+    * rect--xmin，ymin，xmax，ymax 
+    * line--x1,y1,x2,y2,x3,y3…;[neardistance]
+    * polygon--x1,y1,x2,y2,x3,y3…第一个点与最后一个点相同
+    * @type {string}
+    */
+    this.geometry = '';
+
+    /**
+    * 符合SQL查询规范的任何字符串
+    * @type {string}
+    */
+    this.where = '';
+
+
+    /**
+    * 返回结果的序列化形式
+    * @type {string}
+    */
+    this.f = 'json',
+
+    /**
+    * 需要查询的要素Id号,格式：oid1，oid2，oid3
+    * @type {string}
+    */
+        this.objectIds = '';
+
+    /**
+    * 指定查询结果的结构，json规范
+    *    struct={ IncludeAttribute:true | false, 
+    *             IncludeGeometry:true | false, 
+    *             IncludeWebGraphic :true |false}
+    *    参数不区分大小写，可以省略，默认为IncludeAttribute:true，其他参数均为false
+    * @type {json}
+    */
+    this.structs = '';
+
+    /**
+    * 返回的要素分页的页数，默认返回第0页
+    * @type {string}
+    */
+    this.page = '';
+    /**
+    * 要素结果集每页的记录数量，默认为20条/页
+    * @type {string}
+    */
+    this.pageCount = '';
+
+    /**
+    *指定查询规则，Json表示形式
+    *    rule={  CompareRectOnly:true | false,
+    *            EnableDisplayCondition:true | false,
+    *            MustInside : true|false, 
+    *            Intersect : true|false }
+    *    参数不区分大小写，可以省略
+    *    CompareRectOnly表示是否仅比较要素的外包矩形，来判定是否与几何约束图形有交集；
+    *    EnableDisplayCondition表示是否将隐藏图层计算在内；
+    *    MustInside表示是否完全包含；
+    *    Intersect：是否相交
+    * @type {json}
+    */
+    this.rule = '';
+
+    /**
+    * 这里查询结果,这里主要是存放查询过程中报错信息
+    * @type {string}
+    */
+    this.queryResult = '未查询';
+};
+/**
+ * 查询操作
+ * @param successCallback {requestSuccessCallback} 查询成功回调函数
+ * @param errorCallback {requestErrorCallback} 查询成功回调函数
+ */
+MapDocQuery.prototype.beginQuery = function (successCallback, errorCallback) {
+    var o = this;
+    //检验参数合法性
+    if (o.docObj && o.docObj.type != DocType.TypeDoc) {
+        o.queryResult = "目标文档不符合查询要求";
+        alert(o.queryResult);
+        return;
+    }
+    //如果docName未设置则设置为服务名
+    if (!o.docName)
+        o.docName = o.docObj.name;
+    var queryString = 'query?guid=' + Math.random();
+    //构建查询参数
+    if (o.geometryType && o.geometry) {
+        //这里可以进行进一步的参数验证
+        queryString += '&geometryType=' + o.geometryType + '&geometry=' + o.geometry;
+    }
+    if (o.where)
+        queryString += '&where=' + o.where;
+    if (o.f)
+        queryString += '&f=' + o.f;
+    if (o.objectIds)
+        queryString += '&objectIds=' + o.objectIds;
+    if (o.structs)
+        queryString += '&structs=' + o.structs;
+    if (o.page)
+        queryString += '&page=' + o.page;
+    if (o.pageCount)
+        queryString += '&pageCount=' + o.pageCount;
+    if (o.rule)
+        queryString += '&rule=' + o.rule;
+    
+    $.support.cors = true;
+    $.ajax({
+        url: 'http://' + o.docObj.ip + ':' + o.docObj.port + '/igs/rest/mrfs/docs/' + o.docName + '/' + o.mapIndex + '/' + o.layerID + '/' + queryString,
+        dataType: 'json',
+        success: function (res, code) {
+            successCallback && successCallback(res, code);
+        },
+        error: function (xhr) {
+            errorCallback && errorCallback(xhr);
+        }
+    });
+}

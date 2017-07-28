@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>个人信息_管理中心_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/user.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js,highcharts.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+        <style type="text/css">
+            .changeposition{
+                position: fixed;
+                top: 20px;
+                width: 1169px;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="user clearfix" >
+                <div class="user-body">
+                    <div class="user-info" id="tabbox">
+                        <div class="title">
+                            账户信息
+                        </div>
+                        <div class="user-info-content clearfix">
+                            <div class="user-detail col-sm">
+                                <div class="info-row clearfix">
+                                    <div class="col-sm row-img"><img src="../images/user.png"></div>
+                                    <div class="col-sm first">用户名:</div>
+                                    <div class="col-sm" name="username">{$user_info.userName}</div>
+                                </div>
+                                <div class="info-row clearfix">
+                                    <div class="col-sm row-img"><img src="../images/email.png"></div>
+                                    <div class="col-sm first">邮&nbsp;&nbsp;&nbsp;&nbsp;箱:</div>
+                                    <div class="col-sm">{$user_info.email}</div>
+                                </div>
+                                <div class="info-row clearfix">
+                                    <div class="col-sm row-img"><img src="../images/pwd.png"></div>
+                                    <div class="col-sm first">密&nbsp;&nbsp;&nbsp;&nbsp;码:</div>
+                                    <div class="col-sm">******</div>
+                                    <div class="col-sm"><a href="javascript:void(0)" class="change-pwd">修改密码</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="resource-info" style="display:none">
+                        <div class="title">
+                            资源信息
+                        </div>
+                        <div class="resource-info-content"> 
+                            <div class="point-row clearfix">
+                                <div class="col-sm pie">
+                                    <div class="point_pic view-pic"></div>
+                                </div>
+                                <div class="col-sm info">
+                                    <div>
+                                        <span>点数配额:</span>
+                                        <span>{if $user_info.pointAll}{$user_info.pointAll}{else}------{/if}</span>
+                                    </div>
+                                    <div>
+                                        <span>点数剩余:</span>
+                                        <span>{if !$user_info.pointAll && !$user_info.pointHave}------{else}{$user_info.pointHave}{/if}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="host-row clearfix">
+                                <div class="col-sm pie">
+                                    <div class="host_pic view-pic"></div>
+                                </div>
+                                <div class="col-sm info">
+                                    <div>
+                                        <span>云主机配额:</span>
+                                        <span>{if $user_info.hostNum}{$user_info.hostNum}{else}------{/if}</span>
+                                    </div>
+                                    <div>
+                                        <span>云主机剩余:</span>
+                                        <span>{if !$user_info.hostNum && !$user_info.hostHave}------{else}{$user_info.hostHave}{/if}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="point_all" value="{$user_info.pointAll}">
+                        <input type="hidden" name="point_have" value="{$user_info.pointHave}">
+                        <input type="hidden" name="host_num" value="{$user_info.hostNum}">
+                        <input type="hidden" name="host_have" value="{$user_info.hostHave}">
+                        <input type="hidden" name="username" value="{$user_info.userName}">
+                    </div>
+                </div>
+            </div>
+            <div id="change-password" class="modal hide">
+                <div class="modal-body">
+                    <span class="close" data-dismiss="modal" aria-hidden="true"></span>
+                    <div class="change-title title">修改密码</div>
+                    <div class="change-info">
+                        <div class="form-group clearfix">
+                            <div class="col-sm first">原始密码:</div>
+                            <div class="col-sm"><input type="password" name="old-password"></div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <div class="col-sm first">新密码:</div>
+                            <div class="col-sm">
+                                <input type="password" name="new-password">
+                                <div class="tip-title">6至16个字符,必须包含字母和数字</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn-zondy edit-password">确认修改</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        </div>
+        
+    </body>
+    <script type="text/javascript" src="js/user_info.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $(window).scroll(function(){
+                if($(document).scrollTop()>265){
+                // console.log("111");
+                $("#tabbox").addClass("changeposition")
+                }else{
+                $("#tabbox").removeClass("changeposition")
+                }
+            })
+        })
+    </script>
+</html>

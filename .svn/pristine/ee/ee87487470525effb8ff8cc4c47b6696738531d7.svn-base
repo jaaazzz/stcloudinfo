@@ -1,0 +1,35 @@
+[
+    {
+        "id": "1",
+        "lx": "1",
+        "layer": "永州兴趣点",
+        "text": "测试矢量图",
+        "default": "",
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "projection":"degree"
+    },
+    {
+        "id": "2",
+        "lx": "2",
+        "layer": "永州底图数据",
+        "text": "永州瓦片",
+        "default":"left",
+        "zoom": 8,
+        "centerx": 111.74,
+        "centery": 26.01,
+        "projection":"degree"
+    },
+    {
+        "id": "3",
+        "lx": "2",
+        "layer": "永州影像数据danfu",
+        "text": "永州瓦片影像",
+        "default":"right",
+        "zoom": 0,
+        "centerx": 0,
+        "centery": 0,
+        "projection":"degree"
+    }
+]

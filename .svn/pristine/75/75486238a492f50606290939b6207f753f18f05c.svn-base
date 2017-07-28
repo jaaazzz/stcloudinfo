@@ -1,0 +1,13 @@
+<!--Iris update-->
+{if $is_desktop eq '1'}
+<input type="text" name="order-count-num4desktop" class="order-count-num4desktop" style='width:40px;text-align:right;' value='1'/>
+{else}
+<input type="text" name="order-count-num" class="order-count-num" style='width:40px;text-align:right;' value='1'/>
+{/if}
+
+
+<!-- <span class="muted">最大购买份数:<span id='max-buy-count'>1</span></span> -->
+<!-- <a class='order-count-tooltip' style='font-size:12px;color:#77F;' data-toggle="tooltip" data-placement="right" data-original-title="单次购买不能超过660M" title>?</a> -->
+
+<!--Iris add-->
+<!-- <a class='order-count-tooltip' style='font-size:12px;color:#77F;' data-toggle="tooltip" data-placement="right" data-original-title="份数提示" title>份数提示</a> -->

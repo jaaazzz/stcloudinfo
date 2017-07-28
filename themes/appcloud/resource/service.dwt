@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>服务资源_地图服务_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link rel="stylesheet" type="text/css" href="themes/appcloud/dist/bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="themes/appcloud/style/homeCss/main.css">
+        <script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/jquery.min.js"></script>
+        <script type="text/javascript" src="themes/appcloud/dist/bootstrap/js/bootstrap.min.js"></script>
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <style>
+        .select2{
+            width: 290px;
+            !important;
+        }
+        .select2-container{
+            z-index:9999;
+        }
+
+        /*.changeposition{
+            position: fixed;
+            top:570px;
+            z-index:10012;
+        }
+        .changeposition2{
+            position: fixed;
+            top:25px;
+        }*/
+        .content-body{
+            /*border:1px solid #dcdcdc;*/
+            width:200px;
+            box-sizing:border-box;
+            text-align:center;
+        }
+        .content-head{
+            width:180px;
+            margin:5px 10px;
+            border-bottom:1px solid #dcdcdc;
+        }
+        .service-content:focus{outline:none;}
+        .service-type-list{
+            width:136px;
+            height:40px;
+            line-height:40px;
+            margin:0 auto;
+            font-size:14px;
+            color:#666;
+            margin-left:45px;
+        }
+        .service-type-name{display:inline-block;width:80px;height:20px;line-height:20px;color:#666;cursor:pointer;float: left;background:#f3f6fc;margin-top:10px;}
+        .service-x{margin-left:15px;cursor:pointer;display: none;float: left;padding:0;height:20px;width:20px;line-height:20px;font-size:16px;margin-top:10px;color:#666;}
+        #pageId ul{
+            float: right;
+            margin-bottom:20px;
+        }
+        .pagination ul>.active>a{
+            background:#0fa7ff;
+            border:1px solid #0fa7ff;
+            border-right:none;
+            color:#fff;
+        }
+        .pagination ul>.li-num>a:hover{
+            border:1px solid #0091ff;
+            background:#0091ff;
+            border-right:none;
+            color:#fff;
+        }
+        .pagination ul>.pre>a:hover{
+            border:1px solid #0091ff;
+            background:#0091ff;
+            border-right:none;
+            color:#fff;
+        }
+        .pagination ul>.next>a:hover{
+            border:1px solid #0091ff;
+            background:#0091ff;
+            border-left:none;
+            color:#fff;
+        }
+        .service-detail-list:hover{
+            -webkit-box-shadow: 0px 5px 20px rgba(75,176,229,0.3);
+            -moz-box-shadow: 0px 5px 20px rgba(75,176,229,0.3);
+            -ms-box-shadow: 0px 5px 20px rgba(75,176,229,0.3);
+            box-shadow: 0px 5px 20px rgba(75,176,229,0.3);  
+        }
+        
+        
+    }
+    </style>
+    <body>
+
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+
+        <section class="jumbotron"  style="background: url(../images/服务资源/图层-33.png) 0% 100% /cover no-repeat;min-height: 200px;">
+            <div class="container" style="display: none;">
+                <form id="searchCard" class="text-center search-card" action="">
+                    <div class="search-card_content">
+                        <input type="text" class="search-card_text"  maxlength="255" autocomplete="off">
+                    </div>
+                    <div class="search-card-submit">
+                        <input type="submit" class="search-card_btn" value="搜索" class="btn">
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 地质产品导航 -->
+        <section>
+            <div class="container">
+                <div class="row service-navbar">
+                    <div class="col-md-4">
+                        <div class="dropdown service-item text-center">
+                            <a id="dropdownMenu1" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <div class="service-item_img">
+                                    <img src="../images/服务资源/服务类型.png" alt="">
+                                </div>
+                                <h4>服务类型</h4>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="left: 140px;">
+                              <li><span class="service-type-name" value="WMS">WMS服务</span></li>
+                              <li><span class="service-type-name" value="WFS">WFS服务</span></li>
+                              <li><span class="service-type-name" value="WCS">WCS服务</span></li>
+                              <li><span class="service-type-name" value="WMTS">WMTS服务</span></li>
+                              <li><span class="service-type-name" value="WFS-G">WFS-G服务</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="dropdown service-item text-center">
+                            <a id="dropdownMenu1" class="dropdown-toggle" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <div class="service-item_img">
+                                    <img src="../images/服务资源/数据类型.png" alt="">
+                                </div>
+                                <h4>数据类型</h4>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="left: 140px;">
+                                {foreach from=$gislist item=item}
+                                <li><span class="service-type-name" value="WMS">{$item.name}</span></li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="service-item text-center">
+                            <div class="service-item_img">
+                                <a href="">
+                                    <img src="../images/服务资源/专题服务.png" alt="">
+                                </a>
+                            </div>
+                            <h4>专题服务</h4>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </section>
+        <!-- 地质产品展示 -->
+        <section>
+            <div class="container"> 
+                <div class="service-hr-box">
+                    <div class="service-hr-box_img">
+                        <img src="../images/服务资源/地质数据.png" alt="地质数据" height="230" width="270">
+                    </div>
+                    <div class="service-hr-box_content">
+                        <h3>地质数据</h3>
+                        <div class="service-hr-box_intro">
+                            <p>数据类型：<span>矢量OGC服务</span></p>
+                            <p>服务简介：<span>服务简介简介简介</span></p>
+                            <p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+                            <p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+                        </div>
+                        <a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+                    </div>
+                </div>
+
+                <div class="service-hr-box">
+                    <div class="service-hr-box_img">
+                        <img src="../images/服务资源/地质数据1.png" alt="地质数据" height="230" width="270">
+                    </div>
+                    <div class="service-hr-box_content">
+                        <h3>地质数据</h3>
+                        <div class="service-hr-box_intro">
+                            <p>数据类型：<span>矢量OGC服务</span></p>
+                            <p>服务简介：<span>服务简介简介简介</span></p>
+                            <p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+                            <p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+                        </div>
+                        <a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+                    </div>
+                </div>
+
+                <div class="service-hr-box">
+                    <div class="service-hr-box_img">
+                        <img src="../images/服务资源/地质数据2.png" alt="地质数据" height="230" width="270">
+                    </div>
+                    <div class="service-hr-box_content">
+                        <h3>地质数据</h3>
+                        <div class="service-hr-box_intro">
+                            <p>数据类型：<span>矢量OGC服务</span></p>
+                            <p>服务简介：<span>服务简介简介简介</span></p>
+                            <p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+                            <p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+                        </div>
+                        <a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+                    </div>
+                </div>
+
+                <div class="service-hr-box">
+                    <div class="service-hr-box_img">
+                        <img src="../images/服务资源/地学科普1.png" alt="地质数据" height="230" width="270">
+                    </div>
+                    <div class="service-hr-box_content">
+                        <h3>地质数据</h3>
+                        <div class="service-hr-box_intro">
+                            <p>数据类型：<span>矢量OGC服务</span></p>
+                            <p>服务简介：<span>服务简介简介简介</span></p>
+                            <p>服务地址：<a href="">http://fanyi.baidu.com</a></p>
+                            <p>服务元数据：<a href="">http://fanyi.baidu.com</a></p>
+                        </div>
+                        <a href="#" class="btn btn-success btn-more" role="button">申请服务许可</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/mapservice.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
+    <script type="text/javascript">
+        var data = '{$service_json}';
+        $("#select-services").select2({
+            data: JSON.parse(data),
+            placeholder:'请选择服务',
+            allowClear:true,
+            multiple: true,
+            formatSelection: format,
+            width:'270px'
+        })
+
+        function isAll(){
+            if(!$('.isAll').prop('checked')){
+                $('.show-services').css('display','block');
+            }else{
+                $('.show-services').css('display','none');
+            }
+        }
+
+        function format(item) { 
+            return item.tag; 
+        }
+
+        function apply(){
+            var time_limit = $("#all_time").val();
+            var time_num = $(".allnum").val();
+            var time_unit = $(".allunit").val();
+            var service_ids;
+            if($('.isAll').prop('checked')){
+                service_ids='all';
+            }else{
+                var reslist=$("#select-services").select2("data");
+                var ids = new Array();
+                for(var i =0;i<reslist.length;i++){
+                    ids.push(reslist[i].id);
+                }
+                // alert(ids.join(','));
+                service_ids=ids.join(',');
+            }
+            var data = {
+                "act" : "apply_service_token",
+                "time_limit" : time_limit,
+                "time_num" : time_num,
+                "time_unit" : time_unit,
+                "service_type" : service_ids
+            };
+            $.get('ajax.php',data,function(result){
+                    if(result.status==200){
+                        window.location="user.php?act=my_token";
+                    }else{
+                        if(result.msg == "not_login"){
+                            GucLogin();
+                        }else{
+                            alert(result.content.text);
+                        }
+                    }
+                },'JSON');
+        }
+
+        function delete_batch_modal(){
+            $('.hover').css("display","block");
+            $('.services').val(0);
+            $('#time-limit').val(1);
+            $('#apply_token').css("display","block");
+            $('#apply').attr("onclick","apply()");
+        }
+
+        function apply_this(id){
+            $('#time-limit').val(1);
+            $(".time-num").css("display","none");
+            $(".time-unit").css("display","none");
+            $('.hover').css("display","block");
+            $('.services').val(id);
+            $('#prompt_content_delelt_app').css("display","block");
+            $('#delete-app-can-btn').attr("onclick","apply_service_token()");
+        }
+
+        function close_modal(){
+            $('.hover').css("display","none");
+            $('.prompt_content_modal').css("display","none");
+        }
+        function select_time(n){
+            if(n.value==2)
+            {
+                $(".time-num").css("display","inline-block");
+                $(".time-unit").css("display","inline-block");
+            }else if(n.value==1)
+            {
+                $(".time-num").css("display","none");
+                $(".time-unit").css("display","none");
+            }
+        }
+
+        function checkall(){
+            if($("#checkall").is(":checked")){
+                $(".checkone").prop("checked",true);
+            }else{
+                $(".checkone").prop("checked",false);
+            }
+        }
+        
+
+        function apply_service_token(){
+            var time_limit = $("#time-limit").val();
+            var time_num = $(".time-num").val();
+            var time_unit = $(".time-unit").val();
+            var service_type = $(".services").val();
+            var data = {
+                "act" : "apply_service_token",
+                "time_limit" : time_limit,
+                "time_num" : time_num,
+                "time_unit" : time_unit,
+                "service_type" : service_type
+            };
+            $.get('ajax.php',data,function(result){
+                if(result.status==200){
+                    window.location="user.php?act=my_token";
+                }else{
+                    if(result.msg == "not_login"){
+                        GucLogin();
+                    }else{
+                        alert(result.content.text);
+                    }
+                }
+            },'JSON');
+        }
+
+        $(function(){
+            var st = "{$st}";
+            var gdt = "{$gdt}";
+            var tt = "{$tt}";
+            var sear = "{$search}";
+            var page_size = "{$page_size}";
+            var stt = st.split(',');
+            if(st != ""){
+                $('.service-type-name').each(function(){
+                    var stn = $(this).attr("value");
+                    for(var i = 0;i<stt.length;i++){
+                        if(stt[i] == stn){
+                            $(this).css({'background-color':'rgb(155, 155, 155)'});
+                            $(this).siblings('.service-x').css({'display':'block'});
+                        }   
+                    }
+                });
+            }
+            if(gdt != ""){
+                $('.service-data-type').each(function(){
+                    var sdt = $(this).attr("value");
+                    if(sdt==gdt){
+                        $(this).css({'background-color':'rgb(155, 155, 155)'});
+                        $(this).siblings('.service-data-type-x').css({'display':'block'});
+                        $(this).addClass('data-type-selected').parent().siblings('.service-type-content').children('.service-data-type').removeClass('data-type-selected');
+                    }
+                });
+            }
+            if(tt != ""){
+                $('.find-option').each(function(){
+                    var fo = $(this).attr("value");
+                    if(fo==tt){
+                        $(this).attr("selected","selected");
+                    }
+                });
+            }
+
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        // return "{$p_url}p="+n;
+                        //reseachService(n);
+                        //alert(1);
+                        return 'resource.php?do=service&service_type='+st+'&gis_data_type='+gdt+'&theme_type='+tt+'&search='+sear+'&p='+n+'&page_size='+page_size;
+                    }
+                })            
+            }
+
+
+            $(window).scroll(function(){
+                if($(document).scrollTop()>166){
+                // console.log("111");
+                $("#tabbox").addClass("changeposition2");
+                $("#apply-btn").addClass("changeposition");
+                }else{
+                $("#tabbox").removeClass("changeposition2");
+                $("#apply-btn").removeClass("changeposition");
+                }
+            })
+
+        })
+
+        $('.service-type-name').click(function(){
+            $(this).css({'background-color':'rgb(155, 155, 155)'});
+            $(this).siblings('.service-x').css({'display':'block'});
+            // var data = $(this).attr('value');
+            reseachService(1);
+        })
+        $('.service-x').click(function(){
+            $(this).css({'display':'none'});
+            $(this).siblings('.service-type-name').css({'background-color':'#f3f6fc'});
+            reseachService(1);
+        })
+        $('.service-data-type').click(function(){
+            $(this).addClass('data-type-selected').parent().siblings('.service-type-content').children('.service-data-type').removeClass('data-type-selected');
+            $(this).css({'background':'rgb(155, 155, 155)'});
+            $(this).parent().siblings('.service-type-content').children('.service-data-type').css({'background':'#f3f6fc'});
+            $('.service-data-type-x').css({'display':'none'});
+            $(this).siblings('.service-data-type-x').css({'display':'block'});
+            reseachService(1);
+        })
+        $('.service-data-type-x').click(function(){
+            $(this).css({'display':'none'});
+            $('.service-data-type').css({'background-color':'#f3f6fc'});
+            $(this).siblings('.service-data-type').removeClass('data-type-selected');
+            reseachService(1);
+        })
+       
+        $('.special-service').change(function(){
+            reseachService(1);
+        })
+
+        $('.all-service-type').click(function(){
+            $('.service-type-name').css({'background-color':'rgb(255, 255, 255)'});
+            $('.service-data-type').css({'background-color':'rgb(255, 255, 255)'});
+            $('.service-x').css({'display':'none'});
+            $('.service-data-type-x').css({'display':'none'});
+            $('.special-service option:first').prop('selected','selected');
+            $('.service-data-type').removeClass('data-type-selected');
+            reseachService(1);
+        })
+        $('.service-reseach-btn').click(function(){
+            reseachService(1);
+        })
+
+        $('.service-content').on('keypress',function(e){
+            if(e.keyCode == '13'){
+                reseachService(1);
+            }
+        })
+
+        function reseachService(page){
+            var service_type = [];
+           
+            for(var i = 0;i<$('.service-type-name').length;i++){
+                if($('.service-type-name')[i].style.backgroundColor == 'rgb(155, 155, 155)'){
+                    var mess = $('.service-type-name')[i].attributes.value.nodeValue;
+                    // data.service_type += $('.service-type-name')[i].attributes.value.nodeValue+',';
+                    //data.service_type.append(mess);
+                    service_type.push(mess);
+                }
+            }
+            var service_type = service_type;
+
+            if($('.data-type-selected') && $('.data-type-selected').length>0){
+                var gis_data_type = $('.data-type-selected').attr('value');
+            }else{
+                var gis_data_type = '';
+            }
+            
+            var theme_type = $('.special-service').val();
+            var search = $('.service-content').val();
+            // $.ajax({
+            //     url:'resource.php?do=service',
+            //     data:data,
+            //     type:'get',
+            //     success:function(res){
+                    
+            //     }
+            // })
+            window.location.href = 'resource.php?do=service&service_type='+service_type+'&gis_data_type='+gis_data_type+'&theme_type='+theme_type+'&search='+search+'&page='+page+'&pageSize=';
+        }
+    </script>
+</html>

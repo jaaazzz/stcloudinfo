@@ -1,0 +1,163 @@
+<ul class="nav nav-pills account pull-right">
+<!--<li class="help-center"><a href="helper.php#/2">帮助中心</a></li>-->
+{if $user_info}
+<li class="user-action" style="border:none;">
+	<span class="user-action-name" style="padding-right: 18px;"><span>{$user_info.username}</span><i class="navi-arrow"></i></span>
+	<ul class="dropdown" style="min-width:71px;">
+	<li class="drop-loginout"><a href="javascript:void(0);" onclick="GucLogout()">注销</a></li>
+	</ul>
+</li>
+{else}
+<li style='border:none;'><a style=";width:44px;background:none;" class="user-reg" href="javascript:void(0);" onclick="userRegister()">注册</a></li>
+<li style='border:none;'><a style="width:44px;background:none;" class="user-login-name" href="javascript:void(0);" onclick="GucLogin()">登录</a></li>
+{/if}
+<!--<li class="help-center"><a href="{$cloud_disk_url}" target="_blank">数据云盘</a></li>-->
+
+<!-- <div class="backgroundNull" style="display:none;width:100%;height:100%;background:rgba(0,0,0,0.5);position:fixed;left:0;top:0;z-index:999999;">
+    <div class="registerMessage" style="width:568px;background:#fff;left: 395px;top: 200px;position:fixed;border-radius:3px;">
+        <a href="" title="关闭" class="register-close" style="float:right;font-size: 25px;cursor: pointer;margin-right: 10px;">×</a>
+        <div style="clear:both;width:100%;height:2px"></div>
+        <form style="width:100%;text-align:center;">
+            <input class="usernameRegister" type="text" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入账号" required><br>
+            <input class="userEmaiRegisterRegister" type="text" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入邮箱" required><br>
+            <input class="passwordRegister1" type="password" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入密码" required><br>
+            <input class="passwordRegister2" type="password" style="width:80%;height:36px;margin:4px auto;" placeholder="请输入密码" required><br>
+            <input class="submitRegister" type="submit" style="width:20%;height:28px;margin:8px auto 10px;" value="提交"><br>
+        </form>
+    </div>
+</div> -->
+</ul>
+<div class="backgroundNull" style="display:none;width:100%;height:100%;background:rgba(0,0,0,0.5);position:fixed;left:0;top:0;z-index:999999;">
+    <div class="registerMessage" style="width:510px;left: 395px;top: 25px;position:fixed;border-radius:4px;background:url(themes/appcloud/images/素材天下网-sucaitianxia.com.png)0 0 no-repeat;background-color:#fff;">
+        <a href="" title="关闭" class="register-close" onclick="return closeRegist()" style="float:right;font-size: 25px;cursor: pointer;margin-right: 10px;height:40px;line-height:40px;">×</a>
+        <div style="clear:both;width:100%;height:2px"></div>
+        <form style="width:55%;margin:0 auto;">
+            <div class="registMassege" style="width:100%;height:20px;margin:4px auto;color:red;padding:0 8px;line-height:20px;text-align:left;" ></div>
+            <input class="usernameRegister form-control" type="text" style="width:100%;height:36px;margin:8px auto;color:#333;padding:0 8px;line-height:36px;float:left;box-sizing:border-box;" placeholder="请输入账号">
+            <input class="userEmaiRegisterRegister form-control" type="text" style="width:100%;height:36px;margin:8px auto;color:#333;padding:0 8px;line-height:36px;float:left;box-sizing:border-box;" placeholder="请输入邮箱">
+            <input class="passwordRegister1 form-control" type="password" style="width:100%;height:36px;margin:8px auto;color:#333;padding:0 8px;line-height:36px;float:left;box-sizing:border-box;" placeholder="请输入密码">
+            <input class="passwordRegister2 form-control" type="password" style="width:100%;height:36px;margin:8px auto;color:#333;padding:0 8px;line-height:36px;float:left;box-sizing:border-box;" placeholder="请再次输入密码">
+            <input class="realname form-control" type="text" style="width:100%;height:36px;margin:8px auto;color:#333;padding:0 8px;line-height:36px;float:left;box-sizing:border-box;" placeholder="请输入姓名">
+            <select class="tenant-group form-control" style="width:100%;height:36px;margin:8px auto;color:#333;float:left;box-sizing:border-box;">
+                <option select="selected" hidden style="color:red;">请选择租户组</option>
+                {foreach from = $tenants item = item}
+                <option value="{$item.id}">{$item.groupName}</option>
+                {/foreach}
+            </select>   
+            <input class="submitRegister form-control" type="submit" style="width:100%;height:36px;margin:16px auto 0px;line-height:normal;color:#fff;background:#4bb0e5;box-sizing:border-box;border-radius:4px;border:none;float:left;" value="提交">
+            <div style="clear:both;"></div>
+            <div style="margin:8px auto 24px;height:16px;line-height:16px;width:100%;"><span style="width:130px;display:inline-block;margin-left:90px;"><span style="color:#4bb0e5;font-size:14px;">已有账号？</span><a href="#" onclick="userLoginInfo()" style="color:#4bb0e5;font-size:14px;">登录</a><span></div>
+        </form>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+var movediv = $('.registerMessage');
+var moveInput = $('.registerMessage').find('input');
+moveInput.mouseover(function(){
+    movediv.unbind();
+})
+moveInput.mouseout(function(){
+    movediv.bind('mousedown',moveFun);
+})
+$('.tenant-group').mouseover(function(){
+    movediv.unbind();
+})
+$('.tenant-group').mouseout(function(){
+    movediv.bind('mousedown',moveFun);
+})
+movediv.bind('mousedown',moveFun);
+function moveFun(){
+    var offset_x = $(this)[0].offsetLeft;
+    var offset_y = $(this)[0].offsetTop;
+    var mouse_x = event.pageX;
+    var mouse_y = event.pageY;
+
+    $(document).bind('mousemove',function(){
+        
+        
+        var _x = event.pageX - mouse_x;
+        var _y = event.pageY - mouse_y;
+        var now_x = (offset_x + _x) + 'px';
+        var now_y = (offset_y + _y) + 'px';
+        movediv.css({
+            top:now_y,
+            left:now_x
+        })
+    })
+    $(document).bind('mouseup',function(){
+        $(this).unbind('mousemove');
+    })
+}
+var height = $(document).height() + 'px';
+// console.log(height);
+function userLoginInfo(){
+	// $('.guc-login-prompt').css({'display':'block'});
+	$('.user-login-name').trigger('click');
+    $('.backgroundNull').css({'display':'none'});
+}
+function userRegister(){
+	$('.guc-login-prompt').css({'display':'none'});
+    $('.backgroundNull').css({'display':'block','width':'100%','height':height});
+}
+
+function closeRegist(){
+    $('.guc-login-mask').css({'display':'none'});
+    $('.backgroundNull').css({'display':'none'});
+    $('.registerMessage input').value = '';
+    $('.submitRegister').value = '提交';
+    return false;
+};
+
+$('.submitRegister').click(function(){   
+    var userName = $('.usernameRegister').val();
+    var userEmail = $('.userEmaiRegisterRegister').val();
+    var password1 = $('.passwordRegister1').val();
+    var password2 = $('.passwordRegister2').val();
+    var realname = $('.realname').val();
+    var tenantid = $('.tenant-group').val();
+    if(userName.length < 6 ){
+    	// alert('账号不能少于6位！');
+        $('.registMassege').html('账号不能少于6位！')
+    	return false;
+    }
+    if(password1 == password2){
+        var data = {};
+        data.username = userName;
+        data.email = userEmail;
+        data.password = password1;
+        data.role_id = 6;
+        data.realname = realname;
+        data.tenantid = tenantid;
+        // $.cors = true;
+        $.ajax({
+            url:'../ajax.php?act=user_regist',
+            data:data,
+            type:'post',
+            // dataType:'json',
+            success:function(res){
+                var message = JSON.parse(res);
+                // alert('111');
+                if(message.code == 1){
+                    alert('申请成功，等待审核！');
+                    $('.backgroundNull').css({'display':'none'});
+                    $('.guc-login-mask').css({'display':'none'});
+                    $('.registerMessage form input').val('');
+                    $('.submitRegister').val('提交');
+                }else if(message.code == -1){
+                   // alert(message.msg); 
+                    $('.registMassege').html(message.msg)                
+                }   
+            },
+            error:function(res){
+                alert('ajax失败');
+            }
+        })
+    }else{
+        alert('两次密码不一致！');  
+    } 
+    return false;
+})	
+</script>

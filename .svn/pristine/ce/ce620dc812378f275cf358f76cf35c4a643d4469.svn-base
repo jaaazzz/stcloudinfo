@@ -1,0 +1,11 @@
+{
+    "layersProp":[
+        {"layer":"KBUIPT433100","name":"地名","value":"0","url":"./themes/appcloud/onlinesrc/images/地名.png"},
+        {"layer":"KINTPT433100","name":"生活","value":"1","url":"./themes/appcloud/onlinesrc/images/生活.png"},
+        {"layer":"KLANPT433100","name":"景点","value":"2","url":"./themes/appcloud/onlinesrc/images/景点.png"},
+        {"layer":"KREGPT433100","name":"市政","value":"3","url":"./themes/appcloud/onlinesrc/images/政府.png"},
+        {"layer":"KRESPT433100","name":"乡镇","value":"4","url":"./themes/appcloud/onlinesrc/images/生活.png"},
+        {"layer":"KSTRP433100","name":"街道","value":"5","url":"./themes/appcloud/onlinesrc/images/交通.png"},
+        {"layer":"uadb","name":"教育","value":"6","url":"./themes/appcloud/onlinesrc/images/教育.png"}
+    ]
+}

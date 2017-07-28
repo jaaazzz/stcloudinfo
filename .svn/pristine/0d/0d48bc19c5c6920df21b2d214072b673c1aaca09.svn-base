@@ -1,0 +1,331 @@
+
+function Addmarker() {
+    alert(1);
+            removeMaker();
+            if (!data.vectorLayer) {
+                data.vectorLayer = new ol.layer.Vector({
+                    source: vectorSource
+                });
+                map.addLayer(data.vectorLayer);
+            }
+            map.on('click', clickpopup);
+        }
+//专题图层
+// function initDocLayerGroup(){
+// $.ajax({
+//         url: 'themes/appcloud/onlinesrc/wms.json',
+//         type:"POST",
+//         data:{},
+//         dataType:"json",
+//         success:function(data){
+//             data.docVectLayerArr=new Array();
+//             var theme = '';
+//             $(data).each(function(i,item){
+//                 var text=item.text;
+//                 var type=item.type;
+//                 var lx=item.lx;
+//                 var children=item.children;
+//                 theme +=  "<div class='accordion-group' style='overflow: hidden;'><div class='accordion-heading'><a class='accordion-toggle theme-option'  data-toggle='collapse' data-parent='#accordion2' href='#collapse"+i+"'>"+text+"</a></div><div id='collapse"+i+"' class='accordion-body collapse' style='height: 0px;'><div class='accordion-inner'><div class='checkbox'>";
+//                 $(children).each(function(j,jtem){
+//                     var layer=jtem.layer;
+//                     var type=jtem.type;
+//                     var text= jtem.layer;
+//                      theme += "<label><input type='checkbox' onchange='addDocLayer(\""+layer+"\",this)'>"+layer+"</label><br/>";
+//                     var mapDocLayer = new Zondy.Map.Doc(text, layer, {
+//                         //IP地址
+//                         ip: ip,
+//                         //端口号
+//                         port: port
+//                     });
+//                     data.docVectLayerArr.push(mapDocLayer);
+//                 });
+//                 theme +=  "</div></div></div></div>";
+//             });
+//             $('#accordion2').html(theme);
+//         },
+//         error:function(e){
+            
+//         }
+        
+// });
+// }
+
+function initDocLayerGroup(){
+    $('#themeTree').tree({
+        url: 'themes/appcloud/onlinesrc/theme.json',
+        onLoadSuccess: function (node, param) {
+            $(this).find("span.tree-checkbox").unbind().click(function () {
+                $("#themeTree").tree("select",$(this).parent());
+                return false;
+            });
+            var n = $('#themeTree').tree("getChildren");
+            for(var i=0;i<n.length;i++){
+                if(n[i].type==1){
+                    var mapDocLayer = new Zondy.Map.Doc(n[i].text, n[i].layer, {
+                        //IP地址
+                        ip: ip,
+                        //端口号
+                        port: port
+                    });
+                    data.docVectLayerArr.push(mapDocLayer);
+                }
+            }
+        },
+        onSelect: function (node) {
+            // var flag=isFile(node);
+            // if(flag==true){//选中的是叶子节点或者是最底级文件夹
+
+            // }else{
+
+            // }
+            checkNode(node);
+            // var n = $('#themeTree').tree("getRoot", node.target);
+            // //$('#themeTree').tree("uncheck", n.target);
+            // if (node.type == 1) {//选择的是最子节点数据层
+            //     if (node.checked == true) {
+            //         $('#themeTree').tree("uncheck", node.target);
+            //         addDocLayer(node.layer,false);
+            //     } else {
+            //         $('#themeTree').tree("check", node.target);
+            //         addDocLayer(node.layer,true);
+            //     }
+            // } else {
+            //     var childnodes = $('#themeTree').tree("getChildren", node.target);
+            //     if (childnodes.length == 1) {
+            //         if (node.checked == true) {
+            //             $('#themeTree').tree("uncheck", node.target);
+            //             addDocLayer(node.layer,false);
+            //         } else {
+            //             $('#themeTree').tree("check", node.target);
+            //             addDocLayer(node.layer,true);
+            //         }
+            //     } else {
+            //         if (node.checked == false) {
+            //             alert("只允许选择单个图层");
+            //         }
+            //     }
+            // }
+        },
+        onCheck: function (node, checked) {
+
+        }
+    });
+}   
+function checkNode(node){
+    var pNode=$('#themeTree').tree("getParent", node.target);
+    var f=$('#themeTree').tree("isLeaf", node.target);
+    var checkedNode = $('#themeTree').tree("getChecked");
+    if(f==true){//叶子节点
+         var tmp=false;
+         var pNode=$('#themeTree').tree("getParent", node.target);
+         var pid=pNode.id;
+         for(var k=0;k<checkedNode.length;k++){
+            var pp=$('#themeTree').tree("isLeaf", checkedNode[k].target);
+            if(pp==true){
+                var parentNode=$('#themeTree').tree("getParent", checkedNode[k].target);
+                //var a=$('#themeTree').tree("isLeaf", checkedNode[k].target);
+                var id=parentNode.id;
+                if(pid!=id){
+                    tmp=true;
+                }
+            }
+         }
+         if(tmp==false){
+            if (node.checked == true) {
+                checkDocLayer(node,false);
+                $('#themeTree').tree("uncheck", node.target);
+            }else{
+                checkDocLayer(node,true);
+                $('#themeTree').tree("check", node.target);
+            }
+         }else{
+            for(var m=0;m<checkedNode.length;m++){
+                checkDocLayer(checkedNode[m],false);
+                $('#themeTree').tree("uncheck", checkedNode[m].target);
+            }
+            if (node.checked == true) {
+                checkDocLayer(node,false);
+                $('#themeTree').tree("uncheck", node.target);
+            }else{
+                checkDocLayer(node,true);
+                $('#themeTree').tree("check", node.target);
+            }
+         }
+    }else{//非叶子节点
+        var flag=true;
+        var n = $('#themeTree').tree("getChildren", node.target);
+        for(var i=0;i<n.length;i++){
+            var z=$('#themeTree').tree("isLeaf", n[i].target);
+            if(z==false){
+                flag=false;
+            }
+        }
+        if(flag==true){//是最底级文件夹
+            if (node.checked == true) {
+                checkDocLayer(node,false);
+                $('#themeTree').tree("uncheck", node.target);
+            }else{
+                for(var m=0;m<checkedNode.length;m++){
+                    checkDocLayer(checkedNode[m],false);
+                    $('#themeTree').tree("uncheck", checkedNode[m].target);
+                }
+                $('#themeTree').tree("check", node.target);
+                checkDocLayer(node,true);
+            }
+        }
+    }
+}
+
+function checkDocLayer(node,flag){
+    if(node.type==1){//数据
+        //var flag=node.checked;
+        //addDocLayer(node.layer,!flag);
+        addDocLayer(node.layer,flag);
+    }else{//底层文件夹
+        //var flag=node.checked;
+        var n = $('#themeTree').tree("getChildren", node.target);
+        for(var i=0;i<n.length;i++){
+            //addDocLayer(n[i].layer,!flag);
+            addDocLayer(n[i].layer,flag);
+        }
+    }
+}
+function addDocLayer(layer,checked){
+    for(var i=0;i<data.docVectLayerArr.length;i++){
+        if(data.docVectLayerArr[i].name==layer){
+            if(checked==true){
+                var flag=false;
+                var layers=map.getLayerGroup().getLayers().getArray();
+                for(var j=0;j<layers.length;j++){
+                    if(layers[j].name==layer){
+                        flag=true;
+                        break;
+                    }
+                }
+                if(flag==false){
+                    data.docVectLayerArr[i].tip="theme";
+                    map.addLayer(data.docVectLayerArr[i]);
+                }
+            }else{
+                map.removeLayer(data.docVectLayerArr[i]);
+            }
+        }
+    }
+}
+
+//导航栏选择
+function selectColumn(item){
+    if(item==1){
+        $('#mapCon').show();
+        $('#swipe').hide();
+        $('#layerDiv').show();
+        $('#multi').hide();
+        $('#searchbox').show();
+        data.defaultMapSL=data.SL;
+        data.defaultMapYX=data.YX;
+        var layers=map.getLayerGroup().getLayers().getArray();
+        for(var i=0;i<layers.length;i++){
+                map.removeLayer(layers[i]);
+                i=0;
+        }
+        var defaultLayer = new Zondy.Map.TileLayer(data.defaultMapSL, data.defaultMapSL, {
+            ip: ip,
+            port: port
+        });
+        map.addLayer(defaultLayer);
+        view = map.getView();
+        view.setZoom(zoom);
+        view.setCenter(center);
+        $('.theme-map').hide();
+        $('#TreeType').hide();
+        $('.theme').find('span').removeClass('choose');
+        $('.search').find('span').removeClass('choose');
+        $('.show').find('span').addClass('choose');
+        $('#tree').show();
+    }else if(item==2){
+        typeSearch();
+        $('.theme-map').hide();
+        $('.show').find('span').removeClass('choose');
+        $('.theme').find('span').removeClass('choose');
+        $('#tree').hide();
+        $('#TreeType').show();
+        $('.search').find('span').addClass('choose');  
+    }else if(item==3){
+        data.defaultMapSL=data.SL;
+        data.defaultMapYX=data.YX;
+        var layers=map.getLayerGroup().getLayers().getArray();
+        for(var i=0;i<layers.length;i++){
+                map.removeLayer(layers[i]);
+                i=0;
+        }
+        var defaultLayer = new Zondy.Map.TileLayer(data.defaultMapSL, data.defaultMapSL, {
+            ip: ip,
+            port: port
+        });
+        map.addLayer(defaultLayer);
+        view = map.getView();
+        view.setZoom(zoom);
+        view.setCenter(center);
+        initDocLayerGroup();
+        $('.theme-map').show();
+        $('.show').find('span').removeClass('choose');
+        $('.search').find('span').removeClass('choose');
+        $('#tree').hide();
+        $('#TreeType').hide();
+        $('.theme').find('span').addClass('choose');
+    }
+}
+
+//隐藏导航栏
+// $('#moveD').click(function(){
+//     // alert($('.left-box').css('left'));
+//     if($('.left-box').css('left') == '0px'){
+//         $('.left-box').css({'left':'-308px'});
+//         $('#moveD').html(">");
+//         $('#toolBars').css({
+//             width:$(window).width()-60+'px',
+//             left:'50px'
+//         });
+//         $('#mapCon').css({
+//             left:'10px'
+//         })
+//         $('#mapCon').html("");
+//         ShowMap.initMap();
+//     }else if($('.left-box').css('left') == '-308px'){
+//         $('.left-box').css({'left':'0px'});
+//         $('#moveD').html("<");
+//         $('#toolBars').css({
+//             width:'1420px',
+//             left:'370px'
+//         });
+//         $('#mapCon').css({
+//             left:'320px'
+//         })
+//         $('#mapCon').html("");
+//         ShowMap.initMap();
+//     }
+// })
+
+function jumpLevel(xarray, yarray){
+    var xmin=9999999,xmax=0,ymin=9999999,ymax=0;
+    for(var i in xarray){
+        if(xarray[i]<xmin){
+            xmin=xarray[i];
+        } 
+        if(xarray[i]>xmax){
+            xmax=xarray[i];
+        }
+    }
+    for(var i in yarray){
+        if(yarray[i]<ymin){
+            ymin=yarray[i];
+        } 
+        if(yarray[i]>ymax){
+            ymax=yarray[i];
+        }
+    }
+    var size=map.getSize();
+    view.fit([xmin*2,ymin*2,xmax*2,ymax*2],size);
+    //view.fit([xmin,ymin,xmax,ymax],size);
+    //view.setCenter([(xmin+xmax)/2,(ymin+ymax)/2]);
+}

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>首页</title>
+    <meta name="Keywords" content="{$keywords}" />
+    <meta name="Description" content="{$description}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+    <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="themes/appcloud/css/savedResource.css" type="text/css" rel="stylesheet"/>
+    <link href="themes/appcloud/css/savedResource4.css" type="text/css" rel="stylesheet"/>
+    <link href="css/base.css" rel="stylesheet" type="text/css" />
+    <link href="css/home.css" rel="stylesheet" type="text/css"/>
+
+    {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js}
+    <!--[if lt IE 8]>
+    <script type="text/javascript" src="js/iconfont-ie7.js"></script>
+    <![endif]-->
+    <!--[if lt IE 9]>
+    {insert_scripts files='html5shiv.js'}
+    <link type="text/css" rel="stylesheet" href="css/headerIe.css"/>
+    <script type="text/javascript" src="js/html5.js"></script>
+    <![endif]-->
+
+    {* insert_scripts files='DialogBySHF.js' *}
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/saved_resource_3.js"></script>
+</head>
+<body>
+    <div class="space-time-cloud-home">
+        <!-- 引入Header开始 -->
+            <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <!-- 引入Header结束 -->
+        <!-- banner开始 -->
+        {if $banner_arr && count($banner_arr) > 0}
+        <div class="space-time-cloud-home-banner">
+            <!--<ul class="banner" id="banner">-->
+                <!--<li class="fw fw1 active" style="background-image: url('./themes/appcloud/images/banner/banner1.png');">-->
+                <!--</li>-->
+                <!--<li class="fw fw2" style="background-image: url('./themes/appcloud/images/banner/banner2.png');">-->
+                <!--</li>-->
+                <!--<li class="fw fw3" style="background-image: url('./themes/appcloud/images/banner/banner3.png');">-->
+                <!--</li>-->
+                <!--<li class="fw-controller">-->
+                    <!--<span class="fw-button active" data-index=1>-->
+                    <!--</span>-->
+                    <!--<span class="fw-button" data-index=2>-->
+                    <!--</span>-->
+                    <!--<span class="fw-button" data-index=3>-->
+                    <!--</span>-->
+                <!--</li>-->
+            <!--</ul>-->
+            <div data-spm="418686" data-moduleid="175947" data-name="aliyun-index-top-banner-2016" data-guid="418686" id="guid-418686" data-scene-id="431827" data-scene-version="11" data-hidden="" data-gitgroup="ali-mod" data-ext="" class="aliyun-index-top-banner-2016 J_Module" tms="aliyun-index-top-banner-2016/0.0.71" tms-datakey="431827">
+                <div class="module-wrap J_tb_lazyload dbl_tms_module_wrap" style="position: relative; z-index: 100;">
+                    <script>
+                        var indexBanner_isIE8 = false;
+                        var indexBanner_isIE9 = false;
+                    </script>
+                    <!--[if lte IE 8]>
+                    indexBanner_isIE8 = true;
+                    <![endif]-->
+                    <!--[if lte IE 9]>
+                    <script>
+                        indexBanner_isIE9 = true;
+                    </script>
+                    <![endif]-->
+                    <script>
+                        var OPEN_HOVER3D = "";
+                        var AUTO_PLAY_TIME="5000";
+                        var DARK_BG="#000";
+                        var LIGHT_BG="#fff";
+                        var PERSONAL="false";
+                    </script>
+                    <div class="banner-container dark" style="background: rgb(34, 37, 42);">
+                        <div class="index-top-banner" data-hover-container="">
+                            {foreach from=$banner_arr item=item key=key name=banner_arr}
+                            <div data-group="" data-isimage="" data-group-open="" data-active="dark" data-groupindex="0" class="{if $item.index == '0'}'center animating-enter-down'{else}'bottom'{/if}">
+                                <div class="y-row" data-ignore-group="">
+                                    <div class="layer left-header" data-ignore="">
+                                        {$banner_des_arr.$key}
+                                    </div>
+                                </div>
+                                <a href="javascript:;" target="_blank">
+                                    <div data-base-layer="" style="transform: rotateX(0deg) rotateY(0deg);">
+                                        <div class="banner-row">
+                                            {foreach from=$item.info item=i_item key=i_key name=i_name}
+                                            <div class="layer right-image no-transition" data-zindex="{$i_item.z_index}" style="{$i_item.transform}">
+                                                <img src="{$i_item.path}" alt=""/>
+                                            </div>
+                                            {/foreach}
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {/foreach}
+                        </div>
+                        <ul class="banner-tab dark" style="visibility: visible;{$banner_margin}"><!-- margin-left值的计算公式：-16 × banner个数 -->
+                            {foreach from=$banner_ul item=item}
+                            <li class="banner-tab-li {if $item == '0'}'active'{/if}" data-index="{$item}"></li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript" src="js/saved_resource_35.js"></script>
+        </div>
+        {/if}
+        <!-- banner结束 -->
+        <div class="space-time-cloud-home-options">
+            <!-- 在线应用开始 -->
+            <div class="space-time-cloud-home-option space-time-cloud-home-online">
+                <div class="space-time-cloud-home-option-content">
+                    <div class="space-time-cloud-home-options-title">
+                        <div class="logo_picture l">
+                            <img src="themes/appcloud/images/home/app_icon.png">
+                        </div>
+                        <div class="l logo-picture-text">在线应用</div>
+                        <div class="l logo-picture-text">
+                            <a href="app.php">
+                                <div class="logo-picture-more">更多</div>
+                            </a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    {if $app_arr && count($app_arr) > 0}
+                    <div class="space-time-cloud-home-online-content">
+                        <ul>
+                            {foreach from=$app_arr item=item key=key name=app_arr}
+                            <li class="app_list">
+                                <div class="content-logo-style" style="position:relative;">
+                                    <div class='app-bl' style='position:absolute;top:-2px;left:-2px;width:228px;height:173px;background:#6389de;opacity: 0.8;text-align:center;'>
+                                        <img src='themes/appcloud/images/two-h.png' style='width:60px;height:60px;margin:20px auto 0;'>
+                                        {if $item.app_type eq 2}
+                                        <a class="" href="javascript:console_app_host({$item.host_id})"> <div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div></a>
+                                        {elseif $item.app_type eq 4}
+                                        <a class="" href="javascript:console_app_host_openstack('{$item.app_url}')"> <div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div> </a>
+                                        {else}
+                                        {if $item.app_url }
+                                        <a class="" href="{$item.app_url}"> <div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div> </a>
+                                        {else}
+                                        <a class="" href="javascript:;"> <div style='width:80px;height:35px;line-height:35px;text-align:center;margin:20px auto 0;cursor:pointer;border:1px solid #fff;font-size:14px;'>访问</div> </a>
+                                        {/if}
+                                        {/if}
+                                    </div>
+                                    <a class="" href="app.php?act=detail&app_id={$item.id}">
+                                        <img src="{if $item.logo_image}{$item.logo_image}{else}themes/appcloud/images/app_logo.png{/if}" alt="app_logo"/>
+                                    </a>
+                                </div>
+                                <div class="content-text-style name-tooltip" data-toggle='tooltip' data-original-title="{$item.app_name}">
+                                    <a href="app.php?act=detail&app_id={$item.id}">
+                                        <script>
+                                            util.cutEllipsis(true,".app_list","{$item.app_name}");
+                                        </script>
+                                    </a>
+                                </div>
+                                <div class="content-operations-style">
+                                    <ul>
+                                        <li class="l" style="display: none;">
+                                            {if $item.app_type == 2}
+                                            <a href="javascript:;" onclick="console_app_host({$item.host_id})">在线使用</a>
+                                            {elseif $item.app_type == 4}
+                                            <a href="javascript:;" onclick="console_app_host_openstack('{$item.app_url}')">在线使用</a>
+                                            {else}
+                                            <a href="{$item.app_url}" target="_blank">在线使用</a>
+                                            {/if}
+                                        </li>
+                                        <li class="l">
+                                            <!--<div class="r content-operations-style-text">33</div>-->
+                                            <div class="r space-time-cloud-hearts" style="float:left;margin-left:10px;">
+                                                {if $item.is_collection > 0 }
+                                                <a href="javascript:;" onclick="cancle_collection('{$item.is_collection}','{$item.id}','app',event)" class="collection">{$item.collection_sum}</a>
+                                                {else}
+                                                <a href="javascript:;" onclick="add_collection('{$item.id}','app',event)" class="no-collection">{$item.collection_sum}</a>
+                                                {/if}
+                                            </div>
+                                            <div class="clear"></div>
+                                        </li>
+                                        <div class="clear"></div>
+                                    </ul>
+                                </div>
+                                <div class=""></div>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                    {else}
+                    <div class="space-time-cloud-home-options-null">
+                        <p>暂无任何应用～</p>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+            <!-- 在线应用结束 -->
+
+            <!-- 软件中心开始 -->
+            <div class="space-time-cloud-home-option space-time-cloud-home-sfw">
+                <div class="space-time-cloud-home-option-content">
+                    <div class="space-time-cloud-home-options-title">
+                        <div class="l logo_picture">
+                            <img src="themes/appcloud/images/home/sfw_icon.png">
+                        </div>
+                        <div class="l logo-picture-text">软件中心</div>
+                        <div class="l logo-picture-text">
+                            <a href="sfw.php">
+                                <div class="logo-picture-more">更多</div>
+                            </a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    {if $goods_arr && count($goods_arr) > 0 }
+                    <div class="space-time-cloud-home-sfw-content">
+                        <ul style="width:1290px;">
+                            {foreach from=$goods_arr item=item key=key name=goods_arr}
+                            <li class="sfw_list">
+                                <div class="content-logo-style">
+                                    <a class="zoom" href="sfw.php?do=goods&id={$item.goods_id}">
+                                        <img src="{if $item.goods_img}{$item.goods_img}{else}./images/app_01.png{/if}" alt="sfw_logo"/>
+                                    </a>
+                                </div>
+                                <div class="content-text-style name-tooltip" data-toggle="tooltip" data-original-title="{$item.name}">
+                                    <a href="sfw.php?do=goods&id={$item.goods_id}">
+                                        <script>
+                                            util.cutEllipsis(true,".sfw_list","{$item.name|escape:html}");
+                                        </script>
+                                    </a>
+                                </div>
+                                <div class="content-operations-style">
+                                    <ul>
+                                        <li class="l">
+                                            <div class="l content-operations-style-zw"></div>
+                                            <div class="l space-time-cloud-hearts">
+                                                {if $item.is_collection }
+                                                <a href="javascript:;" onclick="cancle_collection('{$item.is_collection}','{$item.goods_id}','soft',event)" class="collection">{$item.count}</a>
+                                                {else}
+                                                <a href="javascript:;" onclick="add_collection('{$item.goods_id}','soft',event)" class="no-collection">{$item.count}</a>
+                                                {/if}
+                                            </div>
+                                            <!--<div class="l content-operations-style-text">{$item.count}</div>-->
+                                            <div class="clear"></div>
+                                        </li>
+                                        <div class="clear"></div>
+                                    </ul>
+                                </div>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                    {else}
+                    <div class="space-time-cloud-home-options-null">
+                        <p>暂无任何软件产品～</p>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+            <!-- 软件中心结束 -->
+
+            <!-- 资源中心开始 -->
+            <div class="space-time-cloud-home-option space-time-cloud-home-resource">
+                <div class="space-time-cloud-home-option-content">
+                    <div class="space-time-cloud-home-options-title">
+                        <div class="l logo_picture">
+                            <img src="themes/appcloud/images/home/res_icon.png">
+                        </div>
+                        <div class="l logo-picture-text">资源中心</div>
+                        <div class="l logo-picture-text">
+                            <a href="resource.php">
+                                <div class="logo-picture-more">更多</div>
+                            </a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="space-time-cloud-home-options-level-title">
+                        <div class="l text" id="map_serve" style="border-bottom: 2px solid #6288DD">地图服务</div>
+                        <div class="l text" id="map_SDK" style="margin-left:20px;">SDK</div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <!-- 地图服务开始 -->
+                    <div class="space-time-cloud-home-resource-map" id="space-time-cloud-home-resource-map" style="display:block;">
+                        <div class="space-time-cloud-home-resource-map">
+                            <!--<div class="space-time-cloud-home-options-level-title">-->
+                                <!--<div class="l space-time-cloud-home-resource-logo"></div>-->
+                                <!--<div class="l text">地图服务</div>-->
+                                <!--<div class="clear"></div>-->
+                            <!--</div>-->
+                            {if $map_arr && count($map_arr) > 0}
+                            <div class="space-time-cloud-home-resource-content space-time-cloud-home-resource-map-content">
+                                <ul>
+                                    {foreach from = $map_arr item = item key = key name = map_arr}
+                                    <li class="map-list">
+                                        <div class="l content-logo-style">
+                                            <div class="content-logo-style-content">
+                                                <a href="{$item.detail_info_address}">
+                                                    {if strtoupper($item.type) == 'MRMS_MAPX'}
+                                                    <img src="themes/appcloud/images/home/map_server.png" alt="map_server_logo"/>
+                                                    {elseif strtoupper($item.type) == 'VECTOR_OGC'}
+                                                    <img src="themes/appcloud/images/home/map_ogc.png" alt="map_ogc_logo"/>
+                                                    {elseif strtoupper($item.type) == 'TILE_OGC'}
+                                                    <img src="themes/appcloud/images/home/ogc.png" alt="ogc_logo"/>
+                                                    {elseif strtoupper($item.type) == 'MRMS_TDF'}
+                                                    <img src="themes/appcloud/images/home/tile.png" alt="tile_logo"/>
+                                                    {elseif strtoupper($item.type) == 'G3D'}
+                                                    <img src="themes/appcloud/images/home/g3d.png" alt="g3d_logo"/>
+                                                    {else}
+                                                    <img src="themes/appcloud/images/home_map_icon.png" alt="other_logo"/>
+                                                    {/if}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="r resource-sdk-content resource-map-content">
+                                            <div class="content-text-style">
+                                                <a href="{$item.detail_info_address}">{$item.name}</a>
+                                            </div>
+                                            <div class="resource-map-content-server-substanc">
+                                                <div class="resource-map-content-description">
+                                                    <div class="l">服务地址：</div>
+                                                    <div class="l">
+                                                        <!-- {if $item.wfs_base_address }  -->
+                                                        <div class="map-server-url">
+                                                            <a href="{$item.wfs_base_address}">{$item.wfs_base_address}</a>
+                                                        </div>
+                                                        <!-- {/if} -->
+                                                        <!-- {if $item.wmts_base_address }  -->
+                                                        <div class="map-server-url">
+                                                            <a href="{$item.wmts_base_address}">{$item.wmts_base_address}</a>
+                                                        </div>
+                                                        <!-- {/if} -->
+                                                        <!-- {if $item.wms_base_address }  -->
+                                                        <div class="map-server-url">
+                                                            <a href="{$item.wms_base_address}">{$item.wms_base_address}</a>
+                                                        </div>
+                                                        <!-- {/if} -->
+                                                        <!-- {if !$item.wms_base_address && !$item.wfs_base_address && !$item.wmts_base_address }  -->
+                                                        <div class="map-server-url">
+                                                            <span>暂无</span>
+                                                        </div>
+                                                        <!-- {/if} -->
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="resource-map-content-substance">
+                                                    <span>服务类型：</span>
+                                                    <span>{if $item.type }{ $item.type }{ else } 无 {/if}</span>
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <div class="l resource-sdk-content-operations resource-map-content-operations">
+                                                    <!-- {if $item.preview_address }  -->
+                                                    <div class="l">
+                                                        <a target="_blank" href="{$item.preview_address}" class="gis-inline-block">预览</a>
+                                                    </div>
+                                                    <!-- {/if} -->
+                                                    <!-- {if $item.surface_preview_address }  -->
+                                                    <div class="l">
+                                                        <a target="_blank" href="{$item.surface_preview_address}" class="gis-inline-block">平面预览</a>
+                                                    </div>
+                                                    <!-- {/if} -->
+                                                    <!-- {if $item.globe_preview_address }  -->
+                                                    <div class="l">
+                                                        <a target="_blank" href="{$item.globe_preview_address}" class="gis-inline-block">球面预览</a>
+                                                    </div>
+                                                    <!-- {/if} -->
+                                                    <div class="clear"></div>
+                                                </div>
+                                                <div class="l space-time-cloud-hearts">
+                                                    {if $item.is_collection }
+                                                    <a href="javascript:;" onclick="cancle_collection('{$item.is_collection}','{$item.sid}','map',event)" class="collection">{$item.collection_count}</a>
+                                                    {else}
+                                                    <a href="javascript:;" onclick="add_collection('{$item.sid}','map',event)" class="no-collection">{$item.collection_count}</a>
+                                                    {/if}
+                                                </div>
+                                                <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                            {else}
+                            <div class="space-time-cloud-home-options-null">
+                                <p>暂无任何地图服务～</p>
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                    <!-- 地图服务结束 -->
+
+                    <!-- SDK开始 -->
+                    <div class="space-time-cloud-home-resource-sdk" id="space-time-cloud-home-resource-sdk" style="display:none;">
+                        <div class="space-time-cloud-home-resource-sdk">
+                            <!--<div class="space-time-cloud-home-options-level-title">-->
+                                <!--<div class="l space-time-cloud-home-resource-logo"></div>-->
+                                <!--<div class="l text">SDK</div>-->
+                                <!--<div class="clear"></div>-->
+                            <!--</div>-->
+                            {if $sdk_arr && count($sdk_arr) > 0}
+                            <div class="space-time-cloud-home-resource-content space-time-cloud-home-resource-sdk-content">
+                                <ul>
+                                    {foreach from=$sdk_arr item=item key=key name=sdk_arr}
+                                    <li>
+                                        <div class="l content-logo-style">
+                                            <div class="content-logo-style-content">
+                                                <img src="{if $item.imageUrl} {$item.imageUrl} {else} themes/appcloud/images/new/app_01.png {/if}" alt="sdk_logo"/>
+                                            </div>
+                                        </div>
+                                        <div class="r resource-sdk-content">
+                                            <div class="content-text-style">{$item.title}</div>
+                                            <div class="resource-sdk-content-description">
+                                                <p>{$item.desc}</p>
+                                            </div>
+                                            <div class="resource-sdk-content-operations">
+                                                {if $item.online }
+                                                <div class="l">
+                                                    <a href="{$item.online}" target="_blank">在线查看</a>
+                                                </div>
+                                                {/if}
+                                                {if $item.link }
+                                                <div class="l">
+                                                    <a href="{$item.link}" target="_blank">下载源码</a>
+                                                </div>
+                                                {/if}
+                                                <!--<div class="r resource-sdk-content-operation">-->
+                                                    <!--<span>浏览次数：{$item.hits}</span>-->
+                                                    <!--<span style="margin-left: 50px;">更新时间：{$item.modified}</span>-->
+                                                <!--</div>-->
+                                                <div class="clear"></div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                            {else}
+                            <div class="space-time-cloud-home-options-null">
+                                <p>暂无任何SDK的范例工程～</p>
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                    <!-- SDK结束 -->
+                </div>
+            </div>
+            <!-- 资源中心结束 -->
+        </div>
+
+        <!-- 引入Footer开始 -->
+            <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem -->
+        <!-- 引入Footer结束 -->
+    </div>
+    <!-- #BeginLibraryItem "/library/load_animation.lbi" --><!-- #EndLibraryItem -->
+</body>
+<script type="text/javascript">
+    $(function(){
+        //$(".zoom").hoverZoom();
+        $('#map_serve').click(function () {
+            $(this).css('border-bottom','2px solid #6288DD');
+            $('#map_SDK').css('border-bottom','2px');
+            $('#space-time-cloud-home-resource-map').show();
+            $('#space-time-cloud-home-resource-sdk').hide();
+        });
+
+        $('#map_SDK').click(function () {
+            $(this).css('border-bottom','2px solid #6288DD');
+            $('#map_serve').css('border-bottom','2px');
+            $('#space-time-cloud-home-resource-map').hide();
+            $('#space-time-cloud-home-resource-sdk').show();
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,49 @@
+.purchased .row.app-list >li .span5{
+	float: left;
+}
+
+
+.purchased.confirm .row.tool-list > li .row.include-list .span8 {
+	float: left;
+}
+
+.all-tools .tabs {
+	margin-left: -38px;
+}
+
+.all-tools .container.inner{
+	margin-left: -3px;
+	float: left;
+}
+
+.purchased .row > li.tool-list .arrow span{
+
+	top: -13px;
+}
+
+.purchased .row > li.tool-list .arrow em {
+	top:-14px;
+}
+
+.sign .row.form .forget-password {
+	float: none;
+	margin-left: 92px;
+}
+.sbHolder{
+	display: inline;
+}
+
+.detail .row.comment .arrow {
+	margin: -7px 0 -2px 135px;
+}
+
+
+
+
+
+
+/* new UI */
+
+.banner .container .btn-zondy.banner1 {
+	margin-top: -96px;
+}

@@ -1,0 +1,70 @@
+﻿[
+    {
+        "id": "1",
+        "lx": "1",
+        "children": [
+            {
+                "id": "2",
+                "lx": "1",
+                "children": null,
+                "state": "open",
+                "layer": "永州兴趣点",
+                "text": "待添加",
+                "checked": false,
+                "type": 1,
+                "projection":"degree"
+            },
+            {
+                "id": "3",
+                "lx": "1",
+                "children": null,
+                "state": "open",
+                "layer": "待添加",
+                "text": "待添加",
+                "checked": false,
+                "type": 1,
+                "projection":"degree"
+            }
+        ],
+        "state": "closed",
+        "layer": "生活",
+        "text": "生活",
+        "checked": false,
+        "type": 0,
+        "projection":"degree"
+    },
+    {
+        "id": "4",
+        "lx": "2",
+        "children": [
+            {
+                "id": "5",
+                "lx": "1",
+                "children": null,
+                "state": "open",
+                "layer": "待添加",
+                "text": "待添加",
+                "checked": false,
+                "type": 1,
+                "projection":"degree"
+            },
+            {
+                "id": "6",
+                "lx": "1",
+                "children": null,
+                "state": "open",
+                "layer": "待添加",
+                "text": "待添加",
+                "checked": false,
+                "type": 1,
+                "projection":"degree"
+            }
+        ],
+        "state": "closed",
+        "layer": "服务",
+        "text": "服务",
+        "checked": false,
+        "type": 0,
+        "projection":"degree"
+    }
+]

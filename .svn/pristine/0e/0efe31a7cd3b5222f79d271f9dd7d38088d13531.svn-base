@@ -1,0 +1,30 @@
+<?php
+
+define('IN_ECS', true);
+
+require(dirname(__FILE__) . '/includes/init.php');
+
+//软件中心ajax请求名称数组
+$ajax_sf_arr = array('collection','changePwd','bindOperated','apply_api');
+//应用管理yukang
+$ajax_app_arr = array('create_app','my_app_data_list','app_index','create_app_host','get_my_host_list','restart_app_host'
+	,'open_app_host','close_app_host','delete_app_host','console_app_host','app_on_sale','delete_app','update_install_exe','app_batch_delete','host_batch_delete','get_user_list'
+	,'console_app_host_openstack','download_file','get_user_info','auto_deploy','get_app_status','delete_msg','update_msg',"apply_service_token",'user_regist','get_show_map','get_theme_map');
+
+$action = isset($_REQUEST['act']) ? trim($_REQUEST['act']) : 'default';
+
+foreach ($ajax_sf_arr as $action_name) {
+    if($action == $action_name){
+        include_once(ROOT_PATH . "ajax/ajax_sw/{$action_name}.php");
+        exit;
+    }
+}
+
+foreach ($ajax_app_arr as $action_name) {
+    if($action == $action_name){
+        include_once(ROOT_PATH . "ajax/app_ajax.php");
+        exit;
+    }
+}
+
+?>

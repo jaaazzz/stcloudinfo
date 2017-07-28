@@ -1,0 +1,120 @@
+<style type="text/css">
+
+</style>
+<link href="js/sweetalert.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/sweetalert.min.js"></script>
+<script type="text/javascript">
+    var type='edit_user';
+    $(function(){
+
+        $(".header-user-info").hover(function(){
+            $('.dropdown').show();
+            $(".navi-arrow").removeClass('mouseout').addClass('mousein');
+        },function(){
+            $('.dropdown').hide();
+            $(".navi-arrow").removeClass('mousein').addClass('mouseout');
+        });
+
+        //点击　确定创建、修改用户
+        $(".modal_btns .admin_sure").click(function(){
+            var canpass=false;
+            if($('.password_a').val()||type=='add_user'){
+                var is_pwd=/^(?![^a-zA-Z]+$)(?!\D+$).{6,16}$/;
+                if(!is_pwd.test($('.password_a').val())){
+                    $(".password_a").next().html('6~16个字符，必须至少含字母和数字');
+                    canpass=false;
+                    return;
+                }else{
+                    canpass=true;
+                    $(".password_a").next().html('');
+                }
+            }
+
+            var data={
+                user_name:$(".username_a").val(),
+                email:$(".email_a").val(),
+                remark:$(".remark_a").val()
+            }
+            if(canpass){
+                data.password=$('.password_a').val();
+            }
+
+            $.post('admin_user_list.php',{act:type,user:JSON.stringify(data),user_id:{$admin_id}},function(res){
+                if(res=='ok'){
+                    var title=type=='add_user'?"创建用户成功!":"修改用户成功!";
+                    swal({
+                        title: title,
+                        text: "",
+                        type: "success",
+                        allowOutsideClick:true,
+                        confirmButtonText: "关闭"
+                    });
+                    location.reload();
+                }else{
+                    swal({
+                        title: res,
+                        text: "",
+                        type: "error",
+                        allowOutsideClick:true,
+                        confirmButtonText: "关闭"
+                    });
+                }
+
+            });
+
+        });
+
+    });
+    function edit_user(id) {
+        var id=id;
+        $.post('admin_user_list.php',{act:'get_user_by_id',user_id:id},function(res){
+            var user=JSON.parse(res);
+            $(".edit_admin .username_a").val(user.user_name);
+            $(".edit_admin .email_a").val(user.email);
+            $(".edit_admin .remark_a").val(user.remark);
+            $(".edit_admin .password_a").val('');
+            $(".modal_background.edit_admin_bg,.modal_box.edit_admin").show();
+        });
+    }
+</script>
+<div class="header">
+    <div class="header-title">
+        {$shop_title}
+    </div>
+    <div class="header-user-info">
+        <span class="header-user-name">{$admin_name}</span><i class="navi-arrow"></i>
+        <ul class="dropdown">
+            <li class="drop-loginout"><a onclick="edit_user('{$admin_id}')">修改资料</a></li>
+            <li class="drop-loginout"><a href="privilege.php?act=logout">注销</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="modal_background edit_admin_bg">
+    <div class="modal_box edit_admin" style="width: 525px;height: 400px; ">
+        <div class="modal-header">
+            <span class="title-word">修改资料</span>
+            <span class="close" aria-hidden="true" data-dismiss="modal"></span>
+        </div>
+        <div class="modal-body">
+            <table>
+                <tr>
+                    <td>用户名：</td><td><input type="text" readonly class="username_a"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>密码：</td><td><input type="password" class="password_a"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>邮箱：</td><td><input type="text" readonly class="email_a"/><div class="error_tip"></div></td>
+                </tr>
+                <tr>
+                    <td>备注：</td><td><input type="text" class="remark_a"/></td>
+                </tr>
+            </table>
+            <div class="modal_btns">
+                <a class="modal_btn admin_sure">确定</a>
+                <a class="modal_btn cancel">取消</a>
+            </div>
+        </div>
+    </div>
+</div>

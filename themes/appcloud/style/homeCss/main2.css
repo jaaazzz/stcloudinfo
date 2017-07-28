@@ -1,0 +1,187 @@
+body {
+  font-family: 'Microsoft YaHei';
+}
+// .navbar {
+//   min-height: 96px;
+// }
+// .navbar-default {
+//   background-color: #162f43;
+//   border-color: #0e1d2a;
+// }
+.btn-more {
+  width: 70px;
+  height: 30px;
+}
+.midnav {
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+.midnav-default {
+  background-color: #162f43;
+  color: #fff;
+}
+.midnav-white {
+  background-color: #fff;
+}
+.midnav-dark {
+  background-color: #323232;
+  color: #fff;
+}
+.infobox {
+  padding: 10px 0 30px;
+}
+.infoCaption {
+  margin: 40px 0 50px;
+}
+.infoCaption > .infoTitle {
+  color: #152935;
+  margin-bottom: 16px;
+}
+.infoCaption > .infoTitle_h3 {
+  color: #fff;
+  margin-bottom: 16px;
+}
+.infoCaption > .info-tips {
+  color: #c6c6c6;
+}
+.infoCaption > ul.list-inline > li {
+  border-right: 1px solid #c6c6c6;
+}
+.infoCaption > ul.list-inline > li:last-child {
+  border-right: none;
+}
+.infoCaption > ul.list-inline > li > a {
+  color: #c6c6c6;
+}
+.infoCaption > ul.list-inline > li > a:hover,
+.infoCaption > ul.list-inline > li > a:focus {
+  text-decoration: none;
+  color: #fff;
+}
+.infoCaption > .moreInfo {
+  margin-top: 25px;
+}
+.footernav {
+  padding: 14px 0;
+  background: url(../../images/homeimage/底部条纹.png);
+}
+.footernav > .container {
+  color: #95c7e5;
+  font-size: 12px;
+}
+.fastlink {
+  padding: 24px 0 6px;
+}
+.fastlink > .fastlink-title {
+  margin-bottom: 8px;
+  padding-bottom: 16px;
+  width: 96px;
+  border-bottom: 1px solid #a6deff;
+  color: #a6deff;
+}
+.fastlink > ul {
+  list-style: none;
+  padding-left: 0;
+}
+.fastlink > ul > li.fastlink-link {
+  padding: 8px 0;
+  text-decoration: none;
+}
+.fastlink > ul > li.fastlink-link > a {
+  color: #95c7e6;
+}
+.fastlink > ul > li.fastlink-link > a:hover,
+.fastlink > ul > li.fastlink-link > a:focus {
+  text-decoration: none;
+  color: #fff;
+}
+.service-box {
+  margin: 50px 16px;
+  height: 100px;
+}
+.service-box > .service-box_img {
+  vertical-align: middle;
+  display: table-cell;
+}
+.service-box > .service-box_img > a:hover,
+.service-box > .service-box_img > a:focus {
+  text-decoration: none;
+  color: #fff;
+}
+.service-box > .service-box_body {
+  display: table-cell;
+  color: #fff;
+  padding-left: 16px;
+}
+.service-box > .service-box_body > .service-box_h3 > a {
+  color: #fff;
+}
+.service-box > .service-box_body > .service-box_h3 > a:hover,
+.service-box > .service-box_body > .service-box_h3 > a:focus {
+  text-decoration: none;
+  color: #fff;
+}
+.service-box > .service-box_body > p > a {
+  color: #fff;
+}
+.service-box > .service-box_body > p > a:hover,
+.service-box > .service-box_body > p > a:focus {
+  text-decoration: none;
+  color: #fff;
+}
+.col-20-per-xs,
+.col-20-per-sm,
+.col-20-per-md,
+.col-20-per-lg {
+  position: relative;
+  min-height: 1px;
+  padding-left: 0;
+  padding-right: 0;
+}
+.col-20-per-xs {
+  float: left;
+  width: 50%;
+}
+@media (min-width: 768px) {
+  .col-20-per-sm {
+    float: left;
+    width: 50%;
+  }
+}
+@media (min-width: 992px) {
+  .col-20-per-md {
+    float: left;
+    width: 20%;
+  }
+}
+@media (min-width: 1200px) {
+  .col-20-per-lg {
+    float: left;
+    width: 20%;
+  }
+}
+.geo-product .product-card:nth-child(2n+1) {
+  background-color: #f1f1fd;
+}
+.geo-product .product-card:nth-child(2n) {
+  background-color: #ecf2f2;
+}
+.product-card {
+  height: 390px;
+}
+.product-card > .product-card_content {
+  padding: 16px;
+}
+.product-card > .product-card_content > h3 {
+  margin: 0 0 16px;
+}
+.product-card > .product-card_bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  box-sizing: border-box;
+  padding: 16px;
+}
+.product-card > .product-card_bottom > p {
+  padding-bottom: 12px;
+}

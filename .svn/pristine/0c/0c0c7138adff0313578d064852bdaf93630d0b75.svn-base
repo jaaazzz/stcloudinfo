@@ -1,0 +1,11 @@
+{
+    "layersProp":[
+        {"layer":"KBUIPT433100","name":"餐饮","value":"0","url":"./themes/appcloud/onlinesrc/images/美食.png"},
+        {"layer":"KBUIPT433100","name":"购物","value":"1","url":"./themes/appcloud/onlinesrc/images/购物.png"},
+        {"layer":"KBUIPT433100","name":"教育","value":"2","url":"./themes/appcloud/onlinesrc/images/教育.png"},
+        {"layer":"KBUIPT433100","name":"酒店宾馆","value":"3","url":"./themes/appcloud/onlinesrc/images/酒店.png"},
+        {"layer":"KBUIPT433100","name":"旅游","value":"4","url":"./themes/appcloud/onlinesrc/images/景点.png"},
+        {"layer":"KBUIPT433100","name":"医疗卫生","value":"5","url":"./themes/appcloud/onlinesrc/images/医疗.png"},
+        {"layer":"KBUIPT433100","name":"银行","value":"6","url":"./themes/appcloud/onlinesrc/images/金融.png"}
+    ]
+}

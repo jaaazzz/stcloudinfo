@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>资源中心_地图服务_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/mapservice.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+    </head>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <div class="resource-navigation clearfix">
+                <a href="resource.php?do=mapservice" class="col-sm active">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/map_s.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            地图服务
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=sdk" class="col-sm sdk">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/sdk.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            SDK
+                        </div>
+                    </div>
+                </a>
+                <div class="col-sm blank-div"></div>
+            </div>
+            <div class="resource-content">
+                <ul>
+                    <!-- {if $items }  -->
+                    <!-- {foreach from=$items item=item key=key name=items} -->
+                    <li class="clearfix">
+                        <div class="content-img col-sm">
+                            {if strtoupper($item.type) == 'MRMS_MAPX'}
+                            <img src="themes/appcloud/images/home/map_server.png" alt="map_server_logo"/>
+                            {elseif strtoupper($item.type) == 'VECTOR_OGC'}
+                            <img src="themes/appcloud/images/home/map_ogc.png" alt="map_ogc_logo"/>
+                            {elseif strtoupper($item.type) == 'TILE_OGC'}
+                            <img src="themes/appcloud/images/home/ogc.png" alt="ogc_logo"/>
+                            {elseif strtoupper($item.type) == 'MRMS_TDF'}
+                            <img src="themes/appcloud/images/home/tile.png" alt="tile_logo"/>
+                            {elseif strtoupper($item.type) == 'G3D'}
+                            <img src="themes/appcloud/images/home/g3d.png" alt="g3d_logo"/>
+                            {else}
+                            <img src="themes/appcloud/images/home_map_icon.png" alt="other_logo"/>
+                            {/if}
+                        </div>
+                        <div class="content-body col-sm">
+                            <div class="content-body-title"><a href="{$item.detail_info_address}">{$item.name}</a></div>
+                            <div class="content-body-substance">
+                                <div class="substance">
+                                    <!-- {if $item.wfs_base_address || $item.wmts_base_address || $item.wms_base_address }  -->
+                                    <div class="gis-inline-block" style="vertical-align:top">服务地址：</div>
+                                    <div class="gis-inline-block">
+                                        <!-- {if $item.wfs_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wfs_base_address}">{$item.wfs_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                        <!-- {if $item.wmts_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wmts_base_address}">{$item.wmts_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                        <!-- {if $item.wms_base_address }  -->
+                                        <div>
+                                            <a href="{$item.wms_base_address}">{$item.wms_base_address}</a>
+                                        </div>
+                                        <!-- {/if} -->
+                                    </div>
+                                    <!-- {/if} -->
+                                </div>
+                                <div class="substance">
+                                    <span>服务类型：</span>
+                                    <span>{$item.type}</span>
+                                </div>
+                                <div class="substance token-div">
+                                    <!-- {if $item.token_str }  -->
+                                    <div class="gis-inline-block" style="vertical-align:top">服务tokens：</div>
+                                    <div class="gis-inline-block service-token">
+                                    <!-- {foreach from=$item.token_str item=item2 key=key2 name=items2} -->
+                                        <!-- {if $key2 eq 0 }  -->
+                                        <div>
+                                            {$item2}
+                                            {if $smarty.foreach.items2.total > 2}
+                                            <a href="javascript:void(0)" onclick="spread(event)" class="spread-a">展开</a>
+                                            {/if}
+                                        </div>
+                                        <!-- {else} -->
+                                        <div class="hide">{$item2}</div>
+                                        <!-- {/if} -->
+                                    <!-- {/foreach} -->
+                                    </div>
+                                    <!-- {/if} -->
+                                </div>
+                            </div>
+                            <div class="content-body-btn">
+                                <!-- {if $item.preview_address }  -->
+                                <a target="_blank" href="{$item.preview_address}" class="gis-inline-block p-btn">预览</a>
+                                <!-- {/if} -->
+                                <!-- {if $item.surface_preview_address }  -->
+                                <a target="_blank" href="{$item.surface_preview_address}" class="gis-inline-block p-btn">平面预览</a>                                
+                                <!-- {/if} -->
+                                <!-- {if $item.globe_preview_address }  -->
+                                <a target="_blank" href="{$item.globe_preview_address}" class="gis-inline-block p-btn">球面预览</a>                                
+                                <!-- {/if} -->
+                                <a href="javascript:void(0)" class="gis-inline-block p-btn" onclick="apply_token()">申请</a>
+                                <!-- {if $item.is_collection }  -->
+                                <a href="javascript:;" onclick="cancle_collection('{$item.is_collection}','{$item.sid}','map',event)" class="collection">{$item.collection_count}</a>
+                                <!-- {else} -->
+                                <a href="javascript:;" onclick="add_collection('{$item.sid}','map',event)" class="no-collection">{$item.collection_count}</a>
+                                <!-- {/if} -->
+                            </div>
+                        </div>
+                    </li>                    
+                    <!-- {/foreach} -->
+                    <!-- {/if} -->
+                </ul>
+            </div>
+        </div>
+        <div id="pageId">
+        </div>
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript">
+        $(function(){
+            /* 分页 begin */
+            {if $page_count && $page}
+            var max_page = {$page_count};
+            var current_page = {$page};
+            initPageHtml(max_page,current_page);
+            {/if}
+            //初始化分页
+            function initPageHtml(maxPage,current_page){
+                zdPage.creatPageHtml({
+                    current_pno : current_page,
+                    pagerId : 'pageId',
+                    total : maxPage,
+                    mode : 'link',
+                    getLink : function(n){
+                        return "{$p_url}p="+n;
+                    }
+                })            
+            }
+            /* 分页 end */
+        })
+    </script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/mapservice.js"></script>
+</html>

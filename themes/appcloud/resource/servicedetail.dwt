@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xml:lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <title>资源中心_地图服务_{$shop_name}</title>
+        <meta name="Keywords" content="{$keywords}" />
+        <meta name="Description" content="{$description}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="themes/appcloud/images/favicon.ico" rel="shortcut icon"/>
+        <link href="bootstrap.css" rel="stylesheet" type="text/css" />
+        <link href="css/base.css" rel="stylesheet" type="text/css" />
+        <link href="css/mapservice.css" rel="stylesheet" type="text/css" />
+        <!-- <link href="main.css" rel="stylesheet" type="text/css" /> -->
+        <!-- {insert_scripts files='jquery-1.7.2.min.js,bootstrap.min.js,g-common.js} -->
+        <!--[if lt IE 9]>
+          {insert_scripts files='html5shiv.js'}
+        <![endif]-->
+        <style type="text/css">.navbar-wrapper-active{
+        background:-webkit-linear-gradient(top,#150b57,#1b1160);background:-ms-linear-gradient(top,#150b57,#1b1160);background:-moz-linear-gradient(top,#150b57,#1b1160);background:linear-gradient(top,#150b57,#1b1160);
+    }</style>
+    </head>
+    <style>
+        .content-body{
+            border:1px solid #dcdcdc;
+            width:200px;
+            padding:10px;
+        }
+        .content-head{
+            width:180px;
+            margin:5px 10px;
+            border-bottom:1px solid #dcdcdc;
+        }
+        .service-content:focus{outline:none;}
+        .service-type-list{
+            width:100%;
+            height:24px;
+            line-height:24px;
+        }
+
+        .service-detail-catalogue{width:100%;}
+        .client-service-title{display:inline-block;width:80px;text-align:right;height:30px;line-height:30px;}
+        .service-type-name{display:inline-block;width:70px;height:20px;line-height:20px;margin-left:20px;color:#6389de;cursor:pointer;background:#fff;float: left;}
+        .service-x{margin-left:15px;cursor:pointer;display: none;float: left;padding:0;height:20px;width:20px;line-height:20px;font-size:16px;}
+    </style>
+    <body>
+        <!-- #BeginLibraryItem "/library/header.lbi" --><!-- #EndLibraryItem -->
+        <div class="container">
+            <!-- <div class="resource-navigation clearfix">
+                <a href="resource.php?do=mapservice" class="col-sm">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/map_s.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            地图服务
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=sdk" class="col-sm sdk">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/home/sdk.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            SDK
+                        </div>
+                    </div>
+                </a>
+                <a href="resource.php?do=service" class="col-sm  active">
+                    <div class="tab-content-div clearfix">
+                        <div class="tab-content-img col-sm">
+                            <img src="themes/appcloud/images/cat_27_active.png">
+                        </div>
+                        <div class="tab-content-text col-sm">
+                            服务资源
+                        </div>
+                    </div>
+                </a>
+                <div class="col-sm blank-div"></div>
+            </div> -->
+            <div class="service-detail-catalogue">
+                <div style="width:100%;height:40px;background:#999;">
+                    <ul>
+                        <li class="service-detail-btn" style="float:left;width:100px;padding:0 15px;text-align:center;height:40px;line-height:40px;font-size:16px;color:blue;cursor:pointer;">服务详情</li>
+                        <li class="map-praview-btn" style="float:left;width:100px;padding:0 15px;text-align:center;height:40px;line-height:40px;font-size:16px;color:blue;cursor:pointer;">地图预览</li>
+                    </ul>
+                </div>
+            </div>
+        <!-- 服务详情 -->
+            <div class="service-detail" style="width:1170px;margin:0 auto;">
+                
+                <div class="service-sign-message" style="width:100%;">
+                    <h4 style="font-size:16px;">服务标识信息</h4>
+                    <div style="width:100%;box-sizing:border-box;padding:10px 15%;height:256px;line-height:256px;">
+                        <span>缩略图：</span><img id="serviceImg" src="{$service_img}" style="width:256px;height:256px;" onerror="javascript:this.src='themes/appcloud/resource/0F5B63DA-0062-41EA-8D44-185D57060137.png'" alt="暂未提供缩略图！">
+                    </div>
+                </div>
+                <div style="clear:both;height:2px;width:100%;"></div>
+                <div class="client-message" style="width:100%;">
+                    <h4 style="font-size:16px;">基本资料信息</h4>
+                    <form style="width:100%;box-sizing:border-box;padding:10px 15%;margin:0;">
+                        <div class="client-message-lists" style="width:100%;margin-top:10px;">
+                            <span class="client-service-title">访问权限：</span>
+                            <input class="openService" type="radio" name="accessright" value="open" disabled><span>公开</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input class="privateService" type="radio" name="accessright" value="private" disabled><span>私有</span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">服务名称：</span>
+                            <span id="service-name" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;">{$service.name}</span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">发布单位：</span>
+                            <span id="release-section" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;">{$service.tenantGroup.groupName}</span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">关键词：</span>
+                            <span id="key-word" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;">{$service.tag}</span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">空间参考：</span>
+                            <span id="spatial-reference" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;"></span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">服务版本：</span>
+                            <span id="serve-version" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;">K10.2</span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">专题类型：</span>
+                            <span id="subject-type" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;">{$service.themeType.name}</span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">注册人：</span>
+                            <span id="register-name" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;">{$service.createdBy}</span>
+                        </div>
+                        <div class="client-message-lists " style="width:50%;float:left;margin-top:10px;">
+                            <span class="client-service-title">服务类型：</span>
+                            <span id="service-type" type="text" name="" value="" style="margin:0;padding:0 5px;height:30px;line-height:30px;">{$service.type}</span>
+                        </div>
+                        <div style="clear:both;width:100%;height:2px;"></div>
+                    </form>
+                </div>
+            </div>
+        <!-- 地图预览 -->
+            <div class="map-preview" style="width:1170px;margin:0 auto;display:none;">
+                <iframe src="" address="{$service_private_url}" style="width:80%;height:600px;margin:10px auto;"></iframe>
+            </div>
+
+        <!-- #BeginLibraryItem "/library/footer.lbi" --><!-- #EndLibraryItem --> 
+    </body>
+    <!-- {insert_scripts files='pagination.js'} -->
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/mapservice.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var serviceIspublic = "{$service.requireToken}";
+            if(serviceIspublic == true){
+                $('.openService').attr('checked','checked');
+            }else if(serviceIspublic == false){
+                $('.privateService').attr('checked','checked');
+            };
+            $('.service-detail-btn').click(function(){
+                $('.map-preview').css({'display':'none'});
+                $('.service-detail').css({'display':'block'});
+            });
+            $('.map-praview-btn').click(function(){
+                $('.service-detail').css({'display':'none'});
+                $('.map-preview').css({'display':'block'});
+                var $map_frame = $('.map-preview iframe');
+                if(!$map_frame.attr('src')){
+                    $map_frame.attr('src',$map_frame.attr('address'));
+                }
+            });
+            
+        })
+    </script>
+</html>

@@ -1,0 +1,132 @@
+var group_type;
+var goods_id = {$goods.goodsId};
+var basePrice = {$goods.shopPrice};
+var total_amount = 0;
+var price_num = 1;
+var price_unit = 1;//如果是月，则为1；如果是年，则为12.
+var base_price_list = {$price_list_json};
+var goods_trial_period;
+{if $goods.goodsTrialPeriod}
+    goods_trial_period = {$goods.goodsTrialPeriod};
+{else}
+    goods_trial_period = 0;
+{/if}
+if($('.price-group').val()){
+    group_type = $('.price-group').val();
+}
+
+$(".btn-zondy.pay").on("click", function(){
+{if ($has_login)}
+    if(!inputOrderCountToPayModel()){
+        return false;
+    }
+    if (price_unit == 1) {
+        $(".confirm-date span").html(price_num + "个月");
+    } else if (price_unit == 12){
+        $(".confirm-date span").html(price_num + "年");
+    }
+    $(".confirm-price span").html((updatePrice()));
+    
+    $("#goto-buy-page-btn").html("提&nbsp;&nbsp;&nbsp;交");
+    updateDate(price_num*price_unit*31);
+    addToOrder(false);
+{else}
+    GucLogin();
+{/if}
+});
+
+{if $goods.goodsTrialPeriod && $goods.goodsTrialPeriod > 0}
+$(".btn-zondy.try").on("click", function(){
+{if ($has_login)}
+    var goods_trial_period = {$goods.goodsTrialPeriod};
+    $(".confirm-count").hide();
+    $(".confirm-date span").html("试用"+goodsTrialPeriod+"天");
+    $(".confirm-price span").html("¥0");
+    $("#goto-buy-page-btn").html("确&nbsp;&nbsp;&nbsp;认");
+    updateDate(goods_trial_period);
+    addToOrder(true); 
+{else}
+    GucLogin();
+{/if}       
+});
+{/if}
+
+
+$(".time-num").on("change", function(){
+    price_num = $(this).val();
+    updatePrice();
+});
+
+$(".time-unit").on("change",function(){
+    price_unit = $(this).val();
+    updatePrice();
+});
+
+function updatePrice(){
+    if(base_price_list.length > 0){
+        for(var key in base_price_list){
+            if(base_price_list[key].group_type == group_type){
+                total_amount = (basePrice * base_price_list[key].goods_price_ratio + base_price_list[key].price * base_price_list[key].price_ratio) * price_num * price_unit * order_count;
+                total_amount = setPriceFormat(total_amount,1); //to deal with js 0.1 * 3 bug
+            }
+        }
+    }
+    else{
+        total_amount = basePrice * price_num * price_unit * order_count;
+        total_amount = setPriceFormat(total_amount,1); //to deal with js 0.1 * 3 bug
+    }
+    var total_amount_html = total_amount == 0 ? 0 : total_amount;
+    $(".row.price span").html(total_amount_html);
+    return total_amount;
+}
+
+function addToOrder(is_try) {
+
+    var period = price_unit * price_num;
+    var $buypage = $("#goto-buy-page");
+    var $buypagebtn = $("#goto-buy-page-btn");
+    $buypage.modal('show');
+    var addonList,packageName;
+    $buypagebtn.off('click').click(function(){
+        $(this).addClass('disabled').attr('disabled','disabled').html("处理中...");
+        if (is_try) {
+            var is_try_group = group_type ? group_type : 10 ; 
+            util.gisAddToCart(goods_id,period,is_try,addonList,packageName,goods_trial_period,is_try_group);
+        } else {
+            var order_count = $(".order-count-num").val();
+            if(!order_count){
+                order_count = $(".order-count-num4desktop").val();
+            }
+            location.href = 'flow.php?step=finish_new_order&goods_id=' + goods_id + '&period=' + period + '&total_amount=' + total_amount + '&is_tried=' + is_try + '&order_type=0' + '&order_count=' + order_count +'&group=' + group_type;
+        }
+    });
+        
+}
+
+function getPriceGroupByNum(num){
+    base_price_list = price_group;
+    if(base_price_list){
+        var len = base_price_list.length;
+        for(var i = len-1;i>=0;i--){
+            var minnum = base_price_list[i].minnum;
+            if(num>=minnum){
+                group_type = base_price_list[i].group_type;
+                break;
+            }
+        }
+
+    }
+}
+
+function pluginRefresh(){
+    updatePrice();
+}
+
+$('.price-group').on("change", function(){
+    group_type = $(this).val();
+    updatePrice();
+})
+
+{if $bac_act neq 'order'}
+updatePrice();
+{/if}

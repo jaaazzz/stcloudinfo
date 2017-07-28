@@ -1,0 +1,783 @@
+//Iris add
+{if $bac_act eq 'order'}
+var page_type = 'order';
+var order_goods_name = '{$goods_name}';
+var end_time = '{$end_time}';
+var rest_day = {$rest_day};
+var assembled_addon_list = {$assembled_addon_list};
+var order_id = {$order_sn};
+{if $scale_type}
+var group_type = {$scale_type};
+{/if}
+{else}
+var page_type = '';
+{/if}
+{if $is_trial}
+var is_trial = true;
+{else}
+var is_trial = false;
+{/if}
+
+var goods_id = {$goods.goodsId};
+var base_price = {$goods.shopPrice};
+var group_base_price = base_price;
+var total_price = 0;
+var capacity = {$goods.capacity};
+var COOKIE_NAME = page_type ? "ZONDY_ORDER":"ZONDY_CUSTOMIZE";
+var my_cookie;
+var price_num = 1;
+var price_unit = 1;//如果是月，则为1；如果是年，则为12.
+var could_Move = true;
+var current_index = page_type ? order_id : {$goods.goodsId};
+var goods_addon_list = {$addon_list_json};
+var page_data = [];
+var has_file = !! '{$goods.hasFile}';
+var base_price_list,group_type;
+var goods_trial_period;
+{if $goods.goodsTrialPeriod}
+    goods_trial_period = {$goods.goodsTrialPeriod};
+{else}
+    goods_trial_period = 0;
+{/if}
+
+{if $goods.goodsId eq 381}
+    var CUSTOM_PKG_CONFIG = {
+        BASIC:[385, 399, 396, 397, 390],
+        STANDARD:[385, 399, 396, 397, 390, 386, 401, 395],
+        PREMIUM:[385, 399, 396, 397, 390, 386, 401, 395, 382, 387, 391, 393, 400],
+    };
+{/if}
+
+{if $assembled_addon_list}
+    var assembled_addon_list_arry = [];
+    for(var key in assembled_addon_list){
+        assembled_addon_list_arry.push(assembled_addon_list[key]);
+    }
+{/if}
+
+{if $bac_act eq 'order'}
+    pluginRefresh();
+{/if}
+
+function getPriceGroupByNum(num){
+    base_price_list = price_group;
+    if(base_price_list){
+        var len = base_price_list.length;
+        for(var i = len-1;i>=0;i--){
+            var minnum = base_price_list[i].minnum;
+            if(num>=minnum){
+                group_type = base_price_list[i].group_type;
+                break;
+            }
+        }
+
+    } 
+}
+
+//更新插件列表的插件价格
+function pluginRefresh(){
+    if(group_type && page_data.length > 0){
+        for (var i = 0; i < page_data.length; i++) {
+            page_data[i].price = updatePluginPrice(page_data[i],goods_addon_list[i].price);
+        }
+
+        var has_chosen = $("#has-been-chosen").find('.addon-item');
+        has_chosen.each(function(index){
+            $(this).remove();
+        });                
+
+        var to_choose = $("#to-be-chosen").find('.addon-item');
+            to_choose.each(function(index){
+                $(this).remove();
+            });
+
+        renderData();                  
+    }
+}
+
+//根据购买份数更新插件单价
+function updatePluginPrice(data_obj,data_price){
+    data_obj.price = data_price;
+    for (var j in  data_obj.addon_group) {
+        if (data_obj.addon_group[j]['scale_type'] == group_type) {
+            var goods_ratio = data_obj.addon_group[j]['price_ratio'];
+            var cur_price = data_obj.price * goods_ratio;
+            data_obj.price = ((cur_price * 100) /100).toFixed(2);
+            break;              
+        }
+    }
+    return data_obj.price;
+}
+
+function getBasePrice(price){
+        if(group_type){
+            {foreach from=$goods_group  item=ginfo }
+                var type = '{$ginfo.scaleType}';
+                if(type == group_type){
+                    price = price * {$ginfo.priceRatio};
+                }
+             {/foreach}
+        }
+     return price;
+}
+
+for (var i = 0; i < goods_addon_list.length; i++) {
+
+    var goods_price = goods_addon_list[i].price ;
+
+    if(group_type){
+        for (var j in  goods_addon_list[i].addon_group) {
+             if (goods_addon_list[i].addon_group[j]['scaleType'] == group_type) {
+                var goods_ratio = goods_addon_list[i].addon_group[j]['priceRatio'];
+                goods_price = setPriceFormat(goods_price * goods_ratio);
+                break;
+            }
+     }
+    }
+
+    page_data.push({
+        "id": goods_addon_list[i].id,
+        "name": goods_addon_list[i].name[0],
+        "is_official": goods_addon_list[i].is_official[0],
+        "price": goods_price,
+        "original_price" : goods_addon_list[i].price[0],                   //商品原价
+        "pic": goods_addon_list[i].thumb[0] == '' ? './images/default.png' : goods_addon_list[i].thumb[0],
+        "is_fixed":goods_addon_list[i].is_basic[0] == 1 ? true:false,
+        "url":"sfw.php?do=goods&id="+goods_addon_list[i].id+"&parent_id="+goods_id,
+        "purchased": false,
+        "capacity": goods_addon_list[i].capacity[0],
+        "addon_group": goods_addon_list[i].addon_group[0],
+        "trial_period": goods_addon_list[i].trial_period[0],
+        "chosen":false
+    });
+}
+
+
+function init(){
+    my_cookie = fetchCookie();
+    renderData();
+
+    $('#has-been-chosen').on('click', '.addon-item .delete', function(e){
+        var _self = $(e.target).parent('.addon-item');
+        var _id = _self.data('id');
+        _self.remove();
+        deleteCartTpl(_id);
+        $('#to-be-chosen .addon-item.chosen').each(function(){
+            if ($(this).data('id') == _id) {
+                $(this).removeClass('chosen');
+            }
+        });
+        adjustBoxStyle();
+    })
+
+    // $('#to-be-chosen').on('click', '.addon-item:not(.chosen) .add', function(e){
+    //     var _self = $(e.target).parent('.addon-item');
+    //     addCartTpl(_self);
+    //     _self.addClass('chosen');
+    // });
+
+    $('#to-be-chosen').on('click', '.addon-item:not(.chosen) .add', addCartTpl);
+
+{if $bac_act eq 'order'}
+    //添加插件页面购买操作
+    $(".btn-zondy.pay").on("click", function(){
+        $(".confirm-date span").html(rest_day + "天");
+        $(".confirm-deadline span").html(end_time);    
+        $(".confirm-price span").html(setPriceFormat(base_price * rest_day / 30,1));
+        $("#goto-buy-page-btn").html("提&nbsp;&nbsp;&nbsp;交");
+        var addon_list = [];
+        if (page_type == 'order' && !is_trial) {
+            for (var i = 0; i < page_data.length; i++) {
+                if (page_data[i].chosen && assembled_addon_list_arry.indexOf(page_data[i].id) == -1) {
+                    addon_list.push(page_data[i].id);
+                }
+            }           
+        }
+        else{
+            for (var i = 0; i < page_data.length; i++) {
+                if (page_data[i].chosen) {
+                    addon_list.push(page_data[i].id);
+                }
+            }
+        }
+        reassemble();
+    });
+{else}
+    //第一次购买页面购买按钮操作
+    $(".btn-zondy.pay").on("click", function(){
+        {if ($has_login)}
+            $(".confirm-count").show();
+
+            if(!inputOrderCountToPayModel()){
+                return false;
+            }
+
+            if (price_unit == 1) {
+                $(".confirm-date span").html(price_num + "个月");
+            } else if (price_unit == 12) {
+                $(".confirm-date span").html(price_num + "年");
+            }
+            $(".confirm-price span").html(setPriceFormat(group_base_price * price_num * price_unit * order_count,1));
+            $("#goto-buy-page-btn").html("提&nbsp;&nbsp;&nbsp;交");
+            updateDate(price_num*price_unit*30);
+            addToOrder(false);
+        {else}
+            GucLogin();
+        {/if}
+    });
+    {if $goods.goodsTrialPeriod && $goods.goodsTrialPeriod > 0}
+    $(".btn-zondy.try").on("click", function(){
+    {if ($has_login)}
+        var goods_trial_period = {$goods.goodsTrialPeriod};
+        $(".confirm-count").hide();
+        $(".confirm-date span").html("试用"+goods_trial_period+"天");
+        $(".confirm-price span").html("¥0");
+        $("#goto-buy-page-btn").html("确&nbsp;&nbsp;&nbsp;认");
+        updateDate(goods_trial_period);
+        addToOrder(true);  
+    {else}
+        GucLogin();
+    {/if} 
+    });
+    {/if}
+
+    $(".time-num").on("change", function(){
+        price_num = $(this).val();
+        updatePrice();
+    });
+    $(".time-unit").on("change",function(){
+        price_unit = $(this).val();
+        updatePrice();
+    });
+    
+    {if $goods.goodsId eq 381}
+        preCustomPackage();
+    {/if}
+
+{/if}
+
+};
+
+
+function fetchCookie() {
+    my_cookie = eval('('+$.cookie(COOKIE_NAME)+')');
+
+    if (!my_cookie) {
+        my_cookie = {};
+        $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+    }
+    if (!my_cookie[current_index]) {
+        my_cookie[current_index] = [];
+
+        //Add fixed addons into cookies
+        for (var i in page_data) {
+            if (page_data[i].is_fixed) {
+                my_cookie[current_index].push(parseInt(page_data[i].id));
+            }
+        }
+
+        $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+    } else {
+         for (var i in page_data) {
+            for (var j in my_cookie[current_index]) {
+                if (page_data[i].id == my_cookie[current_index][j]) {
+                    page_data[i].chosen = true;
+                }
+            }
+        }
+    }
+    checkPreCustom(my_cookie[current_index]);
+    return my_cookie;
+};
+
+
+function renderData() {
+    var fixed_array = [];
+    var purchased_array = [];
+    var chosen_array = [];
+
+    for (var i in page_data) {
+
+        if (page_type == 'order') {
+            for (var k in assembled_addon_list) {
+                if (page_data[i].id == assembled_addon_list[k]) {
+                    page_data[i].purchased = true;
+                }
+            }
+        }
+
+        if (page_data[i].is_fixed) {
+            fixed_array.push(page_data[i]);
+        } else if (page_data[i].purchased) {
+            purchased_array.push(page_data[i]);
+        } else {
+            chosen_array.push(page_data[i]);
+        }
+        
+    }
+
+
+    if (fixed_array.length > 0) {
+        for (var i in fixed_array) {
+            var tpl = $("#has-been-chosen-template").tmpl(fixed_array[i]);
+            tpl.addClass(fixed_array[i].purchased?(is_trial?'fixed purchased trial':'fixed purchased'):'fixed');
+            $('#addon-add').before(tpl);
+            util.ellipsisWidth(tpl);
+            createToBeChosenTpl(fixed_array[i]);
+        }
+    }
+
+    if (purchased_array.length > 0) {
+        for (var i in purchased_array) {
+            var tpl = $("#has-been-chosen-template").tmpl(purchased_array[i]);
+            tpl.addClass(is_trial?'purchased trial':'purchased');
+            $('#addon-add').before(tpl);
+            util.ellipsisWidth(tpl);
+            createToBeChosenTpl(purchased_array[i]);
+        }
+    }
+
+    if (chosen_array.length > 0) {
+        for (var i in chosen_array) {
+            if (chosen_array[i].chosen) {
+                createHasBeenChosenTpl(chosen_array[i]);
+            }
+           createToBeChosenTpl(chosen_array[i]);
+        }
+    }
+
+    updatePrice();
+    adjustBoxStyle($('#to-be-chosen'));
+    adjustBoxStyle();
+    //修改使用懒加载后进行版本切换无法加载图片的问题
+    echo.init();
+};
+
+function createHasBeenChosenTpl(data){
+    var tpl = $("#has-been-chosen-template").tmpl(data);
+    tpl.addClass(is_trial?'trial':'');
+    tpl.data('id', data.id);
+    $('#addon-add').before(tpl);
+    util.ellipsisWidth(tpl);
+    adjustBoxStyle();
+};
+
+function createToBeChosenTpl(data){
+    var tpl = $("#to-be-chosen-template").tmpl(data);
+    tpl.addClass(is_trial?'trial':'');
+    if (data.chosen || data.is_fixed || data.purchased) {
+        tpl.addClass('chosen');
+    }
+    tpl.data('id', data.id);
+    tpl.appendTo('#to-be-chosen');
+    
+    util.ellipsisWidth(tpl); 
+};
+
+function adjustBoxStyle(box){
+    if (box === undefined) {
+        box = $('#has-been-chosen');
+    }
+    var addItem = $('#addon-add');
+    var items = box.find('.addon-item, #addon-add');
+    var itemsLength = items.length;
+    var line = (itemsLength - 1) / 7 >> 0; //floor
+    items.each(function(index){
+        var num = index + 1;
+
+        if (7 * line < num && num <= 7 * (line + 1)) {
+            $(this).addClass('box-footer');
+        } else {
+            $(this).removeClass('box-footer');
+        }
+
+        if (index % 7 == 0) {
+            $(this).addClass('line-header');
+        } else {
+            $(this).removeClass('line-header');
+        }
+    });
+
+    if (itemsLength % 7 == 0) {
+        addItem.addClass('line-footer');
+    } else {
+        addItem.removeClass('line-footer');
+        items.last().addClass('all-last');
+    }
+
+};
+
+function adjustChooseBoxStyle(box){
+    if (box === undefined) {
+        box = $('#to-be-chosen');
+    }
+    var items = box.find('.addon-item[data-show="true"]');
+    var itemsLength = items.length;
+    var line = (itemsLength - 1) / 7 >> 0; //floor
+    items.each(function(index){
+        var num = index + 1;
+
+        if (7 * line < num && num <= 7 * (line + 1)) {
+            $(this).addClass('box-footer');
+        } else {
+            $(this).removeClass('box-footer');
+        }
+
+        if (index % 7 == 0) {
+            $(this).addClass('line-header');
+        } else {
+            $(this).removeClass('line-header');
+        }
+    });
+
+};
+
+function addCartTpl(e){
+    if (!could_Move) {
+        return;
+    } else {
+        could_Move = false;
+    }
+    var _self = $(e.target).parent('.addon-item');
+    var _id = _self.data('id');
+    var i = 0;
+    while (i < page_data.length) {
+        if (page_data[i].id == _id){
+            page_data[i].chosen = true;
+            page_data[i].move = true;
+            _self.addClass('chosen');
+            var addPosition = $('#addon-add');
+            var startIndex = _self.index();
+            var endIndex = addPosition.index();
+            var startLeft = (startIndex % 7) * 137 - 1;
+            var startTop =  (Math.floor(startIndex / 7) == 0 ? -1 : Math.floor(startIndex / 7) * 139);
+            var moveLeft = startLeft + (endIndex % 7 - startIndex % 7) * 137 ;
+            var moveTop = startTop - 225 - Math.floor(startIndex / 7) * 139 + (Math.floor(endIndex / 7) == 0 ? 1 : 0);
+
+            var addItem = _self.clone();
+            addItem.addClass('clone').css({
+                left: startLeft,
+                top: startTop
+            }).appendTo('#to-be-chosen').find('.triangle,.add').hide();
+
+            addItem.animate({"left":moveLeft+"px","top":moveTop+"px"},500,"swing",function(){
+                createHasBeenChosenTpl(page_data[i]);
+                my_cookie[current_index].push(parseInt(_id));
+                $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+                checkPreCustom(my_cookie[current_index]);
+                updatePrice();
+                addItem.hide().css('left','-9999px');
+                could_Move = true;
+                //document.getElementById('to-be-chosen').removeChild(addItem[0]);
+                //addItem.remove();
+            });
+            break;
+        }
+        i++;
+    }
+};
+
+function deleteCartTpl(dataId){
+    var i = 0;
+    while (i < page_data.length) {
+        if (page_data[i].id == dataId){
+            page_data[i].chosen = false;
+            break;
+        } 
+        i++;
+    }
+    var j = 0;
+    while (j < my_cookie[current_index].length) {
+        if (my_cookie[current_index][j] == dataId){
+            my_cookie[current_index].splice(j,1);
+        } 
+        j++;
+    }
+
+    $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+    checkPreCustom(my_cookie[current_index]);
+    updatePrice();
+};
+
+function updatePrice(){
+    get_group_info();
+    if (page_type == 'order' && !is_trial) {
+        base_price = 0;
+        original_price = 0;
+        for (var i = 0; i < page_data.length; i++) {
+            if (page_data[i].chosen) {
+                if(assembled_addon_list_arry.indexOf(page_data[i].id) == -1){
+                    base_price += parseFloat(page_data[i].price);
+                    original_price += parseFloat(page_data[i].original_price);
+                }
+            }
+        }
+        base_price += group_price;
+        original_price += group_price;
+        total_price = order_count * base_price * rest_day / 30;
+        total_original_price = order_count * original_price * rest_day / 30;
+    } else if (page_type == 'order' && is_trial){
+        base_price = 0;
+        total_price = 0;
+        total_original_price = 0;
+    } else {
+        original_price = parseInt({$goods.shopPrice});
+        base_price = getBasePrice({$goods.shopPrice});
+        for (var i = 0; i < page_data.length; i++) {
+            if (page_data[i].is_fixed || page_data[i].chosen) {
+                base_price += parseFloat(page_data[i].price);
+                original_price += parseFloat(page_data[i].original_price);
+            }
+        }
+        group_base_price = base_price;
+        for (var i = 0; i < base_price_list.length; i++) {
+            if (base_price_list[i].group_type == group_type) {
+                { if $group_plugin_list}
+                var price = group_price;
+                original_price += parseFloat(ori_group_price);
+                {else}
+                var price = base_price_list[i].price * base_price_list[i].price_ratio;
+                $('.runtime .group-price').html(price.toFixed(2)+'/月');
+                original_price += parseFloat(base_price_list[i].price);
+                {/if}
+                group_base_price += parseFloat(price);
+                break;
+            }
+        }
+        total_price = group_base_price * price_num * price_unit * order_count;
+        total_original_price = original_price * price_num * price_unit * order_count;
+    }
+    total_price = setPriceFormat(total_price,1); //to deal with js 0.1 * 3 bug
+    total_original_price = setPriceFormat(total_price,1);
+    var total_price_html = total_price == 0 ? 0 : total_price;
+    if (page_type == 'order' && !is_trial) {
+        total_price_html = total_price == 0 ? 0 : total_price;
+    }
+    $(".row.price span").html(total_price_html);
+    updateOriPrice(total_original_price,total_price);
+    enableOrDisableButton();
+    updateSize();
+};
+
+function updateOriPrice(originalPrice,price){
+    $(".row.price span.origin-price").remove();
+    $(".row.price span.price-tip").remove();
+    if(originalPrice != price){
+        var origin_html = "<span class='origin-price'>" +
+                           "¥" + originalPrice +
+                            "<div class='mid-line' style='margin-top:-20px;border-color:#de4820'></div>" +
+                          "</span>";
+        var tip_html = "<span class='price-tip'>" +
+                        "(多买多优惠)" +
+                       "</span>";
+        $(".row.price span").before(origin_html);
+        $(".row.price").append(tip_html);
+    }
+}
+
+
+function updateSize(){
+    var latestSize = baseSize;
+    for (var i = 0; i < page_data.length; i++) {
+        if (page_data[i].is_fixed || page_data[i].chosen) {
+            latestSize += parseFloat(page_data[i].capacity);
+        }
+    }
+
+    sizeItem.html(util.kbOrMbOrGB(latestSize));
+
+    updateBuyCount(latestSize);
+};
+
+function enableOrDisableButton (){
+    var box = $('#has-been-chosen');
+    if (box.find('.addon-item').length || has_file) {
+        if(can_try){
+            $('.btn-zondy.pay, .btn-zondy.try').removeClass('disabled').removeAttr('disabled');
+        }else{
+            $('.btn-zondy.pay').removeClass('disabled').removeAttr('disabled');
+        }
+    } else {
+        $('.btn-zondy.pay, .btn-zondy.try').addClass('disabled').attr('disabled','disabled');
+    }
+
+
+    if (page_type == 'order') {
+        if (box.find('.addon-item').not('.purchased').length) {
+            $('.btn-zondy.pay').removeClass('disabled').removeAttr('disabled');
+        } else {
+            $('.btn-zondy.pay').addClass('disabled').attr('disabled','disabled');
+        }
+    }
+};
+
+
+function addToOrder(is_try) {
+    var goodsArray = [];
+    for (var i = 0; i < page_data.length; i++) {
+        if (page_data[i].is_fixed || page_data[i].chosen) {
+            if(is_try) {
+                if(page_data[i].trial_period && page_data[i].trial_period == 0){
+                    alert(page_data[i].name + "不能试用");
+                    return;
+                }
+            }
+            goodsArray.push({goods_id:page_data[i].id.toString()});
+        }
+    }
+    var period = price_unit * price_num;
+    var $buypage = $("#goto-buy-page");
+    var $buypagebtn = $("#goto-buy-page-btn");
+    $buypage.modal('show');
+    $buypagebtn.off('click').click(function(){
+        $(this).addClass('disabled').attr('disabled','disabled').html("处理中...");
+        if (is_try) {
+            //默认给试用的产品添加功能组类型为10
+            var is_try_group = 10;
+            util.gisAddToCart(goods_id,period,is_try,goodsArray,'{$goods.goods_name}',goods_trial_period,is_try_group);
+        } else {
+            var goods_ids = []; 
+            $.each(goodsArray,function(i,n){
+                goods_ids.push(n.goods_id);
+            });
+            group_type = group_type ? group_type : 10;
+            if(group_type){
+                 location.href ='flow.php?step=finish_new_order&goods_id=' + goods_id + '&period=' + period + '&total_amount=' + total_price + '&is_trial=' + is_try + '&order_type=0' + '&addon_list=' + goods_ids.join(",") + '&package_name={$goods.goods_name}' + '&order_count=' + order_count+ '&group=' + group_type;
+            }
+        }
+    });
+    
+};
+
+function reassemble (){
+    var url = 'flow.php?step=finish_reassemble_order',
+    $buypage = $("#goto-buy-page"),
+    $buypagebtn = $("#goto-buy-page-btn"),
+    $payorderbtn = $(".btn-zondy.pay");
+    var addon_list = [];
+    for (var i = 0; i < page_data.length; i++) {
+        if (page_data[i].chosen && assembled_addon_list_arry.indexOf(page_data[i].id) == -1) {
+            addon_list.push(page_data[i].id);
+        }
+    }
+    var goods_data = {
+        order_id: order_id,
+        addon_list:JSON.stringify(addon_list),
+        total_price: total_price,
+        period: rest_day,
+        order_type: 2 //重新选配
+    };
+
+    $buypage.modal('show');
+    $buypagebtn.off('click').click(function(){
+        $(this).addClass('disabled').attr('disabled','disabled').html("正在处理...");
+        location.href ='flow.php?step=finish_reassemble_order&order_id=' + order_id + '&addon_list=' + JSON.stringify(addon_list);
+    });
+
+    
+};
+
+function checkPreCustom(current_checked_array){
+    {if $goods.goods_id neq 381}
+    return;
+    {/if}
+    var current_array_string = JSON.stringify(current_checked_array.sort());
+    switch (current_array_string) {
+        case JSON.stringify(CUSTOM_PKG_CONFIG.BASIC.sort()):
+            $('.basic_pkg').addClass('active');
+            break;
+        case JSON.stringify(CUSTOM_PKG_CONFIG.STANDARD.sort()):
+            $('.standard_pkg').addClass('active');
+            break;
+        case JSON.stringify(CUSTOM_PKG_CONFIG.PREMIUM.sort()):
+            $('.premium_pkg').addClass('active');
+            break;
+        default:
+            $('.custom_pkg').removeClass('active');
+    }
+};
+
+
+function preCustomPackage() {
+
+    var pre_chosen_list = [];
+    var func_data = [];
+    var un_data = [];
+
+    $('.custom_pkg').on('click', function(){
+   
+        if ($(this).hasClass('active')) {
+            pre_chosen_list = [];
+            $(this).removeClass('active');
+            $('.addon-item').remove();
+            if ($(this).hasClass('basic_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.BASIC;
+            } else if ($(this).hasClass('standard_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.STANDARD;
+            } else if ($(this).hasClass('premium_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.PREMIUM;
+            }            
+            for(var m in pre_chosen_list){
+                var g_id = pre_chosen_list[m];
+                for(var n in page_data){
+                    if(page_data[n].id == g_id){
+                        page_data[n].chosen = false;
+                    }
+                }
+            }
+            renderData();
+        } else {
+            if ($(this).hasClass('basic_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.BASIC;
+            } else if ($(this).hasClass('standard_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.STANDARD;
+            } else if ($(this).hasClass('premium_pkg')) {
+                pre_chosen_list = CUSTOM_PKG_CONFIG.PREMIUM;
+            }
+            var no_chosen_list = [];
+            if($(this).siblings('.active').hasClass('basic_pkg')){
+                no_chosen_list = CUSTOM_PKG_CONFIG.BASIC;
+            }else if ($(this).siblings('.active').hasClass('standard_pkg')) {
+                no_chosen_list = CUSTOM_PKG_CONFIG.STANDARD;
+            } else if ($(this).siblings('.active').hasClass('premium_pkg')) {
+                no_chosen_list = CUSTOM_PKG_CONFIG.PREMIUM;
+            }
+            for(var m in no_chosen_list){
+                var g_id = no_chosen_list[m];
+                for(var n in page_data){
+                    if(page_data[n].id == g_id){
+                        page_data[n].chosen = false;
+                    }
+                }
+            }            
+            $(this).addClass('active').siblings().removeClass('active');
+
+            $('.addon-item').remove();
+
+            if(pre_chosen_list){
+                for(var i in pre_chosen_list){
+                    var g_id = pre_chosen_list[i];
+                    for (var j in page_data) {
+                        if (!page_data[j].is_fixed && !page_data[j].purchased) {
+                            if(page_data[j].id == g_id){
+                                page_data[j].chosen = true;
+                                func_data.push(page_data[j]);
+                                continue;
+                            }
+                        }
+                    }
+                }
+            }
+
+            renderData();
+           
+        }
+        
+        
+        my_cookie[current_index] = pre_chosen_list.concat([]);
+        $.cookie(COOKIE_NAME,JSON.stringify(my_cookie));
+
+    })
+};
+
+init();

@@ -1,0 +1,91 @@
+<?php
+// +----------------------------------------------------------------------
+// | zdcyber
+// +----------------------------------------------------------------------
+// | Copyright (c) 2006-2014
+// +----------------------------------------------------------------------
+// | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
+// +----------------------------------------------------------------------
+// | Author: huangbin
+// +----------------------------------------------------------------------
+// | Desc: 地图服务列表页
+// +----------------------------------------------------------------------
+
+define('IN_ECS', true);
+
+if ((DEBUG_MODE & 2) != 2)
+{
+    $smarty->caching = true;
+}
+
+/* 初始化分页信息 */
+$page = isset($_REQUEST['p'])   && intval($_REQUEST['p'])  > 0 ? intval($_REQUEST['p'])  : 1;
+
+$page_size =  isset($_REQUEST['page_size'])   && intval($_REQUEST['page_size'])  > 0 ? intval($_REQUEST['page_size'])  : 10;
+
+//当前登陆用户用户id
+$user_id = $_SESSION['user_id'];
+
+//查询地图服务所需参数 begin
+$id = $_REQUEST['id'];
+//end
+
+/* 构造缓存id */
+$host = $_SERVER['REQUEST_URI'];
+$cache_id = sprintf('%X', crc32($_SESSION['user_id'] . '-' . $_CFG['lang'] . '-'.$host. '-' .$page));
+
+if (preg_match('/(\?p)+/is', $host)) {
+	$p_url = preg_replace("/(p=)(\d+)/",'',$host);
+}
+else{
+	$p_url = preg_match('/(\?)+/is', $host) ? $host.'&' : $host.'?';
+
+	$p_url = preg_replace("/(&p=)(\d+)/",'',$p_url);
+}
+
+if (!$smarty->is_cached('resource/servicedetail.dwt', $cache_id)){
+	assign_template();
+	
+	$service_url = trim($GLOBALS['iggs_api_url_base_url'])."ecs/get/service/detail?service_id=".$id;
+
+	zd_core::autoload('zd_common_class');
+    //发送请求
+    $message_result = zd_common_class::_send_get($service_url);
+
+    $service = json_decode($message_result,true)['data'];
+
+    $type = $service['type'];
+
+    $jsoninfo = $service['jsonInfo']?json_decode($service['jsonInfo'],true):null;
+    
+    if($type == 3){
+			$service['type'] = "矢量OGC服务";
+		}elseif ($type == 4) {
+			$service['type'] = "WMTS服务";
+		}elseif ($type == 7) {
+			$service['type'] = "目录瓦片地图服务";
+		}elseif ($type == 8) {
+			$service['type'] = "目录文档地图服务";
+		}elseif ($type == 2){
+			$service['type'] = "瓦片地图服务";
+		}elseif ($type == 1){
+			$service['type'] = "地图文档服务";
+		}
+	$ip = trim($GLOBALS['iggs_api_url_base_url']);
+	$ip_a = explode(':',$ip);
+    $ip_s = $ip_a[1];
+    $s_ip = substr($ip_s,2);
+    // $s_ip = substr($ip,7,-15);
+    // $service_img = '';
+    // foreach($service as $v){
+    	$service_img = str_replace("{client_ip}",$s_ip,$service['imgUrl']);
+        $service_private_url = str_replace("{client_ip}",$s_ip,$service['previewUrl']);
+        // $service_img=$v;
+    // }
+    $smarty->assign('service_img',$service_img);
+    $smarty->assign('service_private_url',$service_private_url);
+    $smarty->assign('service',$service);
+}
+
+//页面显示
+$smarty->display('resource/servicedetail.dwt', $cache_id);

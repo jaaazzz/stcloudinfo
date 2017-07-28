@@ -1,0 +1,20 @@
+[
+    {
+        "id": "1",
+        "layer": "武汉矢量",
+        "text": "INDEX2015G",
+        "zoom": 10,
+        "centerx": 111.74,
+        "centery": 26.01,
+        "projection":"degree"
+    },
+    {
+        "id": "2",
+        "layer": "武汉影像",
+        "text": "DOM_H",
+        "zoom": 0,
+        "centerx": 111.74,
+        "centery": 26.01,
+        "projection":"degree"
+    }
+]

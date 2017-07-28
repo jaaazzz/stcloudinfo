@@ -1,0 +1,91 @@
+body{
+    margin:0;
+    padding:0;
+    background: url('images/brower_background.jpg') repeat!important;
+    .browser-page{
+        width: 660px;
+        margin:0 auto;
+        margin-bottom: 50px;
+        .topbar{
+            .logo{
+                margin-top: 45px;
+                a{
+                    display: block;
+                    width: 140px;
+                    height: 40px;
+                    overflow: hidden;
+                    border:none;
+                    img{
+                        border:0;
+                    }
+                }
+            }
+        }
+        .content{
+            text-align: center;
+            padding: 20px 0;
+            -webkit-text-shadow: 0 1px 0px #fff;
+            -moz-text-shadow: 0 1px 0px #fff;
+            text-shadow: 0px 1px 0px #fff;
+
+            h2{
+                font-size: 28px;
+                color: #333;
+                font-family: "Microsoft Yahei","SimHei",Helvetica,Arial;
+                letter-spacing: 1px;
+                padding: 20px 0;
+                text-align: left;
+                font-weight: normal;
+            }
+            .upgrade_desc{
+                text-align: left;
+                margin-top: 10px;
+            }
+            .browser-list{
+                list-style: none;
+                width: 380px;
+                height: 280px;
+                margin: 0 auto;
+                padding: 0;
+                *zoom:1;
+
+                li{
+                    float: left;
+                    padding: 40px 25px 80px;
+                    a{
+                        display: block;
+                        width: 140px;
+                        padding-top: 130px;
+                        height: 30px;
+                        color: #7d9c95;
+                        font-size: 16px;
+                        text-decoration: none;
+                        &.flash-360{
+                            background: url('images/logo-360.png') no-repeat center 10px;
+                        }
+                        &.chrome{
+                            background: url('images/logo-chrome.png') no-repeat center 10px;
+                        }
+                        &:hover{
+                            opacity: 0.9;
+                            -moz-opacity: 0.9;
+                            filter:alpha(opticy=90);
+                        }
+
+                    }
+
+                }
+            }
+            .supported{
+                color: rgb(102, 102, 102);
+                font-size: 14px;
+                a{
+                    margin: 0 4px;
+                    color: rgb(66, 152, 186);
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+}

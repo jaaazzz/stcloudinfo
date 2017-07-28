@@ -1,0 +1,94 @@
+var ori_group_price = 0;
+var group_price = 0;
+/**
+* 获取功能组价格(根据插件定制功能组产品特有)
+* @time 2015-10-31
+*/
+function get_group_info(){
+    //初始化选中插件决定的功能组id
+    var r_group_id = 0;
+    { if $group_plugin_list}
+    //定制功能组插件对象数组
+    var group_plugin_list = {$group_plugin_list};
+    //所有功能组id数组(用于获取最大功能组id)
+	var select_goods_ids = []; 
+	var group_info_arr = [];
+	//获取页面选中的插件id数组
+	var goodsArray = get_select_goods_arr();
+    $.each(goodsArray,function(i,n){
+    	var group_info_obj ={};
+    	//选中的插件id
+        var select_goods_id = n.goods_id;
+        if(group_plugin_list[select_goods_id]){
+            //选中的插件的功能组id
+            var p_group_id = group_plugin_list[select_goods_id].group_id;
+            //选中的插件的功能组价格
+            group_info_obj.price = group_plugin_list[select_goods_id].price;
+            //选中的插件的功能组描述
+            group_info_obj.fun_desc = group_plugin_list[select_goods_id].fun_desc;
+            //选中的插件的价格模板类型id,打折系数数组对象
+            group_info_obj.radio_arr = group_plugin_list[select_goods_id].radio_arr;
+            select_goods_ids.push(p_group_id);
+            if(typeof(group_info_arr[p_group_id]) != 'object'){
+                //功能组信息数组对象
+            	group_info_arr[p_group_id] = group_info_obj;
+            }
+        }
+    });
+    if(select_goods_ids.length > 0){
+        //获取到功能组id数组中最大值
+    	r_group_id = Math.max.apply(null,select_goods_ids);
+    }
+    var ratio_obj_arr = group_info_arr[r_group_id].radio_arr;
+    ori_group_price = group_info_arr[r_group_id].price;
+    /* 遍历价格系数数组,根据group_type确定打折系数 begin */
+    for(var key in ratio_obj_arr){
+        if(ratio_obj_arr[key].scale_type == group_type){
+            group_price = ori_group_price * ratio_obj_arr[key].price_ratio;
+            {if $bac_act eq 'order'}
+            var order_group_id = '{$order_group_id}';
+            if(r_group_id >= order_group_id){
+                /* modify 解决某些老数据存在order_group_id=0时, group_info_arr[order_group_id]无法取值而报错的问题 */
+                if(group_info_arr[order_group_id]){
+                    var order_group_price = group_info_arr[order_group_id].price * ratio_obj_arr[key].price_ratio;
+                    group_price =  parseFloat(group_price) - parseFloat(order_group_price);
+                    //并发用户描述
+                    var concurrent_user = ratio_obj_arr[key].concurrent_user;
+                    //在线用户描述
+                    var online_user = ratio_obj_arr[key].online_user;
+                    //在册用户描述
+                    var register_user = ratio_obj_arr[key].register_user;
+                    web_user_group_desc = "并发用户数="+concurrent_user+",在线用户数="+online_user+",在册用户数="+register_user;
+                }
+                else{
+                    group_price = 0;
+                }
+            }
+            {/if}
+            break;
+        }
+    }
+    /* 遍历价格系数数组,根据group_type确定打折系数 end */
+    var total_group_price = 0;
+    {if $bac_act eq 'order'}
+        total_group_price = group_price;
+    {else}
+        total_group_price = group_price;
+    {/if}
+    total_group_price = Math.round(total_group_price * 100) /100;
+    var group_html = "<div class='group-price-info'>功能授权:<span class='group-price'>"+total_group_price+"点/月</span></div>";
+    $('.row.runtime').html(group_html);
+    {/if}
+    return r_group_id;
+}
+
+//获取选中的插件id
+function get_select_goods_arr(){
+	var goodsArray = [];
+    for (var i = 0; i < page_data.length; i++) {
+        if (page_data[i].is_fixed || page_data[i].chosen || page_data[i].purchased) {
+            goodsArray.push({goods_id:page_data[i].id.toString()});
+        }
+    }
+    return goodsArray;
+}

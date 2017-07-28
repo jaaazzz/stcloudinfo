@@ -1,0 +1,80 @@
+<!-- {if $tool.type eq 'c'} -->
+<div class="span7" data-tool-type="{$tool.type}" data-workbench-id="{$tool.integrate_workbench_id}" data-order-count="{$tool.order_count}"  data-order-sn="{$tool.order_sn}" data-tool-price="{$tool.price}" data-tool-date="{$tool.date}" data-rest-time="{$tool.rest_time}" id="order{$tool.order_id}">
+    <div class="row name" >
+        <span class='edit-input'>
+            <input type='text' />
+            <label class="label-placeholder"></label>
+            <div class="clear"></div>
+        </span>
+        <span class='the-name'>{$tool.name}</span>
+        <span class='edit-name-button'><a href='javascript:void(0);'></a></span>
+        <span class='edit-name-confirm-button'><a href='javascript:void(0);'></a></span>
+        {if $tool.is_on_sale}
+        {if $tool.rest_time >= 0}
+        {if $tool.can_add_addon }
+        <a class='rework' href="sfw.php?do=goods&id={$tool.id}&bac=order&order_sn={$tool.order_sn}" >添加新插件</a>
+        {/if}
+        {/if}
+        {/if}
+
+    </div>
+    <div class="row include-name"><span class="name-title">包含插件：</span><span class="name-list">{foreach from=$tool.addon_list item=addon name=include_list}{if $smarty.foreach.include_list.index > 0}、{/if}<a href="sfw.php?do=goods&id={$addon.id}&bac=order" class="addon_name"  data-addon-price="{$addon.price}" data-addon-final-price="{$addon.final_price}" data-is-show={$addon.is_show}>{$addon.name}</a>{/foreach}</span>
+    </div>
+
+    <div class="row include-name-clone">包含插件：{if ! $tool.addon_list}无{/if}</div>
+
+    <div class="row size">软件大小：{$tool.size}</div>
+    <div class="row os">运行环境：{$tool.envs}</div>
+    {if $tool.order_count > 1}
+    <div class="row order_count">购买份数：{$tool.order_count}</div>
+    {/if}
+    <div class="row create_date">购买时间：{$tool.create_time}</div>
+    <div class="row date{if $tool.rest_time < $warning_time} expired{/if}">到期时间：<span>{$tool.date}{if $tool.rest_time < 0}&nbsp;&nbsp;已过期{/if}</span>
+{if $tool.is_trial && $tool.rest_time < $retrial_time && $tool.is_on_sale}<a class="renew_trial" href="#renew-trial-page" data-toggle="modal">延长试用</a>{/if}
+    </div>
+</div>
+<a class="toggle-include">更多</a>
+<!-- {else} -->
+<div class="span7" data-tool-type="{$tool.type}"  data-workbench-id="{$tool.integrate_workbench_id}" data-order-sn="{$tool.order_sn}" data-order-count="{$tool.order_count}" data-tool-price="{$tool.price}" data-tool-date="{$tool.date}" data-rest-time="{$tool.rest_time}" id="order{$tool.order_id}">
+    <div class="row name the-name">{$tool.name}</div>
+    <div class="row include-name"><span class="name-title">包含插件：</span><span class="name-list">{foreach from=$tool.addon_list item=addon name=include_list}{if $smarty.foreach.include_list.index > 0}、{/if}<a href="sfw.php?do=goods&id={$addon.id}&bac=order" class="addon_name"  data-addon-price="{$addon.price}" data-addon-final-price="{$addon.final_price}" data-is-show={$addon.is_show}>{$addon.name}</a>{/foreach}</span>
+    </div>
+    <div class="row size">软件大小：{$tool.size}</div>
+    <div class="row os">运行环境：{$tool.envs}</div>
+    {if $tool.order_count > 1}
+    <div class="row order_count">购买份数：{$tool.order_count}</div>
+    {/if}
+    <div class="row create_date">购买时间：{$tool.create_time}</div>
+    <div class="row date{if $tool.rest_time < $warning_time} expired{/if}">到期时间：<span>{$tool.date}{if $tool.rest_time < 0}&nbsp;&nbsp;已过期{/if}</span>&nbsp;&nbsp;{if $tool.is_trial && $tool.rest_time < $retrial_time && $tool.is_on_sale}<a class="renew_trial" href="#renew-trial-page" data-toggle="modal">延长试用</a>{/if}</div>
+</div>
+<!-- {/if} -->
+
+
+<div class="span3">
+    <!-- {if $tool.is_on_sale} -->
+        <!-- {if !$tool.is_delete} -->
+            <div class="btn-group" data-sn='{$tool.order_sn}'>
+                <button class="btn-zondy deploy" data-on-sale='{$tool.is_on_sale}' data-order-count="{$tool.order_count}" data-sn='{$tool.order_sn}' data-goods-name="{$tool.name}" data-price="20" onclick="check_deploy('{$tool.order_sn}')">部署到云主机</button>
+                <button class="btn-zondy dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu"> 
+                    <button class="btn-zondy download" data-on-sale='{$tool.is_on_sale}' data-order-count="{$tool.order_count}" data-sn='{$tool.order_sn}' data-goods-name="{$tool.name}" data-price="20" onclick="check_download('{$tool.order_sn}')">迁移到本地</button>
+                </ul>
+            </div>
+
+            <a class="renewals" href="#renewals-tool" data-toggle="modal">{if $tool.is_trial}购买{else}续期{/if}</a>
+        <!-- {/if} -->
+    <!-- {else} -->
+    <button class="btn-zondy download disabled" data-on-sale='' data-sn='{$tool.order_sn}' data-goods-name="{$tool.name}" data-price="20">商品已下架</button>
+    <!-- {/if} -->
+
+
+    <a class="binding-info" href="#binding-info-page" data-toggle="modal">绑定信息</a>
+    {if $tool.is_trial && $tool.rest_time <= 0 && !$tool.is_delete}
+        <a class="i-want-delete" href="javascript:void(0);" data-id="{$tool.order_id}">删除</a>
+    {/if}
+    {if $tool.is_delete}
+        <a class="i-want-recover" href="javascript:void(0);" data-id="{$tool.order_id}">恢复</a>
+    {/if}
+</div>
